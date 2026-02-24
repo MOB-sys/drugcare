@@ -41,3 +41,4 @@ htmlcov/
 # Secrets
 *.pem
 *.key
+yakmeogeo.egg-info/

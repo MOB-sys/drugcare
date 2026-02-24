@@ -1,0 +1,40 @@
+"""애플리케이션 설정 — pydantic-settings 기반 환경변수 로딩."""
+
+from functools import lru_cache
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class Settings(BaseSettings):
+    """전역 설정. .env 파일 또는 환경변수에서 자동 로딩."""
+
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
+
+    # App
+    APP_ENV: str = "development"
+    DEBUG: bool = True
+    API_V1_PREFIX: str = "/api/v1"
+
+    # Database
+    DATABASE_URL: str = "postgresql+asyncpg://yakmeogeo:yakmeogeo@localhost:5432/yakmeogeo"
+    DATABASE_URL_SYNC: str = "postgresql://yakmeogeo:yakmeogeo@localhost:5432/yakmeogeo"
+
+    # Redis
+    REDIS_URL: str = "redis://localhost:6379/0"
+
+    # 공공데이터포털 API
+    DATA_GO_KR_SERVICE_KEY: str = ""
+
+    # OpenAI (Phase 2)
+    OPENAI_API_KEY: str = ""
+
+    @property
+    def is_development(self) -> bool:
+        """개발 환경 여부."""
+        return self.APP_ENV == "development"
+
+
+@lru_cache
+def get_settings() -> Settings:
+    """싱글턴 설정 인스턴스 반환."""
+    return Settings()
