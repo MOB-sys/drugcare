@@ -1,8 +1,12 @@
-"""복약함 라우터 — 사용자 약/영양제 보관함 관리 (스텁)."""
+"""복약함 라우터 — 사용자 약/영양제 보관함 관리."""
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.backend.schemas.common import ApiResponse, PaginatedData
+from src.backend.core.database import get_db
+from src.backend.schemas.cabinet import CabinetItemCreate, CabinetItemResponse
+from src.backend.schemas.common import ApiResponse
+from src.backend.services import cabinet_service
 from src.backend.utils.response import error_response, success_response
 
 router = APIRouter(prefix="/cabinet", tags=["cabinet"])
@@ -10,59 +14,58 @@ router = APIRouter(prefix="/cabinet", tags=["cabinet"])
 
 @router.post(
     "",
-    response_model=ApiResponse[dict],
+    response_model=ApiResponse[CabinetItemResponse],
     summary="복약함 아이템 추가",
     description="복약함에 약물 또는 영양제를 추가합니다.",
 )
 async def add_cabinet_item(
+    data: CabinetItemCreate,
     request: Request,
+    db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """복약함 아이템 추가 엔드포인트 (스텁).
-
-    Phase 2에서 실제 DB 저장으로 구현 예정.
+    """복약함 아이템 추가 엔드포인트.
 
     Args:
+        data: 추가할 아이템 정보 (item_type, item_id, nickname).
         request: HTTP 요청 (device_id는 request.state에서 추출).
+        db: DB 세션 (DI).
 
     Returns:
-        ApiResponse 포맷의 dict.
+        ApiResponse[CabinetItemResponse] 포맷의 dict.
     """
     device_id = request.state.device_id
-    return success_response({
-        "message": "복약함 아이템 추가 구현 예정입니다.",
-        "device_id": device_id,
-    })
+    result = await cabinet_service.add_item(db, device_id, data)
+
+    if result is None:
+        return error_response("해당 약물/영양제를 찾을 수 없습니다.", 404)
+    if result == "duplicate":
+        return error_response("이미 복약함에 등록된 아이템입니다.", 409)
+
+    return success_response(result)
 
 
 @router.get(
     "",
-    response_model=ApiResponse[PaginatedData[dict]],
+    response_model=ApiResponse[list[CabinetItemResponse]],
     summary="복약함 목록 조회",
     description="사용자의 복약함 아이템 목록을 조회합니다.",
 )
 async def list_cabinet_items(
     request: Request,
+    db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """복약함 목록 조회 엔드포인트 (스텁).
-
-    request.state.device_id로 사용자를 식별한다.
-    Phase 2에서 실제 DB 조회로 구현 예정.
+    """복약함 목록 조회 엔드포인트.
 
     Args:
         request: HTTP 요청 (device_id는 request.state에서 추출).
+        db: DB 세션 (DI).
 
     Returns:
-        ApiResponse[PaginatedData] 포맷의 dict.
+        ApiResponse[list[CabinetItemResponse]] 포맷의 dict.
     """
-    _device_id = request.state.device_id
-    paginated = PaginatedData[dict](
-        items=[],
-        total=0,
-        page=1,
-        page_size=20,
-        total_pages=0,
-    )
-    return success_response(paginated.model_dump())
+    device_id = request.state.device_id
+    items = await cabinet_service.list_items(db, device_id)
+    return success_response(items)
 
 
 @router.delete(
@@ -74,20 +77,22 @@ async def list_cabinet_items(
 async def delete_cabinet_item(
     item_id: int,
     request: Request,
+    db: AsyncSession = Depends(get_db),
 ) -> dict:
-    """복약함 아이템 삭제 엔드포인트 (스텁).
-
-    Phase 2에서 실제 DB 삭제로 구현 예정.
+    """복약함 아이템 삭제 엔드포인트.
 
     Args:
         item_id: 삭제할 복약함 아이템의 내부 ID.
         request: HTTP 요청 (device_id는 request.state에서 추출).
+        db: DB 세션 (DI).
 
     Returns:
-        404 에러 응답 (구현 예정).
+        ApiResponse 포맷의 dict 또는 404 에러.
     """
-    _device_id = request.state.device_id
-    return error_response(
-        message=f"복약함 아이템 삭제 구현 예정입니다. (item_id={item_id})",
-        status_code=404,
-    )
+    device_id = request.state.device_id
+    result = await cabinet_service.delete_item(db, device_id, item_id)
+
+    if result is None:
+        return error_response("복약함 아이템을 찾을 수 없습니다.", 404)
+
+    return success_response({"message": "복약함 아이템이 삭제되었습니다."})
