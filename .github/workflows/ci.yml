@@ -1,0 +1,5 @@
+  4개  CI 잡+:
+  - Backend Lint — Ruff + Mypy
+  - Backend Test — PostgreSQL 16 + Redis 7 + pytest (커지버 리 지  70%)
+  - Frontend Analyze — flutter analyze
+  - Frontend Test — flutter test
