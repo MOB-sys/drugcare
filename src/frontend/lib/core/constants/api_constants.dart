@@ -42,6 +42,14 @@ class ApiConstants {
   static String reminder(int reminderId) =>
       '$apiPrefix/reminders/$reminderId';
 
+  // ── 피드백 (Feedback) ──
+  /// 피드백 제출.
+  static const String feedback = '$apiPrefix/feedback';
+
+  // ── 메트릭스 (Metrics) ──
+  /// 앱 메트릭스 이벤트 기록.
+  static const String metrics = '$apiPrefix/metrics/event';
+
   // ── 헬스체크 ──
   /// 서버 헬스체크.
   static const String health = '$apiPrefix/health';

@@ -34,6 +34,13 @@ class SettingsScreen extends StatelessWidget {
             onTap: () => context.push('/settings/legal?type=privacy'),
           ),
 
+          const Divider(height: 1, indent: 56),
+          _SettingsTile(
+            icon: Icons.feedback_outlined,
+            title: '피드백 보내기',
+            onTap: () => context.push('/settings/feedback'),
+          ),
+
           const SizedBox(height: 16),
 
           // 앱 정보 섹션

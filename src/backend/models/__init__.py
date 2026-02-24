@@ -4,6 +4,8 @@ from src.backend.models.supplement import Supplement
 from src.backend.models.interaction import Interaction, ItemType, Severity
 from src.backend.models.user_cabinet import UserCabinet, CabinetItemType
 from src.backend.models.reminder import Reminder
+from src.backend.models.feedback import Feedback
+from src.backend.models.app_metric import AppMetric
 
 __all__ = [
     "Base",
@@ -16,4 +18,6 @@ __all__ = [
     "UserCabinet",
     "CabinetItemType",
     "Reminder",
+    "Feedback",
+    "AppMetric",
 ]

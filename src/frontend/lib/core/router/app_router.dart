@@ -11,6 +11,7 @@ import 'package:yakmeogeo/features/reminder/screens/reminder_screen.dart';
 import 'package:yakmeogeo/features/result/screens/result_screen.dart';
 import 'package:yakmeogeo/features/search/models/selected_search_item.dart';
 import 'package:yakmeogeo/features/search/screens/search_screen.dart';
+import 'package:yakmeogeo/features/settings/screens/feedback_screen.dart';
 import 'package:yakmeogeo/features/settings/screens/legal_screen.dart';
 import 'package:yakmeogeo/features/settings/screens/settings_screen.dart';
 
@@ -105,6 +106,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final type = state.uri.queryParameters['type'] ?? 'terms';
           return LegalScreen(type: type);
         },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/settings/feedback',
+        builder: (context, state) => const FeedbackScreen(),
       ),
     ],
   );

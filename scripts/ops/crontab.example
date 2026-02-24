@@ -1,0 +1,25 @@
+# ==============================================================================
+# 약먹어 (YakMeogeo) Ops Squad — crontab 설정 예시
+# ==============================================================================
+# 설치: crontab -e 로 편집기 열고 아래 내용 추가
+# 환경변수 설정: /etc/yakmeogeo/ops.env 파일 생성 후 사용
+# ==============================================================================
+
+# 환경변수 로드
+SHELL=/bin/bash
+API_BASE_URL=http://localhost:8000
+LOG_DIR=/var/log/yakmeogeo
+# ALERT_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
+
+# --- 헬스체크: 30분마다 실행 ---
+*/30 * * * * API_BASE_URL=$API_BASE_URL LOG_DIR=$LOG_DIR ALERT_WEBHOOK_URL=$ALERT_WEBHOOK_URL /opt/yakmeogeo/scripts/ops/health-check.sh >> /var/log/yakmeogeo/cron.log 2>&1
+
+# --- QA 모니터: 6시간마다 실행 (00:00, 06:00, 12:00, 18:00) ---
+0 */6 * * * API_BASE_URL=$API_BASE_URL LOG_DIR=$LOG_DIR ALERT_WEBHOOK_URL=$ALERT_WEBHOOK_URL /opt/yakmeogeo/scripts/ops/qa-monitor.sh >> /var/log/yakmeogeo/cron.log 2>&1
+
+# --- 일일 보고서: 매일 09:00 ---
+0 9 * * * API_BASE_URL=$API_BASE_URL LOG_DIR=$LOG_DIR ALERT_WEBHOOK_URL=$ALERT_WEBHOOK_URL /opt/yakmeogeo/scripts/ops/daily-report.sh >> /var/log/yakmeogeo/cron.log 2>&1
+
+# --- 헬스체크 로그 로테이션: 매주 일요일 03:00 ---
+0 3 * * 0 find /var/log/yakmeogeo -name "*.log" -mtime +30 -delete 2>/dev/null
+0 3 * * 0 find /var/log/yakmeogeo/reports -name "*.md" -mtime +90 -delete 2>/dev/null

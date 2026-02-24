@@ -5,6 +5,7 @@ import 'package:yakmeogeo/shared/services/cabinet_service.dart';
 import 'package:yakmeogeo/shared/services/drug_service.dart';
 import 'package:yakmeogeo/shared/services/interaction_service.dart';
 import 'package:yakmeogeo/shared/services/reminder_service.dart';
+import 'package:yakmeogeo/shared/services/feedback_service.dart';
 import 'package:yakmeogeo/shared/services/supplement_service.dart';
 
 /// 약물 검색/상세 API 서비스 프로바이더.
@@ -30,4 +31,9 @@ final cabinetServiceProvider = Provider<CabinetService>((ref) {
 /// 리마인더 API 서비스 프로바이더.
 final reminderServiceProvider = Provider<ReminderService>((ref) {
   return ReminderService(ref.read(dioProvider));
+});
+
+/// 피드백 API 서비스 프로바이더.
+final feedbackServiceProvider = Provider<FeedbackService>((ref) {
+  return FeedbackService(ref.read(dioProvider));
 });

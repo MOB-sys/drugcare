@@ -15,7 +15,7 @@ from src.backend.middleware.error_handler import ErrorHandlerMiddleware
 from src.backend.middleware.rate_limiter import RateLimiterMiddleware
 from src.backend.middleware.request_logger import RequestLoggerMiddleware
 from src.backend.middleware.security_headers import SecurityHeadersMiddleware
-from src.backend.routers import cabinet, drugs, health, interactions, reminders, supplements
+from src.backend.routers import cabinet, drugs, feedback, health, interactions, metrics, reminders, supplements
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -102,3 +102,5 @@ app.include_router(supplements.router, prefix=api_prefix)
 app.include_router(interactions.router, prefix=api_prefix)
 app.include_router(cabinet.router, prefix=api_prefix)
 app.include_router(reminders.router, prefix=api_prefix)
+app.include_router(feedback.router, prefix=api_prefix)
+app.include_router(metrics.router, prefix=api_prefix)
