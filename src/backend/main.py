@@ -12,6 +12,9 @@ from src.backend.core.database import engine
 from src.backend.core.redis import pool as redis_pool
 from src.backend.middleware.device_auth import DeviceAuthMiddleware
 from src.backend.middleware.error_handler import ErrorHandlerMiddleware
+from src.backend.middleware.rate_limiter import RateLimiterMiddleware
+from src.backend.middleware.request_logger import RequestLoggerMiddleware
+from src.backend.middleware.security_headers import SecurityHeadersMiddleware
 from src.backend.routers import cabinet, drugs, health, interactions, reminders, supplements
 
 logger = logging.getLogger(__name__)
@@ -57,11 +60,16 @@ app = FastAPI(
 )
 
 # --- 미들웨어 등록 (역순으로 실행됨: 마지막에 추가한 것이 가장 먼저 실행) ---
+# 실행 순서: ErrorHandler → RequestLogger → SecurityHeaders → RateLimiter → DeviceAuth → CORS
 
-# CORS 미들웨어
+# CORS 미들웨어 (가장 안쪽)
+_cors_origins = ["*"] if settings.is_development else [
+    "https://yakmeogeo.com",
+    "https://www.yakmeogeo.com",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -70,7 +78,16 @@ app.add_middleware(
 # 디바이스 인증 미들웨어
 app.add_middleware(DeviceAuthMiddleware)
 
-# 글로벌 에러 핸들러 미들웨어 (가장 바깥에서 예외를 잡도록 먼저 등록)
+# 레이트 리미터 미들웨어
+app.add_middleware(RateLimiterMiddleware)
+
+# 보안 헤더 미들웨어
+app.add_middleware(SecurityHeadersMiddleware)
+
+# 요청 로깅 미들웨어
+app.add_middleware(RequestLoggerMiddleware)
+
+# 글로벌 에러 핸들러 미들웨어 (가장 바깥에서 예외를 잡도록 마지막 등록)
 app.add_middleware(ErrorHandlerMiddleware)
 
 # --- 라우터 등록 ---

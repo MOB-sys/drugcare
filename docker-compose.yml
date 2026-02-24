@@ -29,6 +29,20 @@ services:
       timeout: 5s
       retries: 5
 
+  backend:
+    build: .
+    container_name: yakmeogeo-backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file:
+      - .env
+    restart: unless-stopped
+
 volumes:
   pgdata:
   redisdata:

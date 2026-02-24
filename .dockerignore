@@ -1,0 +1,37 @@
+# Version control
+.git/
+.gitignore
+
+# Virtual environments
+.venv/
+venv/
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Tests & docs
+tests/
+docs/
+
+# Frontend (not needed in backend image)
+src/frontend/
+
+# Agent system
+.agents/
+
+# CI/CD
+.github/
+
+# Environment & secrets
+.env
+.env.*
+
+# IDE
+.idea/
+.vscode/
+*.swp

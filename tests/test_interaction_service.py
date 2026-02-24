@@ -355,3 +355,111 @@ async def test_check_interactions_without_ai_key():
     # AI 필드는 없거나 None
     first_result = result["results"][0]
     assert first_result.get("ai_explanation") is None
+
+
+# ---------------------------------------------------------------------------
+# check_interactions — 엣지 케이스
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_check_single_item_no_pairs():
+    """아이템이 1개이면 조합이 불가하므로 total_checked=0을 반환한다."""
+    mock_db = _mock_db_with_interactions([])
+    mock_redis = AsyncMock()
+    mock_redis.get.return_value = None
+
+    items = [_make_drug_item(1)]
+    result = await check_interactions(mock_db, mock_redis, items)
+
+    assert result["total_checked"] == 0
+    assert result["interactions_found"] == 0
+    assert result["has_danger"] is False
+
+
+@pytest.mark.asyncio
+async def test_check_ten_items_45_pairs():
+    """10개 아이템은 10C2=45개 쌍을 체크한다."""
+    mock_db = _mock_db_with_interactions([])
+    mock_redis = AsyncMock()
+    mock_redis.get.return_value = None
+
+    items = [_make_drug_item(i) for i in range(1, 11)]
+    result = await check_interactions(mock_db, mock_redis, items)
+
+    assert result["total_checked"] == 45
+
+
+@pytest.mark.asyncio
+async def test_check_duplicate_items_no_self_interaction():
+    """동일 아이템이 중복되어도 자기 자신과의 상호작용은 쌍으로 생성된다.
+
+    combinations는 인덱스 기반이므로 동일 item_id 쌍이 생기지만,
+    DB에 자기 자신과의 상호작용 레코드가 없으면 결과는 0건이다.
+    """
+    mock_db = _mock_db_with_interactions([])
+    mock_redis = AsyncMock()
+    mock_redis.get.return_value = None
+
+    items = [_make_drug_item(1), _make_drug_item(1)]
+    result = await check_interactions(mock_db, mock_redis, items)
+
+    assert result["total_checked"] == 1
+    assert result["interactions_found"] == 0
+
+
+@pytest.mark.asyncio
+async def test_check_cache_set_failure_still_returns_result():
+    """cache_set 실패 시에도 정상 결과를 반환한다 (graceful degradation)."""
+    interaction = _make_interaction_result()
+    mock_db = _mock_db_with_interactions([interaction])
+    mock_redis = AsyncMock()
+    mock_redis.get.return_value = None
+    mock_redis.set.side_effect = ConnectionError("Redis down")
+
+    items = [_make_drug_item(1), _make_drug_item(2)]
+    result = await check_interactions(mock_db, mock_redis, items)
+
+    assert result["interactions_found"] == 1
+    assert result["total_checked"] == 1
+
+
+@pytest.mark.asyncio
+async def test_check_mixed_severity_sorting_all_four():
+    """4가지 심각도(DANGER, WARNING, CAUTION, INFO)가 모두 포함될 때 올바르게 정렬된다."""
+    danger = _make_interaction_result(
+        severity=Severity.DANGER,
+        item_a_name="약A", item_b_name="약B",
+        description="병용금기",
+    )
+    warning = _make_interaction_result(
+        severity=Severity.WARNING,
+        item_a_name="약C", item_b_name="약D",
+        description="주의",
+    )
+    caution = _make_interaction_result(
+        severity=Severity.CAUTION,
+        item_a_name="약E", item_b_name="약F",
+        description="경고",
+    )
+    info = _make_interaction_result(
+        severity=Severity.INFO,
+        item_a_name="약G", item_b_name="약H",
+        description="정보",
+    )
+    # 역순으로 넣어서 정렬 검증
+    mock_db = _mock_db_with_interactions([info, caution, warning, danger])
+    mock_redis = AsyncMock()
+    mock_redis.get.return_value = None
+
+    items = [_make_drug_item(1), _make_drug_item(2)]
+    result = await check_interactions(mock_db, mock_redis, items)
+
+    severities = [r["severity"] for r in result["results"]]
+    assert severities == [
+        Severity.DANGER,
+        Severity.WARNING,
+        Severity.CAUTION,
+        Severity.INFO,
+    ]
+    assert result["has_danger"] is True
