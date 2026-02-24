@@ -301,3 +301,57 @@ async def test_check_order_independent_cache_key():
     assert key_ab == key_ba
 
     assert result_ab == result_ba
+
+
+# ---------------------------------------------------------------------------
+# check_interactions — AI 설명 통합
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_check_interactions_with_ai_key():
+    """OPENAI_API_KEY가 설정되면 결과에 AI 필드가 포함된다."""
+    interaction = _make_interaction_result()
+    mock_db = _mock_db_with_interactions([interaction])
+    mock_redis = AsyncMock()
+    mock_redis.get.return_value = None
+
+    items = [_make_drug_item(1), _make_drug_item(2)]
+
+    with patch("src.backend.services.interaction_service.settings") as mock_settings:
+        mock_settings.OPENAI_API_KEY = "test-key"
+        with patch(
+            "src.backend.services.ai_explanation_service.enhance_results",
+            new_callable=AsyncMock,
+        ) as mock_enhance:
+            mock_enhance.return_value = [
+                {
+                    "item_a_name": "타이레놀정500밀리그램",
+                    "item_b_name": "아스피린정",
+                    "severity": "warning",
+                    "ai_explanation": "AI 설명",
+                    "ai_recommendation": "AI 대처",
+                },
+            ]
+            result = await check_interactions(mock_db, mock_redis, items)
+
+    assert result["results"][0]["ai_explanation"] == "AI 설명"
+
+
+@pytest.mark.asyncio
+async def test_check_interactions_without_ai_key():
+    """OPENAI_API_KEY가 비어있으면 기존 동작을 유지한다."""
+    interaction = _make_interaction_result()
+    mock_db = _mock_db_with_interactions([interaction])
+    mock_redis = AsyncMock()
+    mock_redis.get.return_value = None
+
+    items = [_make_drug_item(1), _make_drug_item(2)]
+
+    with patch("src.backend.services.interaction_service.settings") as mock_settings:
+        mock_settings.OPENAI_API_KEY = ""
+        result = await check_interactions(mock_db, mock_redis, items)
+
+    # AI 필드는 없거나 None
+    first_result = result["results"][0]
+    assert first_result.get("ai_explanation") is None

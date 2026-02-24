@@ -104,4 +104,68 @@ void main() {
           reason: '${severity.name}의 배경색이 올바르지 않음');
     }
   });
+
+  testWidgets('AI 설명이 있으면 확장 시 AI 섹션을 표시한다', (tester) async {
+    const resultWithAi = InteractionResult(
+      itemAName: '아스피린',
+      itemBName: '이부프로펜',
+      severity: Severity.danger,
+      description: '병용 시 출혈 위험 증가',
+      source: 'DUR',
+      aiExplanation: '이 두 약은 같은 계열의 진통제입니다.',
+      aiRecommendation: '복용 간격을 두세요.',
+    );
+
+    await tester.pumpWidget(buildWidget(resultWithAi));
+
+    // 초기엔 AI 섹션 안 보임
+    expect(find.text('AI 쉬운 설명'), findsNothing);
+
+    // 탭하면 확장
+    await tester.tap(find.text('상세 보기'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('AI 쉬운 설명'), findsOneWidget);
+    expect(find.text('이 두 약은 같은 계열의 진통제입니다.'), findsOneWidget);
+    expect(find.text('AI 대처 방법'), findsOneWidget);
+    expect(find.text('복용 간격을 두세요.'), findsOneWidget);
+  });
+
+  testWidgets('AI 설명이 없으면 AI 섹션을 표시하지 않는다', (tester) async {
+    const resultWithoutAi = InteractionResult(
+      itemAName: '아스피린',
+      itemBName: '이부프로펜',
+      severity: Severity.warning,
+      description: '주의 필요',
+      source: 'DUR',
+    );
+
+    await tester.pumpWidget(buildWidget(resultWithoutAi));
+
+    await tester.tap(find.text('상세 보기'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('AI 쉬운 설명'), findsNothing);
+    expect(find.text('AI 대처 방법'), findsNothing);
+  });
+
+  testWidgets('AI 설명만 있고 대처 방법이 없으면 설명만 표시한다', (tester) async {
+    const resultAiOnly = InteractionResult(
+      itemAName: '아스피린',
+      itemBName: '이부프로펜',
+      severity: Severity.caution,
+      description: '가벼운 상호작용',
+      source: 'DUR',
+      aiExplanation: 'AI 생성 설명 텍스트입니다.',
+    );
+
+    await tester.pumpWidget(buildWidget(resultAiOnly));
+
+    await tester.tap(find.text('상세 보기'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('AI 쉬운 설명'), findsOneWidget);
+    expect(find.text('AI 생성 설명 텍스트입니다.'), findsOneWidget);
+    expect(find.text('AI 대처 방법'), findsNothing);
+  });
 }

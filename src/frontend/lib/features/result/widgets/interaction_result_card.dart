@@ -133,6 +133,47 @@ class _InteractionResultCardState extends State<InteractionResultCard> {
                         label: '근거 수준',
                         value: result.evidenceLevel!,
                       ),
+                    // AI 쉬운 설명 섹션
+                    if (result.aiExplanation != null) ...[
+                      const SizedBox(height: 8),
+                      const Divider(height: 1),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.auto_awesome,
+                            size: 16,
+                            color: result.severity.color,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            'AI 쉬운 설명',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: result.severity.color,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        result.aiExplanation!,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: AppColors.textPrimary,
+                          height: 1.5,
+                        ),
+                      ),
+                      if (result.aiRecommendation != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: _DetailRow(
+                            label: 'AI 대처 방법',
+                            value: result.aiRecommendation!,
+                          ),
+                        ),
+                    ],
                   ],
                 ),
               ),

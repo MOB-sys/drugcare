@@ -7,6 +7,7 @@ import 'package:yakmeogeo/features/home/providers/home_provider.dart';
 import 'package:yakmeogeo/features/home/widgets/cabinet_summary_card.dart';
 import 'package:yakmeogeo/features/home/widgets/health_tip_card.dart';
 import 'package:yakmeogeo/features/home/widgets/quick_search_bar.dart';
+import 'package:yakmeogeo/shared/widgets/ads/native_ad_widget.dart';
 import 'package:yakmeogeo/shared/widgets/common/disclaimer_banner.dart';
 
 /// 홈 화면.
@@ -64,7 +65,11 @@ class HomeScreen extends ConsumerWidget {
 
               // 건강팁 카드
               const HealthTipCard(),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+
+              // 네이티브 광고
+              const NativeAdWidget(),
+              const SizedBox(height: 16),
 
               // 면책조항 배너
               const DisclaimerBanner(),

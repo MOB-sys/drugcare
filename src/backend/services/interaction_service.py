@@ -13,8 +13,11 @@ from src.backend.schemas.interaction import (
     InteractionItem,
     InteractionResult,
 )
+from src.backend.core.config import get_settings
 from src.backend.utils.cache import cache_get, cache_set, hash_query, make_cache_key
 from src.backend.core.redis import CACHE_TTL_INTERACTION
+
+settings = get_settings()
 
 # 심각도 정렬 순서: danger(0) → warning(1) → caution(2) → info(3)
 _SEVERITY_ORDER: dict[Severity, int] = {
@@ -80,6 +83,12 @@ async def check_interactions(
         results=results_list,
     )
     response_dict = response.model_dump()
+
+    # AI 설명 추가 (API 키가 설정된 경우에만)
+    if settings.OPENAI_API_KEY:
+        from src.backend.services.ai_explanation_service import enhance_results
+        enhanced = await enhance_results(redis, results_list)
+        response_dict["results"] = enhanced
 
     await cache_set(redis, cache_key, response_dict, CACHE_TTL_INTERACTION)
     return response_dict

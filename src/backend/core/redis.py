@@ -12,6 +12,7 @@ CACHE_TTL_INTERACTION = 60 * 60 * 24 * 7      # 7일
 CACHE_TTL_DRUG_DETAIL = 60 * 60 * 24 * 3      # 3일
 CACHE_TTL_SUPPLEMENT_SEARCH = 60 * 60 * 24     # 24시간
 CACHE_TTL_SUPPLEMENT_DETAIL = 60 * 60 * 24 * 3  # 3일
+CACHE_TTL_AI_EXPLANATION = 60 * 60 * 24 * 30     # 30일
 
 pool = ConnectionPool.from_url(settings.REDIS_URL, decode_responses=True)
 

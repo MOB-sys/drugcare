@@ -26,6 +26,12 @@ class InteractionResult {
   /// 근거 수준.
   final String? evidenceLevel;
 
+  /// AI 생성 쉬운 설명.
+  final String? aiExplanation;
+
+  /// AI 생성 대처 방법.
+  final String? aiRecommendation;
+
   /// [InteractionResult] 생성자.
   const InteractionResult({
     required this.itemAName,
@@ -36,6 +42,8 @@ class InteractionResult {
     this.recommendation,
     this.source,
     this.evidenceLevel,
+    this.aiExplanation,
+    this.aiRecommendation,
   });
 
   /// JSON에서 [InteractionResult]를 생성한다.
@@ -49,6 +57,8 @@ class InteractionResult {
       recommendation: json['recommendation'] as String?,
       source: json['source'] as String?,
       evidenceLevel: json['evidence_level'] as String?,
+      aiExplanation: json['ai_explanation'] as String?,
+      aiRecommendation: json['ai_recommendation'] as String?,
     );
   }
 }

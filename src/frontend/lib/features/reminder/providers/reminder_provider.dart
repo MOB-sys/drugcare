@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:yakmeogeo/core/providers/service_providers.dart';
 import 'package:yakmeogeo/features/reminder/models/reminder.dart';
+import 'package:yakmeogeo/shared/services/notification_service.dart';
 
 /// 리마인더 화면 상태.
 class ReminderState {
@@ -51,18 +52,33 @@ class ReminderNotifier extends StateNotifier<ReminderState> {
     }
   }
 
-  /// 새 리마인더를 생성하고 목록을 갱신한다.
+  /// 새 리마인더를 생성하고 알림을 스케줄링한다.
   Future<void> createReminder(ReminderCreate create) async {
     final service = _ref.read(reminderServiceProvider);
     await service.createReminder(create);
     await loadReminders();
+    // 새로 생성된 리마인더 스케줄링 (목록 갱신 후 마지막 아이템)
+    final reminders = state.reminders.valueOrNull;
+    if (reminders != null && reminders.isNotEmpty) {
+      final latest = reminders.last;
+      await NotificationService.instance.scheduleReminder(latest);
+    }
   }
 
-  /// 리마인더를 수정하고 목록을 갱신한다.
+  /// 리마인더를 수정하고 알림을 재스케줄링한다.
   Future<void> updateReminder(int id, ReminderUpdate update) async {
     final service = _ref.read(reminderServiceProvider);
     await service.updateReminder(id, update);
+    // 기존 알림 취소 후 재스케줄
+    await NotificationService.instance.cancelReminder(id);
     await loadReminders();
+    final reminders = state.reminders.valueOrNull;
+    if (reminders != null) {
+      final updated = reminders.where((r) => r.id == id).firstOrNull;
+      if (updated != null && updated.isActive) {
+        await NotificationService.instance.scheduleReminder(updated);
+      }
+    }
   }
 
   /// 리마인더 활성/비활성 상태를 토글한다.
@@ -73,8 +89,9 @@ class ReminderNotifier extends StateNotifier<ReminderState> {
     );
   }
 
-  /// 리마인더를 삭제하고 목록을 갱신한다.
+  /// 리마인더를 삭제하고 알림을 취소한다.
   Future<void> deleteReminder(int id) async {
+    await NotificationService.instance.cancelReminder(id);
     final service = _ref.read(reminderServiceProvider);
     await service.deleteReminder(id);
     await loadReminders();

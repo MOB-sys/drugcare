@@ -32,6 +32,8 @@ class InteractionResult(BaseModel):
     recommendation: str | None = None
     source: str
     evidence_level: str | None = None
+    ai_explanation: str | None = None
+    ai_recommendation: str | None = None
 
 
 class InteractionCheckResponse(BaseModel):
