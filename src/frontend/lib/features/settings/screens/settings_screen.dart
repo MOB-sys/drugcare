@@ -20,46 +20,9 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          // 법적 정보 섹션
-          const _SectionHeader(title: '법적 정보'),
-          _SettingsTile(
-            icon: Icons.description_outlined,
-            title: '이용약관',
-            onTap: () => context.push('/settings/legal?type=terms'),
-          ),
-          const Divider(height: 1, indent: 56),
-          _SettingsTile(
-            icon: Icons.privacy_tip_outlined,
-            title: '개인정보 처리방침',
-            onTap: () => context.push('/settings/legal?type=privacy'),
-          ),
-
-          const Divider(height: 1, indent: 56),
-          _SettingsTile(
-            icon: Icons.feedback_outlined,
-            title: '피드백 보내기',
-            onTap: () => context.push('/settings/feedback'),
-          ),
-
+          _buildLegalSection(context),
           const SizedBox(height: 16),
-
-          // 앱 정보 섹션
-          const _SectionHeader(title: '앱 정보'),
-          _SettingsTile(
-            icon: Icons.info_outline,
-            title: '앱 정보',
-            onTap: () => _showAppInfoDialog(context),
-          ),
-          const Divider(height: 1, indent: 56),
-          _SettingsTile(
-            icon: Icons.code,
-            title: '오픈소스 라이선스',
-            onTap: () => showLicensePage(
-              context: context,
-              applicationName: AppConstants.appName,
-              applicationVersion: '1.0.0',
-            ),
-          ),
+          _buildAppInfoSection(context),
 
           // 버전 정보
           const SizedBox(height: 32),
@@ -75,6 +38,62 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: 16),
         ],
       ),
+    );
+  }
+
+  /// 법적 정보 섹션을 구성한다.
+  ///
+  /// 이용약관, 개인정보 처리방침, 피드백 보내기 타일을 포함한다.
+  Widget _buildLegalSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionHeader(title: '법적 정보'),
+        _SettingsTile(
+          icon: Icons.description_outlined,
+          title: '이용약관',
+          onTap: () => context.push('/settings/legal?type=terms'),
+        ),
+        const Divider(height: 1, indent: 56),
+        _SettingsTile(
+          icon: Icons.privacy_tip_outlined,
+          title: '개인정보 처리방침',
+          onTap: () => context.push('/settings/legal?type=privacy'),
+        ),
+        const Divider(height: 1, indent: 56),
+        _SettingsTile(
+          icon: Icons.feedback_outlined,
+          title: '피드백 보내기',
+          onTap: () => context.push('/settings/feedback'),
+        ),
+      ],
+    );
+  }
+
+  /// 앱 정보 섹션을 구성한다.
+  ///
+  /// 앱 정보 다이얼로그 및 오픈소스 라이선스 타일을 포함한다.
+  Widget _buildAppInfoSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionHeader(title: '앱 정보'),
+        _SettingsTile(
+          icon: Icons.info_outline,
+          title: '앱 정보',
+          onTap: () => _showAppInfoDialog(context),
+        ),
+        const Divider(height: 1, indent: 56),
+        _SettingsTile(
+          icon: Icons.code,
+          title: '오픈소스 라이선스',
+          onTap: () => showLicensePage(
+            context: context,
+            applicationName: AppConstants.appName,
+            applicationVersion: '1.0.0',
+          ),
+        ),
+      ],
     );
   }
 

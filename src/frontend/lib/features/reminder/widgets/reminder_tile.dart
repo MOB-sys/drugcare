@@ -43,42 +43,8 @@ class ReminderTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      reminder.itemName,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: reminder.isActive
-                            ? AppColors.textPrimary
-                            : AppColors.textDisabled,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      timeStr,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: reminder.isActive
-                            ? AppColors.primary
-                            : AppColors.textDisabled,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    _buildDayChips(),
-                    if (reminder.memo != null &&
-                        reminder.memo!.isNotEmpty) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        reminder.memo!,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: AppColors.textSecondary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                    _buildItemHeader(timeStr),
+                    _buildTimeAndMemo(),
                   ],
                 ),
               ),
@@ -97,6 +63,64 @@ class ReminderTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// 아이템 이름과 리마인더 시각을 표시하는 헤더 영역을 빌드한다.
+  ///
+  /// [timeStr] — 포맷된 시각 문자열 (예: "09:30").
+  /// 활성 상태에 따라 텍스트 색상이 변경된다.
+  Widget _buildItemHeader(String timeStr) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          reminder.itemName,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: reminder.isActive
+                ? AppColors.textPrimary
+                : AppColors.textDisabled,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          timeStr,
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: reminder.isActive
+                ? AppColors.primary
+                : AppColors.textDisabled,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// 요일 칩과 선택적 메모 텍스트를 표시하는 영역을 빌드한다.
+  ///
+  /// 요일 칩 행 아래에 메모가 존재하면 한 줄로 표시한다.
+  Widget _buildTimeAndMemo() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 6),
+        _buildDayChips(),
+        if (reminder.memo != null && reminder.memo!.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            reminder.memo!,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ],
     );
   }
 

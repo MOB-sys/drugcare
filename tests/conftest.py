@@ -2,7 +2,7 @@
 
 from collections.abc import AsyncGenerator
 from datetime import datetime, time, timezone
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import httpx
 import pytest
@@ -249,9 +249,14 @@ async def client() -> AsyncGenerator[httpx.AsyncClient, None]:
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_redis] = override_get_redis
 
-    transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="http://test") as ac:
-        yield ac
+    # 레이트리미터가 직접 호출하는 get_redis도 Mock으로 패치
+    mock_redis.incr = AsyncMock(return_value=1)
+    mock_redis.expire = AsyncMock(return_value=True)
+
+    with patch("src.backend.middleware.rate_limiter.get_redis", return_value=mock_redis):
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as ac:
+            yield ac
 
     app.dependency_overrides.clear()
 
@@ -281,9 +286,13 @@ async def client_db_error() -> AsyncGenerator[httpx.AsyncClient, None]:
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_redis] = override_get_redis
 
-    transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="http://test") as ac:
-        yield ac
+    mock_redis.incr = AsyncMock(return_value=1)
+    mock_redis.expire = AsyncMock(return_value=True)
+
+    with patch("src.backend.middleware.rate_limiter.get_redis", return_value=mock_redis):
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as ac:
+            yield ac
 
     app.dependency_overrides.clear()
 
@@ -313,8 +322,13 @@ async def client_redis_error() -> AsyncGenerator[httpx.AsyncClient, None]:
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_redis] = override_get_redis
 
-    transport = httpx.ASGITransport(app=app)
-    async with httpx.AsyncClient(transport=transport, base_url="http://test") as ac:
-        yield ac
+    # Redis 에러 시에도 레이트리미터가 graceful degradation하도록 동일 mock 사용
+    mock_redis.incr = AsyncMock(side_effect=Exception("Redis connection failed"))
+    mock_redis.expire = AsyncMock(side_effect=Exception("Redis connection failed"))
+
+    with patch("src.backend.middleware.rate_limiter.get_redis", return_value=mock_redis):
+        transport = httpx.ASGITransport(app=app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://test") as ac:
+            yield ac
 
     app.dependency_overrides.clear()

@@ -76,6 +76,120 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
     }
   }
 
+  /// 피드백 카테고리 선택 섹션을 빌드한다.
+  ///
+  /// 카테고리 라벨과 [ChoiceChip] 목록을 [Wrap]으로 배치한다.
+  Widget _buildCategorySection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '카테고리',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          children: _categories.map((cat) {
+            final isSelected = _selectedCategory == cat.$1;
+            return ChoiceChip(
+              label: Text(cat.$2),
+              selected: isSelected,
+              onSelected: (_) {
+                setState(() => _selectedCategory = cat.$1);
+              },
+              selectedColor: AppColors.primary.withValues(alpha: 0.15),
+              labelStyle: TextStyle(
+                color: isSelected
+                    ? AppColors.primary
+                    : AppColors.textSecondary,
+                fontWeight:
+                    isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  /// 피드백 내용 입력 필드를 빌드한다.
+  ///
+  /// '내용' 라벨과 최대 2000자의 [TextFormField]를 반환한다.
+  Widget _buildContentField() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '내용',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: _contentController,
+          maxLines: 6,
+          maxLength: 2000,
+          decoration: InputDecoration(
+            hintText: '피드백 내용을 입력해주세요...',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            contentPadding: const EdgeInsets.all(16),
+          ),
+          validator: (value) {
+            if (value == null || value.trim().length < 5) {
+              return '5자 이상 입력해주세요.';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  /// 피드백 제출 버튼을 빌드한다.
+  ///
+  /// 제출 중일 때는 [CircularProgressIndicator]를 표시하고,
+  /// 그렇지 않으면 '피드백 보내기' 텍스트를 표시한다.
+  Widget _buildSubmitButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: ElevatedButton(
+        onPressed: _isSubmitting ? null : _submit,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: _isSubmitting
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white,
+                ),
+              )
+            : const Text(
+                '피드백 보내기',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +204,6 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 안내 문구
               const Text(
                 '서비스 개선에 도움이 되는 소중한 의견을 보내주세요.',
                 style: TextStyle(
@@ -99,99 +212,11 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-
-              // 카테고리 선택
-              const Text(
-                '카테고리',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: _categories.map((cat) {
-                  final isSelected = _selectedCategory == cat.$1;
-                  return ChoiceChip(
-                    label: Text(cat.$2),
-                    selected: isSelected,
-                    onSelected: (_) {
-                      setState(() => _selectedCategory = cat.$1);
-                    },
-                    selectedColor: AppColors.primary.withValues(alpha: 0.15),
-                    labelStyle: TextStyle(
-                      color: isSelected
-                          ? AppColors.primary
-                          : AppColors.textSecondary,
-                      fontWeight:
-                          isSelected ? FontWeight.w600 : FontWeight.normal,
-                    ),
-                  );
-                }).toList(),
-              ),
+              _buildCategorySection(),
               const SizedBox(height: 24),
-
-              // 내용 입력
-              const Text(
-                '내용',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 8),
-              TextFormField(
-                controller: _contentController,
-                maxLines: 6,
-                maxLength: 2000,
-                decoration: InputDecoration(
-                  hintText: '피드백 내용을 입력해주세요...',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  contentPadding: const EdgeInsets.all(16),
-                ),
-                validator: (value) {
-                  if (value == null || value.trim().length < 5) {
-                    return '5자 이상 입력해주세요.';
-                  }
-                  return null;
-                },
-              ),
+              _buildContentField(),
               const SizedBox(height: 32),
-
-              // 제출 버튼
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: _isSubmitting ? null : _submit,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: _isSubmitting
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Text(
-                          '피드백 보내기',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                ),
-              ),
+              _buildSubmitButton(),
             ],
           ),
         ),

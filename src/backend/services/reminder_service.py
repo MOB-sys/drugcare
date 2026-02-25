@@ -63,7 +63,7 @@ async def list_reminders(
     stmt = select(Reminder).where(Reminder.device_id == device_id)
 
     if active_only:
-        stmt = stmt.where(Reminder.is_active == True)  # noqa: E712
+        stmt = stmt.where(Reminder.is_active.is_(True))
 
     stmt = stmt.order_by(Reminder.reminder_time)
     rows = await db.execute(stmt)

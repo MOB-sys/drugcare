@@ -111,6 +111,8 @@ class NotificationService {
         _nextInstanceOfWeekday(dayOfWeek, hour, minute),
         details,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
       );
     }

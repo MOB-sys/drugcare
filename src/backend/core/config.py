@@ -15,9 +15,9 @@ class Settings(BaseSettings):
     DEBUG: bool = True
     API_V1_PREFIX: str = "/api/v1"
 
-    # Database
-    DATABASE_URL: str = "postgresql+asyncpg://yakmeogeo:yakmeogeo@localhost:5432/yakmeogeo"
-    DATABASE_URL_SYNC: str = "postgresql://yakmeogeo:yakmeogeo@localhost:5432/yakmeogeo"
+    # Database — .env 파일에서 실제 값을 설정하세요
+    DATABASE_URL: str = "postgresql+asyncpg://user:password@localhost:5432/dbname"
+    DATABASE_URL_SYNC: str = "postgresql://user:password@localhost:5432/dbname"
 
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"

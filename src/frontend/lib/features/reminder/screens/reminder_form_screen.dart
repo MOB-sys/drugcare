@@ -169,38 +169,45 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
         InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: _pickTime,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-            decoration: BoxDecoration(
-              color: AppColors.background,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.divider),
-            ),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.access_time,
-                  color: AppColors.primary,
-                  size: 20,
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  timeStr,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          child: _buildTimeDisplay(timeStr),
         ),
       ],
+    );
+  }
+
+  /// 시간 아이콘과 텍스트를 포함하는 디스플레이 컨테이너를 빌드한다.
+  ///
+  /// [timeStr] — "HH:mm" 형식의 시간 문자열.
+  Widget _buildTimeDisplay(String timeStr) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 14,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.divider),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.access_time,
+            color: AppColors.primary,
+            size: 20,
+          ),
+          const SizedBox(width: 12),
+          Text(
+            timeStr,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textPrimary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -231,34 +238,7 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
-          children: List.generate(7, (index) {
-            // daysOfWeek: 0=월~6=일 (백엔드 규격 일치)
-            final day = index;
-            final isSelected = _selectedDays.contains(day);
-            final label = AppDateUtils.weekdayName(index);
-
-            return ChoiceChip(
-              label: Text(label),
-              selected: isSelected,
-              selectedColor: AppColors.primaryLight,
-              labelStyle: TextStyle(
-                color: isSelected
-                    ? AppColors.primaryDark
-                    : AppColors.textSecondary,
-                fontWeight:
-                    isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
-              onSelected: (selected) {
-                setState(() {
-                  if (selected) {
-                    _selectedDays.add(day);
-                  } else {
-                    _selectedDays.remove(day);
-                  }
-                });
-              },
-            );
-          }),
+          children: List.generate(7, _buildDayChip),
         ),
         if (_selectedDays.isEmpty)
           const Padding(
@@ -272,6 +252,37 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
             ),
           ),
       ],
+    );
+  }
+
+  /// 개별 요일 선택 칩을 빌드한다.
+  ///
+  /// [index] — 요일 인덱스 (0=월 ~ 6=일, 백엔드 규격 일치).
+  Widget _buildDayChip(int index) {
+    final day = index;
+    final isSelected = _selectedDays.contains(day);
+    final label = AppDateUtils.weekdayName(index);
+
+    return ChoiceChip(
+      label: Text(label),
+      selected: isSelected,
+      selectedColor: AppColors.primaryLight,
+      labelStyle: TextStyle(
+        color: isSelected
+            ? AppColors.primaryDark
+            : AppColors.textSecondary,
+        fontWeight:
+            isSelected ? FontWeight.w600 : FontWeight.normal,
+      ),
+      onSelected: (selected) {
+        setState(() {
+          if (selected) {
+            _selectedDays.add(day);
+          } else {
+            _selectedDays.remove(day);
+          }
+        });
+      },
     );
   }
 
@@ -322,6 +333,26 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
     );
   }
 
+  /// 저장에 필요한 폼 데이터를 준비하여 레코드로 반환한다.
+  ///
+  /// 반환값은 `timeWithSeconds` (HH:mm:ss 형식), `days` (선택된 요일 복사본),
+  /// `memo` (빈 문자열이면 null) 세 필드를 갖는 레코드이다.
+  ({String timeWithSeconds, List<int> days, String? memo}) _buildSavePayload() {
+    final timeStr = AppDateUtils.formatTime(
+      _selectedTime.hour,
+      _selectedTime.minute,
+    );
+    final timeWithSeconds = '$timeStr:00';
+    final memo =
+        _memoController.text.trim().isEmpty ? null : _memoController.text.trim();
+
+    return (
+      timeWithSeconds: timeWithSeconds,
+      days: List<int>.from(_selectedDays),
+      memo: memo,
+    );
+  }
+
   /// 폼을 검증하고 저장한다.
   Future<void> _onSave() async {
     if (!_formKey.currentState!.validate()) return;
@@ -330,32 +361,25 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
     setState(() => _isSaving = true);
 
     try {
-      final timeStr = AppDateUtils.formatTime(
-        _selectedTime.hour,
-        _selectedTime.minute,
-      );
-      final timeWithSeconds = '$timeStr:00';
-      final memo =
-          _memoController.text.trim().isEmpty ? null : _memoController.text.trim();
-
+      final payload = _buildSavePayload();
       final notifier = ref.read(reminderProvider.notifier);
 
       if (_isEditing) {
         await notifier.updateReminder(
           widget.existingReminder!.id,
           ReminderUpdate(
-            reminderTime: timeWithSeconds,
-            daysOfWeek: List<int>.from(_selectedDays),
-            memo: memo,
+            reminderTime: payload.timeWithSeconds,
+            daysOfWeek: payload.days,
+            memo: payload.memo,
           ),
         );
       } else {
         await notifier.createReminder(
           ReminderCreate(
             cabinetItemId: _selectedCabinetItemId!,
-            reminderTime: timeWithSeconds,
-            daysOfWeek: List<int>.from(_selectedDays),
-            memo: memo,
+            reminderTime: payload.timeWithSeconds,
+            daysOfWeek: payload.days,
+            memo: payload.memo,
           ),
         );
       }

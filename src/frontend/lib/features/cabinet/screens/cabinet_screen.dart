@@ -63,63 +63,80 @@ class CabinetScreen extends ConsumerWidget {
           child: ListView.builder(
             padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
             itemCount: items.length,
-            itemBuilder: (context, index) {
-              final item = items[index];
-              return Dismissible(
-                key: ValueKey(item.id),
-                direction: DismissDirection.endToStart,
-                background: Container(
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 20),
-                  margin: const EdgeInsets.only(bottom: 8),
-                  decoration: BoxDecoration(
-                    color: AppColors.danger,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                confirmDismiss: (_) => _confirmDelete(context, item),
-                onDismissed: (_) {
-                  ref.read(cabinetProvider.notifier).deleteItem(item.id);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: CabinetItemTile(
-                    item: item,
-                    onDelete: () => _handleDelete(context, ref, item),
-                  ),
-                ),
-              );
-            },
+            itemBuilder: (context, index) =>
+                _buildListItem(context, ref, items[index]),
           ),
         ),
-
-        // 전체 상호작용 확인 버튼
         if (items.length >= AppConstants.minInteractionItems)
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: () => _checkAllInteractions(context, items),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    '전체 상호작용 확인',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                  ),
-                ),
+          _buildCheckButton(context, items),
+      ],
+    );
+  }
+
+  /// 복약함의 개별 아이템 위젯을 빌드한다.
+  ///
+  /// 스와이프 삭제(Dismissible)와 [CabinetItemTile]을 포함한다.
+  Widget _buildListItem(
+    BuildContext context,
+    WidgetRef ref,
+    CabinetItem item,
+  ) {
+    return Dismissible(
+      key: ValueKey(item.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 20),
+        margin: const EdgeInsets.only(bottom: 8),
+        decoration: BoxDecoration(
+          color: AppColors.danger,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const Icon(Icons.delete, color: Colors.white),
+      ),
+      confirmDismiss: (_) => _confirmDelete(context, item),
+      onDismissed: (_) {
+        ref.read(cabinetProvider.notifier).deleteItem(item.id);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: CabinetItemTile(
+          item: item,
+          onDelete: () => _handleDelete(context, ref, item),
+        ),
+      ),
+    );
+  }
+
+  /// 전체 상호작용 확인 버튼 영역을 빌드한다.
+  ///
+  /// [SafeArea]로 감싸 하단 영역에 안전하게 배치된다.
+  Widget _buildCheckButton(
+    BuildContext context,
+    List<CabinetItem> items,
+  ) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: () => _checkAllInteractions(context, items),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
+            child: const Text(
+              '전체 상호작용 확인',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
           ),
-      ],
+        ),
+      ),
     );
   }
 

@@ -7,7 +7,7 @@ void main() {
       // 리마인더 ID=5, 요일=3 → 알림 ID=53
       const reminderId = 5;
       const dayOfWeek = 3;
-      final notificationId = reminderId * 10 + dayOfWeek;
+      const notificationId = reminderId * 10 + dayOfWeek;
       expect(notificationId, 53);
     });
 

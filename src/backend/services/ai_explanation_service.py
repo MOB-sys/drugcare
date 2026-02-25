@@ -102,24 +102,35 @@ async def _call_openai(interaction: InteractionResult) -> dict | None:
                 ],
             )
 
-        content = response.choices[0].message.content or ""
-
-        # "대처 방법:" 구분자로 분리
-        if "대처 방법:" in content:
-            parts = content.split("대처 방법:", 1)
-            explanation = parts[0].strip()
-            recommendation = parts[1].strip()
-        else:
-            explanation = content.strip()
-            recommendation = None
-
-        return {
-            "ai_explanation": explanation,
-            "ai_recommendation": recommendation,
-        }
+        return _parse_openai_response(response)
     except Exception:
         logger.warning("OpenAI 호출 실패", exc_info=True)
         return None
+
+
+def _parse_openai_response(response: object) -> dict:
+    """OpenAI 응답을 파싱하여 설명/대처 방법 dict를 반환한다.
+
+    Args:
+        response: OpenAI ChatCompletion 응답 객체.
+
+    Returns:
+        {"ai_explanation": str, "ai_recommendation": str | None}.
+    """
+    content = response.choices[0].message.content or ""
+
+    if "대처 방법:" in content:
+        parts = content.split("대처 방법:", 1)
+        explanation = parts[0].strip()
+        recommendation = parts[1].strip()
+    else:
+        explanation = content.strip()
+        recommendation = None
+
+    return {
+        "ai_explanation": explanation,
+        "ai_recommendation": recommendation,
+    }
 
 
 async def enhance_results(

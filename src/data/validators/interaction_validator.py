@@ -11,6 +11,9 @@ _VALID_ITEM_TYPES = {"drug", "supplement"}
 # 허용되는 데이터 출처
 _VALID_SOURCES = {"DUR", "DrugBank", "NaturalMedicines", "자체구축", "AI생성"}
 
+# 허용되는 근거 수준
+_VALID_EVIDENCE_LEVELS = {"official", "high", "medium", "low", "unknown"}
+
 # 필수 필드 목록
 _REQUIRED_FIELDS = (
     "item_a_type",
@@ -76,6 +79,14 @@ def validate_interaction(data: dict[str, Any]) -> tuple[bool, list[str]]:
         errors.append(
             f"source 유효하지 않은 값: '{source}' "
             f"(허용: {_VALID_SOURCES})"
+        )
+
+    # 4-1. evidence_level 유효값 검증
+    evidence_level = data.get("evidence_level")
+    if evidence_level is not None and evidence_level not in _VALID_EVIDENCE_LEVELS:
+        errors.append(
+            f"evidence_level 유효하지 않은 값: '{evidence_level}' "
+            f"(허용: {_VALID_EVIDENCE_LEVELS})"
         )
 
     # 5. 자기 참조 방지

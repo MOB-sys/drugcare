@@ -19,8 +19,6 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cabinetAsync = ref.watch(homeCabinetSummaryProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(AppConstants.appName),
@@ -33,13 +31,7 @@ class HomeScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // 앱 부제
-              const Text(
-                AppConstants.appTagline,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.textSecondary,
-                ),
-              ),
+              _buildTagline(),
               const SizedBox(height: 20),
 
               // 퀵 검색 바
@@ -47,20 +39,7 @@ class HomeScreen extends ConsumerWidget {
               const SizedBox(height: 20),
 
               // 복약함 요약 카드
-              cabinetAsync.when(
-                data: (items) => CabinetSummaryCard(
-                  itemCount: items.length,
-                  onTap: () => _navigateToCabinet(context),
-                ),
-                loading: () => CabinetSummaryCard(
-                  itemCount: 0,
-                  onTap: () => _navigateToCabinet(context),
-                ),
-                error: (_, __) => CabinetSummaryCard(
-                  itemCount: 0,
-                  onTap: () => _navigateToCabinet(context),
-                ),
-              ),
+              _buildCabinetSummary(ref, context),
               const SizedBox(height: 16),
 
               // 건강팁 카드
@@ -76,6 +55,40 @@ class HomeScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  /// 앱 부제(태그라인) 텍스트 위젯을 빌드한다.
+  Widget _buildTagline() {
+    return const Text(
+      AppConstants.appTagline,
+      style: TextStyle(
+        fontSize: 14,
+        color: AppColors.textSecondary,
+      ),
+    );
+  }
+
+  /// 복약함 요약 카드를 비동기 상태에 따라 빌드한다.
+  ///
+  /// [ref]를 통해 복약함 요약 프로바이더를 조회하고,
+  /// 로딩/에러/데이터 상태에 맞는 [CabinetSummaryCard]를 반환한다.
+  Widget _buildCabinetSummary(WidgetRef ref, BuildContext context) {
+    final cabinetAsync = ref.watch(homeCabinetSummaryProvider);
+
+    return cabinetAsync.when(
+      data: (items) => CabinetSummaryCard(
+        itemCount: items.length,
+        onTap: () => _navigateToCabinet(context),
+      ),
+      loading: () => CabinetSummaryCard(
+        itemCount: 0,
+        onTap: () => _navigateToCabinet(context),
+      ),
+      error: (_, __) => CabinetSummaryCard(
+        itemCount: 0,
+        onTap: () => _navigateToCabinet(context),
       ),
     );
   }

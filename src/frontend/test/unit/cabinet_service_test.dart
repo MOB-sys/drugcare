@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:yakmeogeo/core/constants/api_constants.dart';
-import 'package:yakmeogeo/core/utils/api_response_parser.dart';
 import 'package:yakmeogeo/features/cabinet/models/cabinet_item.dart';
 import 'package:yakmeogeo/shared/models/item_type.dart';
 import 'package:yakmeogeo/shared/services/cabinet_service.dart';
