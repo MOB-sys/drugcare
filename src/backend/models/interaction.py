@@ -75,6 +75,7 @@ class Interaction(Base, TimestampMixin):
     )
 
     def __repr__(self) -> str:
+        """상호작용 모델의 문자열 표현을 반환한다."""
         return (
             f"<Interaction(id={self.id}, "
             f"{self.item_a_name!r} x {self.item_b_name!r}, "

@@ -4,6 +4,7 @@ import 'app_colors.dart';
 
 /// 앱 테마 — Material 3 기반, 고대비 + 큰 터치 영역.
 class AppTheme {
+  /// 인스턴스 생성 방지용 private 생성자.
   AppTheme._();
 
   /// 라이트 테마.

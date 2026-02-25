@@ -6,12 +6,16 @@ import 'package:yakmeogeo/core/constants/ad_constants.dart';
 ///
 /// 전면 광고 프리로딩, 빈도 제한 표시, 자동 재프리로딩을 담당한다.
 class InterstitialAdManager {
+  /// 싱글톤 강제용 private 생성자.
   InterstitialAdManager._();
 
   /// 싱글톤 인스턴스.
   static final InterstitialAdManager instance = InterstitialAdManager._();
 
+  /// 현재 로드된 전면 광고 인스턴스.
   InterstitialAd? _interstitialAd;
+
+  /// 광고 로드 진행 중 여부.
   bool _isLoading = false;
 
   /// 마지막 광고 표시 시각 (밀리초).

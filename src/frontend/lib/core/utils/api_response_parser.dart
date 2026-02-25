@@ -1,5 +1,6 @@
 /// API 표준 응답 `{ success, data, error, meta }` 파싱 유틸.
 class ApiResponseParser {
+  /// 인스턴스 생성 방지용 private 생성자.
   ApiResponseParser._();
 
   /// API 응답 JSON에서 data 필드를 추출한다.

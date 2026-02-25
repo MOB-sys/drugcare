@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// 앱 색상 팔레트 — 신호등 시스템 + 브랜딩.
 class AppColors {
+  /// 인스턴스 생성 방지용 private 생성자.
   AppColors._();
 
   // ── 브랜드 색상 ──

@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yakmeogeo/core/providers/service_providers.dart';
 import 'package:yakmeogeo/core/theme/app_colors.dart';
 
-/// 피드백 카테고리 옵션.
+/// 피드백 카테고리 옵션 (코드, 라벨) 목록.
 const _categories = [
   ('bug', '버그 신고'),
   ('feature', '기능 제안'),
@@ -25,10 +25,18 @@ class FeedbackScreen extends ConsumerStatefulWidget {
   ConsumerState<FeedbackScreen> createState() => _FeedbackScreenState();
 }
 
+/// [FeedbackScreen]의 상태 관리 클래스.
 class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
+  /// 폼 글로벌 키.
   final _formKey = GlobalKey<FormState>();
+
+  /// 피드백 내용 텍스트 컨트롤러.
   final _contentController = TextEditingController();
+
+  /// 현재 선택된 카테고리 코드.
   String _selectedCategory = 'bug';
+
+  /// 제출 진행 중 여부.
   bool _isSubmitting = false;
 
   @override

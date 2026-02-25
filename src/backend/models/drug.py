@@ -58,4 +58,5 @@ class Drug(Base, TimestampMixin):
     )
 
     def __repr__(self) -> str:
+        """의약품 모델의 문자열 표현을 반환한다."""
         return f"<Drug(id={self.id}, item_seq={self.item_seq}, name={self.item_name!r})>"

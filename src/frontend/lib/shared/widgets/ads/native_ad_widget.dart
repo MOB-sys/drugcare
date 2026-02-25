@@ -15,8 +15,12 @@ class NativeAdWidget extends StatefulWidget {
   State<NativeAdWidget> createState() => _NativeAdWidgetState();
 }
 
+/// [NativeAdWidget]의 상태 관리 클래스.
 class _NativeAdWidgetState extends State<NativeAdWidget> {
+  /// 현재 로드된 네이티브 광고 인스턴스.
   NativeAd? _nativeAd;
+
+  /// 광고 로드 완료 여부.
   bool _isLoaded = false;
 
   @override

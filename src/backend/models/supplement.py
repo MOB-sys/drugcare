@@ -44,4 +44,5 @@ class Supplement(Base, TimestampMixin):
     )
 
     def __repr__(self) -> str:
+        """영양제 모델의 문자열 표현을 반환한다."""
         return f"<Supplement(id={self.id}, name={self.product_name!r})>"

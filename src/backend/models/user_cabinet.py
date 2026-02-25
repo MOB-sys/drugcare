@@ -41,4 +41,5 @@ class UserCabinet(Base, TimestampMixin):
     )
 
     def __repr__(self) -> str:
+        """복약함 아이템 모델의 문자열 표현을 반환한다."""
         return f"<UserCabinet(id={self.id}, device={self.device_id}, item={self.item_name!r})>"

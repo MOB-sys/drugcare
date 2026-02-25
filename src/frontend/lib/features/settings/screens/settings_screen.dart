@@ -133,8 +133,10 @@ class SettingsScreen extends StatelessWidget {
 
 /// 설정 섹션 헤더.
 class _SectionHeader extends StatelessWidget {
+  /// [_SectionHeader] 생성자.
   const _SectionHeader({required this.title});
 
+  /// 섹션 제목.
   final String title;
 
   @override
@@ -155,14 +157,20 @@ class _SectionHeader extends StatelessWidget {
 
 /// 설정 항목 타일.
 class _SettingsTile extends StatelessWidget {
+  /// [_SettingsTile] 생성자.
   const _SettingsTile({
     required this.icon,
     required this.title,
     required this.onTap,
   });
 
+  /// 타일 아이콘.
   final IconData icon;
+
+  /// 타일 제목.
   final String title;
+
+  /// 탭 콜백.
   final VoidCallback onTap;
 
   @override
@@ -187,9 +195,13 @@ class _SettingsTile extends StatelessWidget {
 
 /// 앱 정보 다이얼로그 내 정보 행.
 class _InfoRow extends StatelessWidget {
+  /// [_InfoRow] 생성자.
   const _InfoRow({required this.label, required this.value});
 
+  /// 라벨 텍스트.
   final String label;
+
+  /// 값 텍스트.
   final String value;
 
   @override

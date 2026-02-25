@@ -8,14 +8,17 @@ import 'package:yakmeogeo/features/reminder/models/reminder.dart';
 ///
 /// 리마인더 알림 스케줄링, 취소, 초기화를 담당한다.
 class NotificationService {
+  /// 싱글톤 강제용 private 생성자.
   NotificationService._();
 
   /// 싱글톤 인스턴스.
   static final NotificationService instance = NotificationService._();
 
+  /// Flutter 로컬 알림 플러그인 인스턴스.
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
 
+  /// 초기화 완료 여부.
   bool _initialized = false;
 
   /// 알림 플러그인을 초기화한다.

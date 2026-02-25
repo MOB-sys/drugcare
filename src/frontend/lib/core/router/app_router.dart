@@ -15,11 +15,19 @@ import 'package:yakmeogeo/features/settings/screens/feedback_screen.dart';
 import 'package:yakmeogeo/features/settings/screens/legal_screen.dart';
 import 'package:yakmeogeo/features/settings/screens/settings_screen.dart';
 
-/// 앱 네비게이션 키 (바텀 네비게이션 탭별).
+/// 루트 네비게이터 키.
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+/// 홈 탭 네비게이터 키.
 final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
+
+/// 복약함 탭 네비게이터 키.
 final _cabinetNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'cabinet');
+
+/// 리마인더 탭 네비게이터 키.
 final _reminderNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'reminder');
+
+/// 설정 탭 네비게이터 키.
 final _settingsNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'settings');
 

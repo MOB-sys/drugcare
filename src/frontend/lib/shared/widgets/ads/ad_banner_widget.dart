@@ -15,8 +15,12 @@ class AdBannerWidget extends StatefulWidget {
   State<AdBannerWidget> createState() => _AdBannerWidgetState();
 }
 
+/// [AdBannerWidget]의 상태 관리 클래스.
 class _AdBannerWidgetState extends State<AdBannerWidget> {
+  /// 현재 로드된 배너 광고 인스턴스.
   BannerAd? _bannerAd;
+
+  /// 광고 로드 완료 여부.
   bool _isLoaded = false;
 
   @override

@@ -20,7 +20,9 @@ class InteractionResultCard extends StatefulWidget {
   State<InteractionResultCard> createState() => _InteractionResultCardState();
 }
 
+/// [InteractionResultCard]의 상태 관리 클래스.
 class _InteractionResultCardState extends State<InteractionResultCard> {
+  /// 상세 정보 확장 여부.
   bool _isExpanded = false;
 
   @override
@@ -186,12 +188,16 @@ class _InteractionResultCardState extends State<InteractionResultCard> {
 
 /// 상세 정보 행 위젯.
 class _DetailRow extends StatelessWidget {
+  /// [_DetailRow] 생성자.
   const _DetailRow({
     required this.label,
     required this.value,
   });
 
+  /// 라벨 텍스트.
   final String label;
+
+  /// 값 텍스트.
   final String value;
 
   @override

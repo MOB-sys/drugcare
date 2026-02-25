@@ -65,7 +65,10 @@ class SearchNotifier extends StateNotifier<SearchState> {
   /// [SearchNotifier] 생성자.
   SearchNotifier(this._ref) : super(const SearchState());
 
+  /// Riverpod Ref 참조.
   final Ref _ref;
+
+  /// 검색어 디바운스 타이머.
   Timer? _debounceTimer;
 
   /// 검색어를 설정하고 디바운스 검색을 트리거한다.

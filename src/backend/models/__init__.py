@@ -1,3 +1,5 @@
+"""데이터베이스 모델 패키지 — 전체 ORM 모델 공개."""
+
 from src.backend.models.base import Base, TimestampMixin
 from src.backend.models.drug import Drug
 from src.backend.models.supplement import Supplement

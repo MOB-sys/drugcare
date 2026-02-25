@@ -36,13 +36,24 @@ class ReminderFormScreen extends ConsumerStatefulWidget {
       _ReminderFormScreenState();
 }
 
+/// [ReminderFormScreen]의 상태 관리 클래스.
 class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
+  /// 폼 글로벌 키.
   final _formKey = GlobalKey<FormState>();
 
+  /// 선택된 복약함 아이템 ID.
   int? _selectedCabinetItemId;
+
+  /// 선택된 알림 시간.
   TimeOfDay _selectedTime = const TimeOfDay(hour: 9, minute: 0);
+
+  /// 선택된 반복 요일 목록.
   final List<int> _selectedDays = [];
+
+  /// 메모 텍스트 컨트롤러.
   final _memoController = TextEditingController();
+
+  /// 저장 진행 중 여부.
   bool _isSaving = false;
 
   /// 수정 모드 여부.

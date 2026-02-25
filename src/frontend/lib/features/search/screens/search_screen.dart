@@ -21,8 +21,12 @@ class SearchScreen extends ConsumerStatefulWidget {
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
+/// [SearchScreen]의 상태 관리 클래스.
 class _SearchScreenState extends ConsumerState<SearchScreen> {
+  /// 검색 입력 텍스트 컨트롤러.
   final _searchController = TextEditingController();
+
+  /// 검색 입력 포커스 노드.
   final _focusNode = FocusNode();
 
   @override
@@ -210,14 +214,20 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
 /// 필터 칩 위젯.
 class _FilterChip extends StatelessWidget {
+  /// [_FilterChip] 생성자.
   const _FilterChip({
     required this.label,
     required this.isSelected,
     required this.onTap,
   });
 
+  /// 칩 라벨 텍스트.
   final String label;
+
+  /// 선택 상태 여부.
   final bool isSelected;
+
+  /// 탭 콜백.
   final VoidCallback onTap;
 
   @override

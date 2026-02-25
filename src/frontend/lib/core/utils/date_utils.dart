@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 
 /// 날짜/시간 포맷 유틸.
 class AppDateUtils {
+  /// 인스턴스 생성 방지용 private 생성자.
   AppDateUtils._();
 
   /// 한국어 요일 이름 (0=월, 1=화, ..., 6=일).

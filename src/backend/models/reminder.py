@@ -39,6 +39,7 @@ class Reminder(Base, TimestampMixin):
     )
 
     def __repr__(self) -> str:
+        """리마인더 모델의 문자열 표현을 반환한다."""
         return (
             f"<Reminder(id={self.id}, device={self.device_id}, "
             f"item={self.item_name!r}, time={self.reminder_time})>"

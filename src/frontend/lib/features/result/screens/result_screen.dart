@@ -29,6 +29,7 @@ class ResultScreen extends ConsumerStatefulWidget {
   ConsumerState<ResultScreen> createState() => _ResultScreenState();
 }
 
+/// [ResultScreen]의 상태 관리 클래스.
 class _ResultScreenState extends ConsumerState<ResultScreen> {
   @override
   void initState() {

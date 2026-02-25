@@ -1,5 +1,6 @@
 /// 앱 전역 상수 정의.
 class AppConstants {
+  /// 인스턴스 생성 방지용 private 생성자.
   AppConstants._();
 
   /// 앱 이름.

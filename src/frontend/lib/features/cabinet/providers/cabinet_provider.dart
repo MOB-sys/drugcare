@@ -28,6 +28,7 @@ class CabinetNotifier extends StateNotifier<CabinetState> {
     loadItems();
   }
 
+  /// Riverpod Ref 참조.
   final Ref _ref;
 
   /// 복약함 아이템 목록을 서버에서 가져온다.
