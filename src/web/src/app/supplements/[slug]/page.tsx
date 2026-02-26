@@ -4,6 +4,7 @@ import { getSupplementBySlug, getAllSupplementSlugs } from "@/lib/api/supplement
 import { InfoSection } from "@/components/detail/InfoSection";
 import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { CheckCTA } from "@/components/detail/CheckCTA";
+import { AddToCabinetButton } from "@/components/detail/AddToCabinetButton";
 import { AdBanner } from "@/components/ads/AdBanner";
 import type { IngredientInfo } from "@/types/drug";
 
@@ -122,6 +123,9 @@ export default async function SupplementDetailPage({ params }: PageProps) {
 
         {/* CTA */}
         <CheckCTA itemType="supplement" itemId={supp.id} itemName={supp.product_name} />
+        <div className="pb-4">
+          <AddToCabinetButton itemType="supplement" itemId={supp.id} itemName={supp.product_name} />
+        </div>
 
         {/* 광고 */}
         <AdBanner slot="supplement-detail-bottom" format="horizontal" />

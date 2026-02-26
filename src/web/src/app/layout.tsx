@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
 import { DisclaimerBanner } from "@/components/common/DisclaimerBanner";
+import { SmartAppBanner } from "@/components/common/SmartAppBanner";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_ID;
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
         <Header />
         <DisclaimerBanner />
+        <SmartAppBanner />
         <main className="flex-1">{children}</main>
         <Footer />
 

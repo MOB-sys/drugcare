@@ -1,27 +1,53 @@
 "use client";
 
+import { useState } from "react";
+import { addCabinetItem } from "@/lib/api/cabinet";
+import { ApiError } from "@/lib/api/client";
+
 interface SearchResultItemProps {
   name: string;
   sub: string | null;
   itemType: "drug" | "supplement";
+  itemId?: number;
   selected: boolean;
   disabled: boolean;
   onToggle: () => void;
+  showCabinetAdd?: boolean;
 }
 
 export function SearchResultItem({
   name,
   sub,
   itemType,
+  itemId,
   selected,
   disabled,
   onToggle,
+  showCabinetAdd = false,
 }: SearchResultItemProps) {
+  const [cabinetStatus, setCabinetStatus] = useState<"idle" | "added" | "duplicate">("idle");
+
+  async function handleCabinetAdd(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (!itemId || cabinetStatus !== "idle") return;
+    try {
+      await addCabinetItem({ item_type: itemType, item_id: itemId, nickname: name });
+      setCabinetStatus("added");
+    } catch (err) {
+      if (err instanceof ApiError && err.status === 409) {
+        setCabinetStatus("duplicate");
+      }
+    }
+  }
+
   return (
-    <button
+    <div
+      role="button"
+      tabIndex={0}
       onClick={onToggle}
-      disabled={disabled && !selected}
-      className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onToggle(); }}
+      aria-disabled={disabled && !selected}
+      className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors cursor-pointer ${
         selected
           ? "bg-teal-50 border-l-4 border-[var(--color-brand)]"
           : disabled
@@ -42,6 +68,22 @@ export function SearchResultItem({
         <p className="font-medium text-gray-900 truncate">{name}</p>
         {sub && <p className="text-sm text-gray-500 truncate">{sub}</p>}
       </div>
+      {showCabinetAdd && itemId && (
+        <button
+          onClick={handleCabinetAdd}
+          disabled={cabinetStatus !== "idle"}
+          className={`shrink-0 px-2 py-1 rounded text-xs font-medium transition-colors ${
+            cabinetStatus === "added"
+              ? "bg-green-100 text-green-600"
+              : cabinetStatus === "duplicate"
+                ? "bg-gray-100 text-gray-400"
+                : "bg-teal-50 text-[var(--color-brand)] hover:bg-teal-100"
+          }`}
+          aria-label={`${name} 복약함에 추가`}
+        >
+          {cabinetStatus === "added" ? "추가됨" : cabinetStatus === "duplicate" ? "추가됨" : "+복약함"}
+        </button>
+      )}
       {selected && (
         <svg className="w-5 h-5 text-[var(--color-brand)] shrink-0" fill="currentColor" viewBox="0 0 20 20">
           <path
@@ -51,6 +93,6 @@ export function SearchResultItem({
           />
         </svg>
       )}
-    </button>
+    </div>
   );
 }

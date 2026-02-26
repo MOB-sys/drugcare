@@ -50,4 +50,20 @@ describe("SearchResultItem", () => {
     fireEvent.click(screen.getByText("타이레놀"));
     expect(onToggle).toHaveBeenCalled();
   });
+
+  it("shows cabinet add button when showCabinetAdd is true", () => {
+    render(
+      <SearchResultItem
+        name="타이레놀"
+        sub={null}
+        itemType="drug"
+        itemId={10}
+        selected={false}
+        disabled={false}
+        onToggle={vi.fn()}
+        showCabinetAdd
+      />,
+    );
+    expect(screen.getAllByText("+복약함").length).toBeGreaterThanOrEqual(1);
+  });
 });

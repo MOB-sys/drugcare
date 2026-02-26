@@ -53,9 +53,11 @@ export function SearchResults({
           name={r.name}
           sub={r.sub}
           itemType={r.item_type}
+          itemId={r.item_id}
           selected={isSelected(r.item_id, r.item_type)}
           disabled={!canAddMore}
           onToggle={() => onToggle({ item_type: r.item_type, item_id: r.item_id, name: r.name })}
+          showCabinetAdd
         />
       ))}
     </div>

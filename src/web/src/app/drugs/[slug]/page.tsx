@@ -5,6 +5,7 @@ import { getDrugBySlug, getAllDrugSlugs } from "@/lib/api/drugs";
 import { InfoSection } from "@/components/detail/InfoSection";
 import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { CheckCTA } from "@/components/detail/CheckCTA";
+import { AddToCabinetButton } from "@/components/detail/AddToCabinetButton";
 import { AdBanner } from "@/components/ads/AdBanner";
 
 interface PageProps {
@@ -136,6 +137,9 @@ export default async function DrugDetailPage({ params }: PageProps) {
 
         {/* CTA */}
         <CheckCTA itemType="drug" itemId={drug.id} itemName={drug.item_name} />
+        <div className="pb-4">
+          <AddToCabinetButton itemType="drug" itemId={drug.id} itemName={drug.item_name} />
+        </div>
 
         {/* 광고 */}
         <AdBanner slot="drug-detail-bottom" format="horizontal" />
