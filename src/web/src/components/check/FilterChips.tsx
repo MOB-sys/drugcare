@@ -22,8 +22,8 @@ export function FilterChips({ current, onChange }: FilterChipsProps) {
           onClick={() => onChange(f.value)}
           className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
             current === f.value
-              ? "bg-[var(--color-brand)] text-white"
-              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              ? "bg-[var(--color-primary)] text-white shadow-sm"
+              : "bg-[var(--color-primary-50)] text-[var(--color-primary)] hover:bg-[var(--color-primary-100)]"
           }`}
         >
           {f.label}

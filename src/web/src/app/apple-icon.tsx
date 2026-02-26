@@ -13,14 +13,14 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#00bfa5",
+          backgroundColor: "#1B3A5C",
           borderRadius: "36px",
           color: "white",
-          fontSize: "100px",
+          fontSize: "90px",
           fontWeight: 700,
         }}
       >
-        약
+        M
       </div>
     ),
     { ...size },

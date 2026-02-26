@@ -1,4 +1,4 @@
-/** 약먹어 API 클라이언트 — 서버/클라이언트 양쪽 사용 가능. */
+/** MediCheck API 클라이언트 — 서버/클라이언트 양쪽 사용 가능. */
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";

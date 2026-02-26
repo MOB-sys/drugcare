@@ -12,9 +12,9 @@ export function SelectedItemsBar({ items, onRemove, onClearAll }: SelectedItemsB
   if (items.length === 0) return null;
 
   return (
-    <div className="bg-gray-50 rounded-lg p-3">
+    <div className="bg-[var(--color-primary-50)] rounded-xl p-3">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-gray-700">
+        <span className="text-sm font-medium text-[var(--color-primary)]">
           선택된 항목 ({items.length}개)
         </span>
         <button
@@ -28,11 +28,11 @@ export function SelectedItemsBar({ items, onRemove, onClearAll }: SelectedItemsB
         {items.map((item) => (
           <span
             key={`${item.item_type}-${item.item_id}`}
-            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-white border border-gray-200"
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-white border border-[var(--color-primary-100)] shadow-sm"
           >
             <span
               className={`w-1.5 h-1.5 rounded-full ${
-                item.item_type === "drug" ? "bg-blue-500" : "bg-green-500"
+                item.item_type === "drug" ? "bg-blue-500" : "bg-emerald-500"
               }`}
             />
             <span className="truncate max-w-[120px]">{item.name}</span>

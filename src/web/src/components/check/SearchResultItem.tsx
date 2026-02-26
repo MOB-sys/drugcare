@@ -49,17 +49,17 @@ export function SearchResultItem({
       aria-disabled={disabled && !selected}
       className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors cursor-pointer ${
         selected
-          ? "bg-teal-50 border-l-4 border-[var(--color-brand)]"
+          ? "bg-[var(--color-primary-50)] border-l-4 border-[var(--color-primary)]"
           : disabled
             ? "opacity-50 cursor-not-allowed"
             : "hover:bg-gray-50"
       }`}
     >
       <span
-        className={`shrink-0 px-2 py-0.5 rounded text-xs font-medium ${
+        className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-medium ${
           itemType === "drug"
-            ? "bg-blue-100 text-blue-700"
-            : "bg-green-100 text-green-700"
+            ? "bg-blue-50 text-blue-700"
+            : "bg-emerald-50 text-emerald-700"
         }`}
       >
         {itemType === "drug" ? "약물" : "영양제"}
@@ -72,12 +72,12 @@ export function SearchResultItem({
         <button
           onClick={handleCabinetAdd}
           disabled={cabinetStatus !== "idle"}
-          className={`shrink-0 px-2 py-1 rounded text-xs font-medium transition-colors ${
+          className={`shrink-0 px-2 py-1 rounded-lg text-xs font-medium transition-colors ${
             cabinetStatus === "added"
-              ? "bg-green-100 text-green-600"
+              ? "bg-emerald-50 text-emerald-600"
               : cabinetStatus === "duplicate"
                 ? "bg-gray-100 text-gray-400"
-                : "bg-teal-50 text-[var(--color-brand)] hover:bg-teal-100"
+                : "bg-[var(--color-primary-50)] text-[var(--color-primary)] hover:bg-[var(--color-primary-100)]"
           }`}
           aria-label={`${name} 복약함에 추가`}
         >
@@ -85,7 +85,7 @@ export function SearchResultItem({
         </button>
       )}
       {selected && (
-        <svg className="w-5 h-5 text-[var(--color-brand)] shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <svg className="w-5 h-5 text-[var(--color-primary)] shrink-0" fill="currentColor" viewBox="0 0 20 20">
           <path
             fillRule="evenodd"
             d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"

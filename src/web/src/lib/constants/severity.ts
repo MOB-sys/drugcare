@@ -3,27 +3,31 @@
 export const SEVERITY_CONFIG = {
   danger: {
     label: "위험",
-    className: "bg-red-100 text-red-800 border-red-300",
-    cardClassName: "border-red-300 bg-red-50",
+    className: "bg-red-50 text-red-700 border-red-200",
+    cardClassName: "border-red-200 bg-red-50/50",
     iconColor: "text-red-600",
+    dotColor: "bg-red-500",
   },
   warning: {
     label: "경고",
-    className: "bg-orange-100 text-orange-800 border-orange-300",
-    cardClassName: "border-orange-300 bg-orange-50",
+    className: "bg-orange-50 text-orange-700 border-orange-200",
+    cardClassName: "border-orange-200 bg-orange-50/50",
     iconColor: "text-orange-600",
+    dotColor: "bg-orange-500",
   },
   caution: {
     label: "주의",
-    className: "bg-yellow-100 text-yellow-800 border-yellow-300",
-    cardClassName: "border-yellow-300 bg-yellow-50",
-    iconColor: "text-yellow-600",
+    className: "bg-amber-50 text-amber-700 border-amber-200",
+    cardClassName: "border-amber-200 bg-amber-50/50",
+    iconColor: "text-amber-600",
+    dotColor: "bg-amber-500",
   },
   info: {
     label: "참고",
-    className: "bg-blue-100 text-blue-800 border-blue-300",
-    cardClassName: "border-blue-300 bg-blue-50",
+    className: "bg-blue-50 text-blue-700 border-blue-200",
+    cardClassName: "border-blue-200 bg-blue-50/50",
     iconColor: "text-blue-600",
+    dotColor: "bg-blue-500",
   },
 } as const;
 

@@ -13,14 +13,14 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#00bfa5",
+          backgroundColor: "#1B3A5C",
           borderRadius: "6px",
           color: "white",
-          fontSize: "20px",
+          fontSize: "18px",
           fontWeight: 700,
         }}
       >
-        약
+        M
       </div>
     ),
     { ...size },

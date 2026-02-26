@@ -23,7 +23,7 @@ export function SearchResults({
   if (isLoading) {
     return (
       <div className="py-12 text-center text-gray-400">
-        <div className="inline-block w-6 h-6 border-2 border-gray-300 border-t-[var(--color-brand)] rounded-full animate-spin" />
+        <div className="inline-block w-6 h-6 border-2 border-[var(--color-primary-100)] border-t-[var(--color-primary)] rounded-full animate-spin" />
         <p className="mt-2 text-sm">검색 중...</p>
       </div>
     );
@@ -46,7 +46,7 @@ export function SearchResults({
   }
 
   return (
-    <div className="divide-y divide-gray-100 max-h-80 overflow-y-auto">
+    <div className="divide-y divide-gray-100 max-h-80 overflow-y-auto scrollbar-thin">
       {results.map((r) => (
         <SearchResultItem
           key={`${r.item_type}-${r.item_id}`}

@@ -10,8 +10,8 @@ export function InfoSection({ title, content }: InfoSectionProps) {
 
   return (
     <section className="py-4 border-b border-gray-100 last:border-b-0">
-      <h2 className="text-lg font-semibold text-gray-900 mb-2">{title}</h2>
-      <p className="text-gray-700 leading-relaxed whitespace-pre-line">{content}</p>
+      <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-2">{title}</h2>
+      <p className="text-gray-700 leading-relaxed whitespace-pre-line break-keep">{content}</p>
     </section>
   );
 }

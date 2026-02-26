@@ -3,18 +3,19 @@ import { type NextRequest } from "next/server";
 
 export const runtime = "edge";
 
-const BRAND_COLOR = "#00bfa5";
-const DRUG_BG = "#e0f7fa";
-const SUPPLEMENT_BG = "#e8f5e9";
+const PRIMARY_COLOR = "#1B3A5C";
+const PRIMARY_DARK = "#132B45";
+const DRUG_BG = "#EEF2F7";
+const SUPPLEMENT_BG = "#ECFDF5";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
-  const title = searchParams.get("title") || "약먹어";
+  const title = searchParams.get("title") || "MediCheck";
   const description = searchParams.get("description") || "";
   const type = searchParams.get("type") || "drug";
 
   const bgColor = type === "supplement" ? SUPPLEMENT_BG : DRUG_BG;
-  const typeLabel = type === "supplement" ? "건강기능식품" : "의약품";
+  const typeLabel = type === "supplement" ? "건강기능식품" : type === "tip" ? "건강팁" : "의약품";
 
   return new ImageResponse(
     (
@@ -44,7 +45,7 @@ export async function GET(request: NextRequest) {
               width: "48px",
               height: "48px",
               borderRadius: "12px",
-              backgroundColor: BRAND_COLOR,
+              backgroundColor: PRIMARY_COLOR,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -53,16 +54,16 @@ export async function GET(request: NextRequest) {
               fontWeight: 700,
             }}
           >
-            약
+            M
           </div>
           <span
             style={{
               fontSize: "28px",
               fontWeight: 700,
-              color: BRAND_COLOR,
+              color: PRIMARY_COLOR,
             }}
           >
-            약먹어
+            MediCheck
           </span>
         </div>
 
@@ -72,7 +73,7 @@ export async function GET(request: NextRequest) {
             display: "flex",
             padding: "6px 16px",
             borderRadius: "20px",
-            backgroundColor: BRAND_COLOR,
+            backgroundColor: PRIMARY_COLOR,
             color: "white",
             fontSize: "18px",
             fontWeight: 600,
@@ -87,7 +88,7 @@ export async function GET(request: NextRequest) {
           style={{
             fontSize: "44px",
             fontWeight: 700,
-            color: "#1a1a1a",
+            color: PRIMARY_DARK,
             textAlign: "center",
             lineHeight: 1.3,
             maxWidth: "900px",
@@ -128,7 +129,7 @@ export async function GET(request: NextRequest) {
             color: "#999",
           }}
         >
-          yakmeogeo.com
+          medicheck.kr
         </div>
       </div>
     ),

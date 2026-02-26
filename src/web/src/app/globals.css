@@ -11,13 +11,32 @@
 }
 
 :root {
-  --color-brand: #00bfa5;
-  --color-brand-dark: #00a08a;
-  --color-danger: #e53e3e;
-  --color-warning: #ed8936;
-  --color-safe: #38a169;
-  --color-caution: #fcd34d;
-  --color-info: #60a5fa;
+  /* ── Primary (Deep Navy) ─────────────────── */
+  --color-primary: #1B3A5C;
+  --color-primary-dark: #132B45;
+  --color-primary-50: #EEF2F7;
+  --color-primary-100: #D4DDE9;
+
+  /* ── Accent (Teal) ───────────────────────── */
+  --color-accent: #0D9488;
+
+  /* ── Background ──────────────────────────── */
+  --color-bg: #F8FAFC;
+
+  /* ── Severity (refined tones) ────────────── */
+  --color-danger: #DC2626;
+  --color-warning: #EA580C;
+  --color-safe: #16A34A;
+  --color-caution: #CA8A04;
+  --color-info: #2563EB;
+
+  /* ── Shadows ─────────────────────────────── */
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06);
+  --shadow-card-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+
+  /* ── Legacy aliases (backward compat) ──── */
+  --color-brand: var(--color-primary);
+  --color-brand-dark: var(--color-primary-dark);
 }
 
 body {
@@ -37,4 +56,35 @@ body {
     "Segoe UI Emoji",
     "Segoe UI Symbol",
     sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Korean typography helpers ───────────── */
+.break-keep {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* ── Custom scrollbar (results panels) ───── */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-100) transparent;
+}
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: var(--color-primary-100);
+  border-radius: 3px;
+}
+
+/* ── Ad banner minimal styling ───────────── */
+.ad-banner {
+  min-height: 50px;
+  border-radius: 12px;
+  overflow: hidden;
 }

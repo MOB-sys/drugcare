@@ -11,12 +11,12 @@ export function CabinetItemCard({ item, onDelete }: CabinetItemCardProps) {
   const dateStr = new Date(item.created_at).toLocaleDateString("ko-KR");
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-white rounded-lg border border-gray-200">
+    <div className="flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
       <span
-        className={`shrink-0 px-2 py-0.5 rounded text-xs font-medium ${
+        className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-medium ${
           item.item_type === "drug"
-            ? "bg-blue-100 text-blue-700"
-            : "bg-green-100 text-green-700"
+            ? "bg-blue-50 text-blue-700"
+            : "bg-emerald-50 text-emerald-700"
         }`}
       >
         {item.item_type === "drug" ? "의약품" : "영양제"}
@@ -29,7 +29,7 @@ export function CabinetItemCard({ item, onDelete }: CabinetItemCardProps) {
       </div>
       <button
         onClick={() => onDelete(item.id)}
-        className="shrink-0 p-1.5 rounded-md text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+        className="shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
         aria-label={`${item.nickname || item.item_name} 삭제`}
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

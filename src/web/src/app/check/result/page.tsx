@@ -37,7 +37,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 
   return {
     title,
-    description: `${nameList.join(", ")} 복약 상호작용 체크 결과 — 약먹어에서 확인하세요.`,
+    description: `${nameList.join(", ")} 복약 상호작용 체크 결과 — MediCheck에서 확인하세요.`,
     openGraph: { title, type: "article" },
   };
 }
@@ -53,7 +53,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
         <p className="text-gray-500 mb-4">확인할 항목이 부족합니다. 2개 이상 선택해주세요.</p>
         <Link
           href="/check"
-          className="inline-block px-6 py-2 rounded-lg text-white font-semibold bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)]"
+          className="inline-block px-6 py-2 rounded-xl text-white font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]"
         >
           다시 선택하기
         </Link>
@@ -76,7 +76,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
         <p className="text-red-600 mb-4">{error}</p>
         <Link
           href="/check"
-          className="inline-block px-6 py-2 rounded-lg text-white font-semibold bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)]"
+          className="inline-block px-6 py-2 rounded-xl text-white font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]"
         >
           다시 시도하기
         </Link>
@@ -86,7 +86,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
 
   return (
     <section className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">상호작용 체크 결과</h1>
+      <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-6">상호작용 체크 결과</h1>
 
       <div className="space-y-4">
         <ResultSummaryCard data={data} />
@@ -100,9 +100,16 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
           </div>
         )}
 
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-700">
-          <p className="font-medium mb-1">면책조항</p>
-          <p>{data.disclaimer || "이 정보는 참고용이며, 의사/약사의 전문적 판단을 대체하지 않습니다. 반드시 전문가와 상담하세요."}</p>
+        <div className="bg-[var(--color-primary-50)] border border-[var(--color-primary-100)] rounded-xl p-4 text-sm text-[var(--color-primary)]">
+          <div className="flex gap-2">
+            <svg className="w-4 h-4 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <p className="font-medium mb-1">면책조항</p>
+              <p className="text-[var(--color-primary)]/80">{data.disclaimer || "이 정보는 참고용이며, 의사/약사의 전문적 판단을 대체하지 않습니다. 반드시 전문가와 상담하세요."}</p>
+            </div>
+          </div>
         </div>
 
         {/* 광고 */}
@@ -111,7 +118,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
         <div className="flex gap-3">
           <Link
             href="/check"
-            className="flex-1 py-3 rounded-lg text-center font-semibold border border-gray-300 text-gray-700 hover:bg-gray-50"
+            className="flex-1 py-3 rounded-xl text-center font-semibold border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
           >
             다시 체크하기
           </Link>

@@ -47,12 +47,12 @@ export function AddToCabinetButton({
     <button
       onClick={handleClick}
       disabled={isDisabled}
-      className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+      className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
         status === "added"
-          ? "bg-green-50 text-green-700 border border-green-200"
+          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
           : status === "duplicate"
             ? "bg-gray-100 text-gray-500 border border-gray-200"
-            : "bg-white text-[var(--color-brand)] border border-[var(--color-brand)] hover:bg-teal-50"
+            : "bg-white text-[var(--color-primary)] border border-[var(--color-primary)] hover:bg-[var(--color-primary-50)] active:scale-[0.98]"
       }`}
     >
       {status === "added" ? (

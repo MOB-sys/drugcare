@@ -15,7 +15,7 @@ export default function CabinetPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">내 복약함</h1>
+      <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-6">내 복약함</h1>
 
       {isLoading && (
         <div className="text-center py-16 text-gray-400">불러오는 중...</div>
@@ -47,7 +47,7 @@ export default function CabinetPage() {
           {items.length >= 2 && (
             <Link
               href={`/check?preselect=${checkParams}`}
-              className="block w-full py-3 rounded-lg text-center text-white font-semibold bg-[var(--color-brand)] hover:bg-[var(--color-brand-dark)] transition-colors"
+              className="block w-full py-3 rounded-xl text-center text-white font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] shadow-md transition-all"
             >
               전체 상호작용 확인하기 ({items.length}개)
             </Link>
@@ -58,12 +58,12 @@ export default function CabinetPage() {
       <AdBanner slot="cabinet-bottom" format="horizontal" className="mt-8" />
 
       {/* 앱 유도 */}
-      <div className="mt-8 p-4 rounded-lg bg-teal-50 border border-teal-200 text-center">
-        <p className="text-sm font-medium text-teal-800 mb-1">
+      <div className="mt-8 p-4 rounded-xl bg-[var(--color-primary-50)] border border-[var(--color-primary-100)] text-center">
+        <p className="text-sm font-medium text-[var(--color-primary)] mb-1">
           매일 복약 리마인더가 필요하다면?
         </p>
-        <p className="text-xs text-teal-600">
-          약먹어 앱에서 푸시 알림으로 복용 시간을 놓치지 마세요.
+        <p className="text-xs text-gray-500">
+          MediCheck 앱에서 푸시 알림으로 복용 시간을 놓치지 마세요.
         </p>
       </div>
 

@@ -100,27 +100,27 @@ export default async function DrugDetailPage({ params }: PageProps) {
               height={128}
               priority
               sizes="128px"
-              className="rounded-lg object-contain bg-white border border-gray-200 shrink-0"
+              className="rounded-xl object-contain bg-white border border-gray-200 shadow-sm shrink-0"
             />
           )}
           <div className="min-w-0">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2 break-keep">{drug.item_name}</h1>
+            <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2 break-keep">{drug.item_name}</h1>
             <div className="flex flex-wrap gap-2 text-sm">
               {drug.entp_name && (
-                <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-600">{drug.entp_name}</span>
+                <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-600">{drug.entp_name}</span>
               )}
               {otcLabel && (
-                <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700">{otcLabel}</span>
+                <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700">{otcLabel}</span>
               )}
               {drug.class_no && (
-                <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-500">분류 {drug.class_no}</span>
+                <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-500">분류 {drug.class_no}</span>
               )}
             </div>
           </div>
         </div>
 
         {/* 정보 섹션 */}
-        <div className="bg-white rounded-xl border border-gray-200 px-6 divide-y divide-gray-100">
+        <div className="bg-white rounded-xl border border-gray-200 px-6 divide-y divide-gray-100 shadow-sm">
           <InfoSection title="효능·효과" content={drug.efcy_qesitm} />
           <InfoSection title="용법·용량" content={drug.use_method_qesitm} />
 

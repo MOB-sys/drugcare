@@ -1,13 +1,17 @@
 import { render, screen, cleanup } from "@testing-library/react";
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, vi } from "vitest";
 import { Header } from "./Header";
 
 afterEach(cleanup);
 
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/",
+}));
+
 describe("Header", () => {
   it("renders the brand name", () => {
     render(<Header />);
-    expect(screen.getAllByText("약먹어").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("MediCheck").length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders navigation links", () => {

@@ -96,22 +96,22 @@ export default async function SupplementDetailPage({ params }: PageProps) {
       <article className="max-w-3xl mx-auto px-4 py-8">
         {/* 헤더 */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2 break-keep">{supp.product_name}</h1>
+          <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2 break-keep">{supp.product_name}</h1>
           <div className="flex flex-wrap gap-2 text-sm">
             {supp.company && (
-              <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-600">{supp.company}</span>
+              <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-600">{supp.company}</span>
             )}
             {supp.category && (
-              <span className="px-2 py-0.5 rounded bg-green-50 text-green-700">{supp.category}</span>
+              <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700">{supp.category}</span>
             )}
             {supp.registration_no && (
-              <span className="px-2 py-0.5 rounded bg-gray-100 text-gray-500">{supp.registration_no}</span>
+              <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-500">{supp.registration_no}</span>
             )}
           </div>
         </div>
 
         {/* 정보 섹션 */}
-        <div className="bg-white rounded-xl border border-gray-200 px-6 divide-y divide-gray-100">
+        <div className="bg-white rounded-xl border border-gray-200 px-6 divide-y divide-gray-100 shadow-sm">
           <InfoSection title="기능성" content={supp.functionality} />
           <InfoSection title="주성분" content={supp.main_ingredient} />
 
