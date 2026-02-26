@@ -8,12 +8,14 @@ export interface InteractionCheckItem {
 export interface InteractionResult {
   item_a_name: string;
   item_b_name: string;
-  severity: "safe" | "caution" | "warning" | "danger";
-  description: string;
+  severity: "danger" | "warning" | "caution" | "info";
+  description: string | null;
   mechanism: string | null;
   recommendation: string | null;
   source: string;
   evidence_level: string | null;
+  ai_explanation: string | null;
+  ai_recommendation: string | null;
 }
 
 export interface InteractionCheckResponse {
