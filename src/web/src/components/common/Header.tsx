@@ -11,6 +11,9 @@ export function Header() {
           <Link href="/check" className="hover:text-[var(--color-brand)]">
             상호작용 체크
           </Link>
+          <Link href="/tips" className="hover:text-[var(--color-brand)]">
+            건강팁
+          </Link>
           <Link href="/cabinet" className="hover:text-[var(--color-brand)]">
             내 복약함
           </Link>

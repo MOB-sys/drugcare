@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getAllDrugSlugs } from "@/lib/api/drugs";
 import { getAllSupplementSlugs } from "@/lib/api/supplements";
+import { getAllTipSlugs } from "@/lib/data/tips";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com";
 
@@ -35,5 +36,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     /* 빌드 시 API 미연결이면 빈 배열 */
   }
 
-  return [...staticPages, ...drugEntries, ...suppEntries];
+  const tipEntries: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/tips`, changeFrequency: "weekly" as const, priority: 0.8 },
+    ...getAllTipSlugs().map((slug) => ({
+      url: `${BASE_URL}/tips/${slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  ];
+
+  return [...staticPages, ...tipEntries, ...drugEntries, ...suppEntries];
 }

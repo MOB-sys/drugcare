@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getDrugBySlug, getAllDrugSlugs } from "@/lib/api/drugs";
 import { InfoSection } from "@/components/detail/InfoSection";
 import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { CheckCTA } from "@/components/detail/CheckCTA";
+import { AdBanner } from "@/components/ads/AdBanner";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -28,10 +30,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description = drug.efcy_qesitm
       ? `${drug.item_name} — ${drug.efcy_qesitm.slice(0, 120)}`
       : `${drug.item_name} 의약품 상세 정보를 확인하세요.`;
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com";
     return {
       title,
       description,
-      openGraph: { title, description, type: "article" },
+      openGraph: {
+        title,
+        description,
+        type: "article",
+        images: [
+          {
+            url: `${siteUrl}/api/og?title=${encodeURIComponent(drug.item_name)}&type=drug`,
+            width: 1200,
+            height: 630,
+            alt: title,
+          },
+        ],
+      },
     };
   } catch {
     return { title: "약물 정보" };
@@ -77,10 +92,14 @@ export default async function DrugDetailPage({ params }: PageProps) {
         {/* 헤더 */}
         <div className="flex gap-6 mb-8">
           {drug.item_image && (
-            <img
+            <Image
               src={drug.item_image}
               alt={drug.item_name}
-              className="w-32 h-32 rounded-lg object-contain bg-white border border-gray-200 shrink-0"
+              width={128}
+              height={128}
+              priority
+              sizes="128px"
+              className="rounded-lg object-contain bg-white border border-gray-200 shrink-0"
             />
           )}
           <div className="min-w-0">
@@ -117,6 +136,9 @@ export default async function DrugDetailPage({ params }: PageProps) {
 
         {/* CTA */}
         <CheckCTA itemType="drug" itemId={drug.id} itemName={drug.item_name} />
+
+        {/* 광고 */}
+        <AdBanner slot="drug-detail-bottom" format="horizontal" />
 
         {/* 면책조항 */}
         <p className="text-xs text-gray-400 text-center mt-4">

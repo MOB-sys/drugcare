@@ -4,6 +4,7 @@ import { getSupplementBySlug, getAllSupplementSlugs } from "@/lib/api/supplement
 import { InfoSection } from "@/components/detail/InfoSection";
 import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { CheckCTA } from "@/components/detail/CheckCTA";
+import { AdBanner } from "@/components/ads/AdBanner";
 import type { IngredientInfo } from "@/types/drug";
 
 interface PageProps {
@@ -29,10 +30,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description = supp.functionality
       ? `${supp.product_name} — ${supp.functionality.slice(0, 120)}`
       : `${supp.product_name} 건강기능식품 상세 정보를 확인하세요.`;
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com";
     return {
       title,
       description,
-      openGraph: { title, description, type: "article" },
+      openGraph: {
+        title,
+        description,
+        type: "article",
+        images: [
+          {
+            url: `${siteUrl}/api/og?title=${encodeURIComponent(supp.product_name)}&type=supplement`,
+            width: 1200,
+            height: 630,
+            alt: title,
+          },
+        ],
+      },
     };
   } catch {
     return { title: "영양제 정보" };
@@ -108,6 +122,9 @@ export default async function SupplementDetailPage({ params }: PageProps) {
 
         {/* CTA */}
         <CheckCTA itemType="supplement" itemId={supp.id} itemName={supp.product_name} />
+
+        {/* 광고 */}
+        <AdBanner slot="supplement-detail-bottom" format="horizontal" />
 
         {/* 면책조항 */}
         <p className="text-xs text-gray-400 text-center mt-4">

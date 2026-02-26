@@ -3,6 +3,7 @@ import Link from "next/link";
 import { checkInteractions } from "@/lib/api/interactions";
 import { ResultSummaryCard } from "@/components/result/ResultSummaryCard";
 import { InteractionCard } from "@/components/result/InteractionCard";
+import { AdBanner } from "@/components/ads/AdBanner";
 import type { InteractionCheckItem } from "@/types/interaction";
 
 interface PageProps {
@@ -103,6 +104,9 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
           <p className="font-medium mb-1">면책조항</p>
           <p>{data.disclaimer || "이 정보는 참고용이며, 의사/약사의 전문적 판단을 대체하지 않습니다. 반드시 전문가와 상담하세요."}</p>
         </div>
+
+        {/* 광고 */}
+        <AdBanner slot="check-result-bottom" format="auto" />
 
         <div className="flex gap-3">
           <Link
