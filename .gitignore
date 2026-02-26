@@ -12,6 +12,20 @@ venv/
 build/
 *.iml
 
+# Flutter platform build artifacts
+android/local.properties
+android/.gradle/
+android/app/build/
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+
+# Keystore & signing
+*.jks
+*.keystore
+key.properties
+
 # Environment
 .env
 .env.local
@@ -43,3 +57,7 @@ htmlcov/
 *.pem
 *.key
 yakmeogeo.egg-info/
+
+# Next.js
+.next/
+out/

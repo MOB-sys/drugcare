@@ -2,8 +2,11 @@
 class ApiConstants {
   ApiConstants._();
 
-  /// 백엔드 기본 URL (개발 환경).
-  static const String baseUrl = 'http://localhost:8000';
+  /// 백엔드 기본 URL (빌드 시 --dart-define=API_BASE_URL 로 오버라이드).
+  static const String baseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://localhost:8000',
+  );
 
   /// API 버전 접두사.
   static const String apiPrefix = '/api/v1';
