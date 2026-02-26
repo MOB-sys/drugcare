@@ -17,6 +17,7 @@ class DrugSearchItem(BaseModel):
     id: int
     item_seq: str
     item_name: str
+    slug: str
     entp_name: str | None = None
     etc_otc_code: str | None = None
     class_no: str | None = None
@@ -31,6 +32,7 @@ class DrugDetail(BaseModel):
     id: int
     item_seq: str
     item_name: str
+    slug: str
     entp_name: str | None = None
     etc_otc_code: str | None = None
     class_no: str | None = None

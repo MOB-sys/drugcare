@@ -75,16 +75,28 @@ async def test_record_event_missing_type(client, auth_headers):
 
 
 @pytest.mark.asyncio
-async def test_record_event_no_device_id(client):
-    """X-Device-ID 헤더 없으면 401 반환."""
-    resp = await client.post(
-        "/api/v1/metrics/event",
-        json={
-            "event_type": "app_open",
-        },
-    )
+async def test_record_event_no_device_id_creates_web_session(client):
+    """X-Device-ID 헤더 없으면 웹 세션 생성 후 처리."""
+    mock_result = {
+        "id": 1,
+        "event_type": "app_open",
+        "created_at": "2026-02-24T09:00:00+00:00",
+    }
+    with patch(
+        "src.backend.routers.metrics.metrics_service.record_event",
+        new_callable=AsyncMock,
+        return_value=mock_result,
+    ):
+        resp = await client.post(
+            "/api/v1/metrics/event",
+            json={
+                "event_type": "app_open",
+            },
+        )
 
-    assert resp.status_code == 401
+    assert resp.status_code == 200
+    set_cookie = resp.headers.get("set-cookie", "")
+    assert "session_id=" in set_cookie
 
 
 @pytest.mark.asyncio

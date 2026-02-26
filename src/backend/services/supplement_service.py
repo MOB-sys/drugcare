@@ -11,6 +11,10 @@ from src.backend.schemas.supplement import SupplementDetail, SupplementSearchIte
 from src.backend.utils.cache import cache_get, cache_set, hash_query, make_cache_key
 from src.backend.core.redis import CACHE_TTL_SUPPLEMENT_DETAIL, CACHE_TTL_SUPPLEMENT_SEARCH
 
+# slug/count 캐시 TTL (초)
+CACHE_TTL_SUPPLEMENT_SLUGS = 60 * 60 * 24   # 24시간
+CACHE_TTL_SUPPLEMENT_COUNT = 60 * 60 * 24   # 24시간
+
 
 async def search_supplements(
     db: AsyncSession,
@@ -103,3 +107,87 @@ async def get_supplement_detail(
     result = SupplementDetail.model_validate(supplement).model_dump()
     await cache_set(redis, cache_key, result, CACHE_TTL_SUPPLEMENT_DETAIL)
     return result
+
+
+async def get_supplement_by_slug(
+    db: AsyncSession,
+    redis: Redis,
+    slug: str,
+) -> dict | None:
+    """slug로 영양제 상세 정보를 조회한다.
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+        slug: 영양제 slug (예: supp-1).
+
+    Returns:
+        SupplementDetail 구조의 dict 또는 None.
+    """
+    cache_key = make_cache_key("supplement", "by-slug", slug)
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    stmt = select(Supplement).where(Supplement.slug == slug)
+    row = await db.execute(stmt)
+    supplement = row.scalar_one_or_none()
+
+    if supplement is None:
+        return None
+
+    result = SupplementDetail.model_validate(supplement).model_dump()
+    await cache_set(redis, cache_key, result, CACHE_TTL_SUPPLEMENT_DETAIL)
+    return result
+
+
+async def get_all_supplement_slugs(
+    db: AsyncSession,
+    redis: Redis,
+) -> list[str]:
+    """모든 영양제 slug 목록을 반환한다 (SSG generateStaticParams용).
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+
+    Returns:
+        slug 문자열 리스트.
+    """
+    cache_key = make_cache_key("supplement", "slugs", "all")
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    stmt = select(Supplement.slug)
+    rows = await db.execute(stmt)
+    slugs = [row[0] for row in rows.all()]
+
+    await cache_set(redis, cache_key, slugs, CACHE_TTL_SUPPLEMENT_SLUGS)
+    return slugs
+
+
+async def count_supplements(
+    db: AsyncSession,
+    redis: Redis,
+) -> int:
+    """전체 영양제 건수를 반환한다.
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+
+    Returns:
+        영양제 총 건수.
+    """
+    cache_key = make_cache_key("supplement", "count")
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    stmt = select(func.count()).select_from(Supplement)
+    result = await db.execute(stmt)
+    count = result.scalar_one()
+
+    await cache_set(redis, cache_key, count, CACHE_TTL_SUPPLEMENT_COUNT)
+    return count

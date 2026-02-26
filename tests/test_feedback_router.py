@@ -122,14 +122,28 @@ async def test_submit_feedback_missing_category(client, auth_headers):
 
 
 @pytest.mark.asyncio
-async def test_submit_feedback_no_device_id(client):
-    """X-Device-ID 헤더 없으면 401 반환."""
-    resp = await client.post(
-        "/api/v1/feedback",
-        json={
-            "category": "bug",
-            "content": "디바이스 ID 없는 요청입니다.",
-        },
-    )
+async def test_submit_feedback_no_device_id_creates_web_session(client):
+    """X-Device-ID 헤더 없으면 웹 세션 생성 후 처리."""
+    mock_result = {
+        "id": 10,
+        "category": "bug",
+        "content": "디바이스 ID 없는 요청입니다.",
+        "app_version": "1.0.0",
+        "created_at": "2026-02-24T09:00:00+00:00",
+    }
+    with patch(
+        "src.backend.routers.feedback.feedback_service.create_feedback",
+        new_callable=AsyncMock,
+        return_value=mock_result,
+    ):
+        resp = await client.post(
+            "/api/v1/feedback",
+            json={
+                "category": "bug",
+                "content": "디바이스 ID 없는 요청입니다.",
+            },
+        )
 
-    assert resp.status_code == 401
+    assert resp.status_code == 200
+    set_cookie = resp.headers.get("set-cookie", "")
+    assert "session_id=" in set_cookie

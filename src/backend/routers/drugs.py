@@ -44,6 +44,54 @@ async def search_drugs(
 
 
 @router.get(
+    "/slugs",
+    response_model=ApiResponse[list[str]],
+    summary="의약품 slug 전체 목록",
+    description="SSG generateStaticParams용 전체 slug 목록을 반환합니다.",
+)
+async def get_drug_slugs(
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+) -> dict:
+    """의약품 slug 전체 목록 엔드포인트."""
+    slugs = await drug_service.get_all_drug_slugs(db, redis)
+    return success_response(slugs)
+
+
+@router.get(
+    "/count",
+    response_model=ApiResponse[int],
+    summary="의약품 총 건수",
+    description="전체 의약품 건수를 반환합니다.",
+)
+async def get_drug_count(
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+) -> dict:
+    """의약품 총 건수 엔드포인트."""
+    count = await drug_service.count_drugs(db, redis)
+    return success_response(count)
+
+
+@router.get(
+    "/by-slug/{slug}",
+    response_model=ApiResponse[DrugDetail],
+    summary="의약품 slug 조회",
+    description="slug로 의약품 상세 정보를 조회합니다.",
+)
+async def get_drug_by_slug(
+    slug: str,
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+) -> dict:
+    """의약품 slug 조회 엔드포인트."""
+    result = await drug_service.get_drug_by_slug(db, redis, slug)
+    if result is None:
+        return error_response("의약품을 찾을 수 없습니다.", 404)
+    return success_response(result)
+
+
+@router.get(
     "/{drug_id}",
     response_model=ApiResponse[DrugDetail],
     summary="의약품 상세 조회",

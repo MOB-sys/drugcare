@@ -8,6 +8,7 @@ class SupplementSearchItem(BaseModel):
 
     id: int
     product_name: str
+    slug: str
     company: str | None = None
     main_ingredient: str | None = None
     category: str | None = None
@@ -20,6 +21,7 @@ class SupplementDetail(BaseModel):
 
     id: int
     product_name: str
+    slug: str
     company: str | None = None
     registration_no: str | None = None
     main_ingredient: str | None = None

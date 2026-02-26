@@ -13,6 +13,7 @@ async def test_search_supplements_success(client, auth_headers):
             {
                 "id": 1,
                 "product_name": "종근당 비타민C 1000",
+                "slug": "supp-1",
                 "company": "종근당건강",
                 "main_ingredient": "비타민C",
                 "category": "비타민",
@@ -68,6 +69,7 @@ async def test_get_supplement_detail_found(client, auth_headers):
     mock_detail = {
         "id": 1,
         "product_name": "종근당 비타민C 1000",
+        "slug": "supp-1",
         "company": "종근당건강",
         "main_ingredient": "비타민C",
         "category": "비타민",

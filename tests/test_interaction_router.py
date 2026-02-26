@@ -165,16 +165,30 @@ async def test_check_interactions_disclaimer(client, auth_headers):
 
 
 @pytest.mark.asyncio
-async def test_check_interactions_no_auth(client):
-    """인증 헤더 없이 요청 시 401 반환."""
-    resp = await client.post(
-        "/api/v1/interactions/check",
-        json={
-            "items": [
-                {"item_type": "drug", "item_id": 1},
-                {"item_type": "drug", "item_id": 2},
-            ],
-        },
-    )
+async def test_check_interactions_no_auth_creates_web_session(client):
+    """인증 헤더 없이 요청 시 웹 세션 생성 후 처리."""
+    mock_result = {
+        "total_checked": 1,
+        "interactions_found": 0,
+        "has_danger": False,
+        "results": [],
+        "disclaimer": DISCLAIMER,
+    }
+    with patch(
+        "src.backend.routers.interactions.interaction_service.check_interactions",
+        new_callable=AsyncMock,
+        return_value=mock_result,
+    ):
+        resp = await client.post(
+            "/api/v1/interactions/check",
+            json={
+                "items": [
+                    {"item_type": "drug", "item_id": 1},
+                    {"item_type": "drug", "item_id": 2},
+                ],
+            },
+        )
 
-    assert resp.status_code == 401
+    assert resp.status_code == 200
+    set_cookie = resp.headers.get("set-cookie", "")
+    assert "session_id=" in set_cookie

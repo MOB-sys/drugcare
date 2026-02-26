@@ -10,107 +10,177 @@
 - **서비스명:** 약먹어 (YakMeogeo / 久藥師)
 - **프로젝트 코드명:** yakmeogeo
 - **한줄 설명:** "이 약이랑 이 영양제, 같이 먹어도 돼?" — 3초 만에 확인하는 복약 안전 체커
-- **플랫폼:** iOS / Android 모바일 앱 + 반응형 웹
-- **수익 모델:** 100% 광고 클릭 수익 (AdMob + 네이버 광고 + 제약사 프리미엄 광고)
+- **수익 모델:** 100% 광고 수익 (웹: AdSense / 앱: AdMob + 네이버 광고)
 - **대상 사용자:** 다제 복용자(40~60대), 영양제 헤비유저(20~40대), 부모님 약 관리자(30~50대)
+
+---
+
+## ⚠️ 듀얼 플랫폼 전략 (핵심)
+
+```
+                    FastAPI 백엔드 (기존 — 100% 유지)
+                 15 API / 7 테이블 / 209 테스트 / Redis
+                     ↕              ↕              ↕
+              PC 브라우저      모바일 브라우저    네이티브 앱
+              (Next.js)       (Next.js 반응형)   (Flutter)
+                 │                  │                │
+              AdSense            AdSense           AdMob
+              SEO 검색 유입      즉석 체크         푸시 리마인더
+              약물 상세 SSG     진입장벽 제로      복약함 관리
+                                                   카메라 약 식별
+```
+
+### 역할 분담
+- **Next.js 웹 (신규)** = 신규 유입 엔진 → "비타민D 오메가3 같이" 검색 → 웹 유입 → AdSense 수익
+- **Flutter 앱 (기존)** = 리텐션 엔진 → 푸시 리마인더 → 매일 앱 진입 → AdMob 수익
+- **웹 → 앱 전환:** 웹에서 상호작용 체크 후 "매일 복약 리마인더 받으려면 앱 설치" 유도
+
+### 플랫폼별 기능 매트릭스
+| 기능 | 웹 (Next.js) | 앱 (Flutter) |
+|------|:-----------:|:----------:|
+| 상호작용 체크 | ✅ 핵심 | ✅ 핵심 |
+| 약물/영양제 상세 정보 | ✅ SSG | ✅ |
+| 복약함 관리 | ✅ 쿠키/localStorage | ✅ SharedPreferences |
+| 복약 리마인더 | ❌ | ✅ 푸시 알림 |
+| 약 사진 식별 | ❌ | ✅ 카메라 (Phase 2) |
+| SEO 검색 유입 | ✅ 핵심 | ❌ |
+| 광고 | AdSense | AdMob |
+| 앱 설치 유도 | ✅ 스마트 배너 | N/A |
+
+---
 
 ## 기술 스택
 
-| 영역 | 기술 | 선정 사유 |
+### 기존 (Sprint 6 완료 — 변경 최소화)
+
+| 영역 | 기술 | 상태 |
+|------|------|------|
+| **백엔드 API** | FastAPI (Python 3.11+) + SQLAlchemy 2.0 async + Pydantic 2 | ✅ 15 API, 209 테스트 |
+| **데이터베이스** | PostgreSQL 16 + Redis 7 | ✅ 7 테이블, 캐시 완비 |
+| **모바일 앱** | Flutter 3.35+ (Riverpod + Go Router + Dio) | ✅ 9 화면, 131 테스트 |
+| **데이터 파이프라인** | 식약처 3종 API 수집기 + 파서 + 검증기 | ✅ 완비 |
+| **AI** | OpenAI GPT-4o (AsyncOpenAI, Semaphore 3) | ✅ 캐시 30일 |
+| **인프라** | Docker + Nginx SSL + GitHub Actions CI/CD | ✅ 프로덕션 구성 |
+| **인증** | 디바이스 UUID (X-Device-ID 헤더) | ✅ 회원가입 없음 |
+
+### 신규 (추가 개발)
+
+| 영역 | 기술 | 사유 |
+|------|------|------|
+| **웹 프론트엔드** | Next.js 15 (App Router) + TypeScript | SSR/SSG → SEO |
+| **웹 스타일링** | Tailwind CSS 4 | 반응형, 유틸리티 퍼스트 |
+| **웹 광고** | Google AdSense | 웹 트래픽 수익화 |
+| **SEO 분석** | Google Analytics 4 + Search Console + 네이버 서치어드바이저 | 검색 성과 추적 |
+| **웹 배포** | Vercel | Next.js 최적 호스팅 |
+
+---
+
+## 기존 백엔드 자산 참조 (신규 개발 시 필수)
+
+### DB 스키마 (7개 — 변경 금지, 추가만 허용)
+| 테이블 | 핵심 컬럼 | 용도 |
+|--------|----------|------|
+| `drugs` | item_seq, item_name, ingredients(JSONB) | 의약품 마스터 |
+| `supplements` | product_name, ingredients(JSONB) | 영양제 마스터 |
+| `interactions` | item_a/b, severity, description, source | 상호작용 |
+| `user_cabinets` | device_id, item_type, item_id | 복약함 |
+| `reminders` | device_id, reminder_time, days_of_week | 리마인더 |
+| `feedbacks` | device_id, category, content | 피드백 |
+| `app_metrics` | device_id, event_type, event_data | 메트릭스 |
+
+### 기존 API (15개 — 웹에서 동일하게 호출)
+| 그룹 | Path | 웹 활용 |
 |------|------|---------|
-| **모바일 앱** | **Flutter (Dart)** — Riverpod + Go Router + Dio | iOS/Android 동시 개발, UI 일관성, 케어커넥트 스택 통일 |
-| **백엔드 API** | **FastAPI (Python)** — SQLAlchemy 2.0 async | 빠른 API 개발, 자동 문서화(Swagger), AI/ML 연동 용이 |
-| **데이터베이스** | **PostgreSQL + Redis** 캐시 | 관계형 약물 데이터에 최적, 상호작용 조회 캐시 |
-| **광고 SDK** | **Google AdMob** (google_mobile_ads) + 네이버 광고 | 한국 매체 eCPM 최적화, Flutter 공식 플러그인 |
-| **인프라** | **Docker + Nginx + GitHub Actions** | 컨테이너 기반, CI/CD 자동화 |
-| **AI/ML** | **OpenAI API (GPT-4o)** | 상호작용 설명 자연어 생성, 약 사진 식별 보조 |
-| **인증** | **디바이스 기반 (UUID)** — MVP 회원가입 없음 | 진입장벽 제로, 건강정보 서버 미전송 |
+| Drugs | `GET /api/v1/drugs/search` | 약물 검색 |
+| Drugs | `GET /api/v1/drugs/{id}` | 약물 상세 (SSG) |
+| Supplements | `GET /api/v1/supplements/search` | 영양제 검색 |
+| Supplements | `GET /api/v1/supplements/{id}` | 영양제 상세 (SSG) |
+| Interactions | `POST /api/v1/interactions/check` | **핵심** 상호작용 체크 |
+| Cabinet | `POST/GET/DELETE /api/v1/cabinet` | 복약함 |
+| Reminders | CRUD `/api/v1/reminders` | ❌ 앱 전용 |
+| Feedback | `POST /api/v1/feedback` | 피드백 |
+| Metrics | `POST /api/v1/metrics/event` | 이벤트 |
 
-## 데이터 소스 (3단계 레이어)
+### 백엔드 최소 변경 사항
+| 항목 | 변경 |
+|------|------|
+| CORS | 웹 도메인 추가 (yakmeogeo.com, localhost:3000) |
+| DeviceAuth | 웹 세션쿠키 분기 (X-Device-ID 없으면 쿠키 session_id 확인) |
+| Nginx | Next.js 프록시 룰 추가 |
+| DB | drugs/supplements에 `slug` 컬럼 추가 (마이그레이션 v003) |
+| 신규 API | slug 조회 4개 + count 2개 = 6개 엔드포인트 추가 |
 
-| 레이어 | 소스 | 용도 | 비용 |
-|--------|------|------|------|
-| **Layer 1** | 식약처 'e약은요' API, DUR 품목정보 API, 낱알식별 API | 의약품 기본정보, 병용금기 | 무료 |
-| **Layer 2** | DrugBank API, Natural Medicines DB | 약물-영양제 교차 상호작용 | 유료 |
-| **Layer 3** | 자체 구축 | 한국 영양제 성분 매핑, 음식-약물 상호작용, AI 설명 | 자체 |
+### Redis 캐시 TTL (웹도 동일 활용)
+| 대상 | TTL |
+|------|-----|
+| 검색 결과 | 24시간 |
+| 약물/영양제 상세 | 3일 |
+| 상호작용 체크 | 7일 |
+| AI 설명 | 30일 |
+
+---
+
+## Next.js 렌더링 전략 (SEO 핵심)
+
+| 페이지 | 렌더링 | 이유 |
+|--------|--------|------|
+| `/drugs/[slug]` | **SSG** (1만개+) | 검색 인덱싱 핵심 |
+| `/supplements/[slug]` | **SSG** (500개+) | 검색 인덱싱 |
+| `/check` | **CSR** | 동적 입력 |
+| `/check/result` | **SSR** | OG 이미지 동적 생성, 공유 가능 |
+| `/cabinet` | **CSR** | localStorage, SEO 불필요 |
+| `/tips/[slug]` | **SSG** | 건강팁 콘텐츠 |
+| `/` | **SSG + ISR** | 메인 랜딩 |
 
 ---
 
 ## 에이전트 시스템 규약
 
-### 파일 접근 규칙
-- 각 에이전트는 자신의 AGENT.md에 정의된 권한 범위만 수정 가능
-- `.agents/shared/` 폴더는 모든 에이전트가 읽기/쓰기 가능
-- 다른 에이전트의 `src/` 영역은 명시적 허가 없이 수정 금지
+### 파일 접근
+- 각 에이전트는 AGENT.md 정의 권한 범위만 수정
+- `.agents/shared/` 는 모든 에이전트 읽기/쓰기
+- **기존 백엔드/Flutter 코드 수정 시 PM 승인 필수**
 
-### 작업 흐름 규칙
-1. 모든 작업은 STATUS_BOARD.md에 등록 후 시작
-2. 작업 완료 시 반드시 outbox에 완료 보고 작성
-3. 에러 발생 시 ERROR_LOG.md에 즉시 기록
-4. 설계 변경 시 DECISIONS_LOG.md에 사유 기록
-5. **약물 데이터 관련 변경은 반드시 데이터 검증 절차를 거친다**
+### 작업 흐름
+1. STATUS_BOARD.md 등록 → 작업 시작
+2. 완료 → outbox 보고
+3. 에러 → ERROR_LOG.md
+4. 설계 변경 → DECISIONS_LOG.md
+5. **약물 데이터 변경 → 데이터 검증 필수**
 
 ### 코드 스타일
-- Dart (Flutter): camelCase 변수, PascalCase 클래스/위젯, snake_case 파일명
-- Python (FastAPI): snake_case 변수/함수, PascalCase 클래스, 타입 힌트 필수
-- SQL: snake_case 테이블/컬럼명
-- 모든 Dart 함수에 /// dartdoc 주석 필수
-- 모든 Python 함수에 docstring 필수
-- 한 함수는 50줄 이하 유지
-- API 응답은 반드시 표준 포맷 사용 (아래 참고)
-
-### API 응답 표준 포맷
-```json
-{
-  "success": true,
-  "data": { },
-  "error": null,
-  "meta": { "timestamp": "ISO8601" }
-}
-```
+- **Python:** snake_case, PascalCase 클래스, docstring
+- **Dart:** camelCase, PascalCase 클래스
+- **TypeScript:** camelCase, PascalCase 컴포넌트, JSDoc
+- 한 함수 50줄 이하
 
 ### 커밋 규칙
-- `feat:` 새 기능 추가
-- `fix:` 버그 수정
-- `data:` 약물/영양제 데이터 관련 변경
-- `docs:` 문서 변경
-- `test:` 테스트 추가/수정
-- `refactor:` 리팩토링
-- `style:` 코드 스타일 (동작 변경 없음)
-- `ad:` 광고 관련 변경
+`feat:` `fix:` `data:` `seo:` `web:` `app:` `api:` `ad:` `docs:` `test:`
 
 ### 금지 사항
-- 🚫 .env 파일이나 시크릿 키를 코드에 직접 작성하지 않는다
-- 🚫 다른 에이전트의 담당 영역 파일을 무단 수정하지 않는다
-- 🚫 테스트 없이 기능을 완료 처리하지 않는다
-- 🚫 STATUS_BOARD.md 업데이트 없이 작업을 진행하지 않는다
-- 🚫 약물 상호작용 데이터를 임의로 생성/수정하지 않는다 (공공데이터 기반 필수)
-- 🚫 의학적 진단/치료 목적의 문구를 사용하지 않는다 (면책조항 필수)
+- 🚫 시크릿 키 하드코딩
+- 🚫 타 에이전트 영역 무단 수정
+- 🚫 테스트 없이 완료 처리
+- 🚫 약물 데이터 임의 생성 (공공데이터 기반 필수)
+- 🚫 의학적 진단/치료 문구 사용 (면책조항 필수)
+- 🚫 기존 API 응답 구조 일방 변경 (앱 호환 유지)
 
-### 필수 법적 요건 (모든 에이전트 숙지)
-- 모든 결과 화면에 면책조항 표시: "의사/약사의 전문적 판단을 대체하지 않습니다"
-- 건강정보는 민감정보 → 개인정보보호법 준수
-- 복용 정보는 디바이스 우선 저장 (서버 전송 최소화)
-- 건강기능식품 광고 규제 준수 (질병 치료 효능 표현 금지)
+### 필수 법적 요건
+- 모든 결과 화면: "의사/약사의 전문적 판단을 대체하지 않습니다"
+- 건강정보 = 민감정보 → 개인정보보호법 준수
+- 복용 정보 디바이스 우선 저장
+- 건강기능식품 광고 규제 (질병 치료 효능 금지)
 
 ---
 
-## MVP 핵심 기능 (Phase 1 — 12주)
-
-| 코드 | 기능 | 우선순위 | 예상 기간 |
-|------|------|---------|---------|
-| F1 | 의약품 상호작용 체크 | P0 | 4주 |
-| F2 | 영양제 조합 체크 | P0 | 3주 |
-| F3 | 약+영양제 교차 체크 | P0 | 3주 |
-| F4 | 복약 리마인더 | P1 | 2주 |
-| F5 | 내 복약함 관리 | P1 | 2주 |
-| F6 | 광고 SDK 연동 | P1 | 1주 |
-
 ## KPI 목표
 
-| 지표 | 3개월 | 6개월 | 12개월 |
-|------|-------|-------|--------|
-| MAU | 3,000 | 15,000 | 80,000 |
-| DAU | 500 | 3,000 | 15,000 |
-| D7 리텐션 | 25% | 35% | 40% |
-| 월 광고수익 | 7만 | 45만 | 300만 |
+| 지표 | 3개월 | 6개월 | 12개월 | 24개월 |
+|------|-------|-------|--------|--------|
+| MAU | 3,000 | 15,000 | 80,000 | 500,000 |
+| DAU | 500 | 3,000 | 15,000 | 100,000 |
+| 검색 유입 | 20% | 35% | 45% | 50%+ |
+| 인덱싱 페이지 | 500 | 2,000 | 10,000+ | 15,000+ |
+| 월 광고수익 | 7만 | 45만 | 300만 | 2,000만+ |
+| D7 리텐션(앱) | 25% | 35% | 40% | 45%+ |
+| 웹→앱 전환 | — | 5% | 8% | 10% |

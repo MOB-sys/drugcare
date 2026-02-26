@@ -66,6 +66,7 @@ app = FastAPI(
 _cors_origins = ["*"] if settings.is_development else [
     "https://yakmeogeo.com",
     "https://www.yakmeogeo.com",
+    "http://localhost:3000",
 ]
 app.add_middleware(
     CORSMiddleware,

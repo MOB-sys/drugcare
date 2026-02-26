@@ -4,16 +4,14 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_device_auth_missing_header(client):
-    """X-Device-ID 헤더 없이 보호된 경로 요청 시 401을 반환하는지 확인한다."""
+async def test_device_auth_missing_header_creates_web_session(client):
+    """X-Device-ID 헤더 없이 요청 시 웹 세션 쿠키가 생성되는지 확인한다."""
     response = await client.get("/api/v1/drugs/search")
 
-    assert response.status_code == 401
-
-    body = response.json()
-    assert body["success"] is False
-    assert "X-Device-ID" in body["error"]
-    assert body["data"] is None
+    # 웹 세션 쿠키 자동 생성으로 요청 통과
+    assert response.status_code == 200
+    set_cookie = response.headers.get("set-cookie", "")
+    assert "session_id=" in set_cookie
 
 
 @pytest.mark.asyncio
@@ -62,17 +60,17 @@ async def test_error_handler_returns_api_response_format(client, auth_headers):
 
 
 @pytest.mark.asyncio
-async def test_device_auth_post_without_header(client):
-    """POST 요청에서도 X-Device-ID 헤더 없으면 401을 반환하는지 확인한다."""
+async def test_device_auth_post_without_header_creates_web_session(client):
+    """POST 요청에서 X-Device-ID 헤더 없으면 웹 세션이 생성되는지 확인한다."""
     response = await client.post(
         "/api/v1/interactions/check",
         json={"items": [{"item_type": "drug", "item_id": 1}, {"item_type": "drug", "item_id": 2}]},
     )
 
-    assert response.status_code == 401
-
-    body = response.json()
-    assert body["success"] is False
+    # 웹 세션 쿠키 자동 생성으로 요청 통과
+    assert response.status_code == 200
+    set_cookie = response.headers.get("set-cookie", "")
+    assert "session_id=" in set_cookie
 
 
 @pytest.mark.asyncio

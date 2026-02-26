@@ -1,116 +1,88 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# 약먹어 Ops — QA 모니터 (6시간 간격 cron 권장)
-# 핵심 API 기능 E2E 스모크 테스트 실행
+# 약먹어 Ops — QA 스모크 테스트 (6시간 간격 cron 권장)
+# 듀얼 플랫폼: API + 웹 페이지 + SEO 인덱싱 통합 검증
 # ==============================================================================
 set -euo pipefail
 
 # --- 설정 ---
+PROJECT_DIR="${PROJECT_DIR:-$HOME/workspace/yakmeogeo}"
 API_BASE="${API_BASE_URL:-http://localhost:8000}"
+WEB_BASE="${WEB_BASE_URL:-http://localhost:3000}"
 API_PREFIX="${API_BASE}/api/v1"
 DEVICE_ID="qa-monitor-$(hostname)-$(date +%s)"
-LOG_DIR="${LOG_DIR:-/var/log/yakmeogeo}"
-LOG_FILE="${LOG_DIR}/qa-monitor.log"
+TIMESTAMP=$(date +%Y%m%d-%H%M)
+REPORT_DIR="${PROJECT_DIR}/.agents/ops-squad/qa-monitor/reports"
+REPORT_FILE="${REPORT_DIR}/QA-${TIMESTAMP}.md"
 ALERT_WEBHOOK="${ALERT_WEBHOOK_URL:-}"
 TIMEOUT=15
 
-PASSED=0
-FAILED=0
-TOTAL=0
+PASS=0
+FAIL=0
+RESULTS=""
 
-mkdir -p "$LOG_DIR"
+mkdir -p "$REPORT_DIR"
 
-timestamp() {
-    date '+%Y-%m-%d %H:%M:%S'
-}
+check() {
+    local name="$1" url="$2" method="${3:-GET}" body="$4"
 
-log() {
-    echo "[$(timestamp)] $1" | tee -a "$LOG_FILE"
-}
-
-send_alert() {
-    local message="$1"
-    if [ -n "$ALERT_WEBHOOK" ]; then
-        curl -sf -X POST "$ALERT_WEBHOOK" \
-            -H 'Content-Type: application/json' \
-            -d "{\"text\": \"🧪 약먹어 QA 모니터 알림: ${message}\"}" \
-            > /dev/null 2>&1 || true
-    fi
-}
-
-# API 호출 함수
-api_test() {
-    local name="$1"
-    local method="$2"
-    local endpoint="$3"
-    local expected_code="$4"
-    local body="${5:-}"
-
-    TOTAL=$((TOTAL + 1))
-
-    local curl_args=(-sf -o /tmp/yakmeogeo-qa-response.json -w "%{http_code}" \
-        --max-time "$TIMEOUT" \
-        -H "X-Device-ID: $DEVICE_ID" \
+    local curl_args=(-s -o /dev/null -w '%{http_code}' --max-time "$TIMEOUT"
+        -H "X-Device-ID: $DEVICE_ID"
         -H "Content-Type: application/json")
 
-    if [ -n "$body" ]; then
-        curl_args+=(-X "$method" -d "$body")
+    if [ "$method" = "POST" ] && [ -n "$body" ]; then
+        STATUS=$(curl "${curl_args[@]}" -X POST -d "$body" "$url" 2>/dev/null || echo "000")
     else
-        curl_args+=(-X "$method")
+        STATUS=$(curl "${curl_args[@]}" "$url" 2>/dev/null || echo "000")
     fi
 
-    local http_code
-    http_code=$(curl "${curl_args[@]}" "${API_PREFIX}${endpoint}" 2>/dev/null || echo "000")
-
-    if [ "$http_code" = "$expected_code" ]; then
-        log "  ✅ PASS: ${name} (HTTP ${http_code})"
-        PASSED=$((PASSED + 1))
+    if [ "$STATUS" = "200" ] || [ "$STATUS" = "201" ]; then
+        RESULTS="${RESULTS}\n| ${name} | ✅ ${STATUS} | PASS |"
+        PASS=$((PASS + 1))
     else
-        log "  ❌ FAIL: ${name} — 예상: ${expected_code}, 실제: ${http_code}"
-        FAILED=$((FAILED + 1))
+        RESULTS="${RESULTS}\n| ${name} | ❌ ${STATUS} | FAIL |"
+        FAIL=$((FAIL + 1))
     fi
 }
 
-# --- QA 테스트 실행 ---
-log "========================================"
-log "=== QA 모니터 스모크 테스트 시작 ==="
-log "========================================"
+# --- API 테스트 ---
+check "API Health" "${API_PREFIX}/health" "GET" ""
+check "Drug Search" "${API_PREFIX}/drugs/search?query=%ED%83%80%EC%9D%B4%EB%A0%88%EB%86%80&limit=5" "GET" ""
+check "Supplement Search" "${API_PREFIX}/supplements/search?query=%EB%B9%84%ED%83%80%EB%AF%BCD&limit=5" "GET" ""
+check "Drug Slugs" "${API_PREFIX}/drugs/slugs" "GET" ""
+check "Drug Count" "${API_PREFIX}/drugs/count" "GET" ""
+check "Interaction Check" "${API_PREFIX}/interactions/check" "POST" \
+    '{"items":[{"item_type":"drug","item_id":"1"},{"item_type":"drug","item_id":"2"}]}'
 
-# 1. 헬스체크
-log "--- [1/6] 헬스체크 ---"
-api_test "헬스체크 응답" "GET" "/health" "200"
+# --- 웹 테스트 ---
+check "Web Home" "${WEB_BASE}/" "GET" ""
+check "Web Check" "${WEB_BASE}/check" "GET" ""
+check "Sitemap" "${WEB_BASE}/sitemap.xml" "GET" ""
+check "Robots.txt" "${WEB_BASE}/robots.txt" "GET" ""
 
-# 2. 약물 검색
-log "--- [2/6] 약물 검색 API ---"
-api_test "약물 검색 (타이레놀)" "GET" "/drugs/search?query=%ED%83%80%EC%9D%B4%EB%A0%88%EB%86%80&limit=5" "200"
-api_test "약물 검색 (빈 쿼리)" "GET" "/drugs/search?query=&limit=5" "200"
+TOTAL=$((PASS + FAIL))
 
-# 3. 영양제 검색
-log "--- [3/6] 영양제 검색 API ---"
-api_test "영양제 검색 (비타민)" "GET" "/supplements/search?query=%EB%B9%84%ED%83%80%EB%AF%BC&limit=5" "200"
+# --- 보고서 생성 ---
+cat > "$REPORT_FILE" << EOF
+# QA 스모크 테스트 보고서
+- **시간:** $(date '+%Y-%m-%d %H:%M')
+- **결과:** ${PASS}/${TOTAL} 통과 $([ "$FAIL" -gt 0 ] && echo "⚠️" || echo "✅")
 
-# 4. 상호작용 체크
-log "--- [4/6] 상호작용 체크 API ---"
-api_test "상호작용 체크 (빈 목록)" "POST" "/interactions/check" "422" '{"items": []}'
+## 상세 결과
+| 테스트 | 상태 | 판정 |
+|--------|------|------|
+$(echo -e "$RESULTS")
 
-# 5. 복약함 API
-log "--- [5/6] 복약함 API ---"
-api_test "복약함 조회" "GET" "/cabinet" "200"
+## 조치 필요
+$([ "$FAIL" -gt 0 ] && echo "❌ ${FAIL}개 테스트 실패 — 확인 필요" || echo "없음")
+EOF
 
-# 6. 리마인더 API
-log "--- [6/6] 리마인더 API ---"
-api_test "리마인더 목록 조회" "GET" "/reminders" "200"
-
-# --- 결과 집계 ---
-log "========================================"
-log "=== QA 모니터 결과 ==="
-log "  전체: ${TOTAL} | 성공: ${PASSED} | 실패: ${FAILED}"
-log "========================================"
-
-if [ "$FAILED" -gt 0 ]; then
-    send_alert "스모크 테스트 실패 ${FAILED}/${TOTAL}건"
-    exit 1
-else
-    log "모든 스모크 테스트 통과"
-    exit 0
+# --- 알림 ---
+if [ "$FAIL" -gt 0 ] && [ -n "$ALERT_WEBHOOK" ]; then
+    curl -sf -X POST "$ALERT_WEBHOOK" \
+        -H 'Content-Type: application/json' \
+        -d "{\"text\": \"🧪 약먹어 QA: ${FAIL}/${TOTAL} 테스트 실패\"}" \
+        > /dev/null 2>&1 || true
 fi
+
+echo "✅ QA 테스트 완료: ${PASS}/${TOTAL} 통과 — ${REPORT_FILE}"

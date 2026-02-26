@@ -53,6 +53,7 @@ def mock_drug(**overrides) -> MagicMock:
         "id": 1,
         "item_seq": "200001234",
         "item_name": "타이레놀정500밀리그램",
+        "slug": "drug-200001234",
         "entp_name": "한국얀센",
         "etc_otc_code": "일반의약품",
         "class_no": "01140",
@@ -88,6 +89,7 @@ def mock_supplement(**overrides) -> MagicMock:
     defaults = {
         "id": 1,
         "product_name": "종근당 비타민C 1000",
+        "slug": "supp-1",
         "company": "종근당건강",
         "registration_no": "20040020012345",
         "main_ingredient": "비타민C",

@@ -28,6 +28,7 @@ class Supplement(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     product_name: Mapped[str] = mapped_column(String(500), nullable=False)
+    slug: Mapped[str] = mapped_column(String(200), unique=True, nullable=False, index=True)
     company: Mapped[str | None] = mapped_column(String(200))
     registration_no: Mapped[str | None] = mapped_column(String(50), unique=True)
     main_ingredient: Mapped[str | None] = mapped_column(String(200))

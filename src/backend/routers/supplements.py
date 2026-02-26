@@ -44,6 +44,54 @@ async def search_supplements(
 
 
 @router.get(
+    "/slugs",
+    response_model=ApiResponse[list[str]],
+    summary="영양제 slug 전체 목록",
+    description="SSG generateStaticParams용 전체 slug 목록을 반환합니다.",
+)
+async def get_supplement_slugs(
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+) -> dict:
+    """영양제 slug 전체 목록 엔드포인트."""
+    slugs = await supplement_service.get_all_supplement_slugs(db, redis)
+    return success_response(slugs)
+
+
+@router.get(
+    "/count",
+    response_model=ApiResponse[int],
+    summary="영양제 총 건수",
+    description="전체 영양제 건수를 반환합니다.",
+)
+async def get_supplement_count(
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+) -> dict:
+    """영양제 총 건수 엔드포인트."""
+    count = await supplement_service.count_supplements(db, redis)
+    return success_response(count)
+
+
+@router.get(
+    "/by-slug/{slug}",
+    response_model=ApiResponse[SupplementDetail],
+    summary="영양제 slug 조회",
+    description="slug로 영양제 상세 정보를 조회합니다.",
+)
+async def get_supplement_by_slug(
+    slug: str,
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+) -> dict:
+    """영양제 slug 조회 엔드포인트."""
+    result = await supplement_service.get_supplement_by_slug(db, redis, slug)
+    if result is None:
+        return error_response("영양제를 찾을 수 없습니다.", 404)
+    return success_response(result)
+
+
+@router.get(
     "/{supplement_id}",
     response_model=ApiResponse[SupplementDetail],
     summary="영양제 상세 조회",

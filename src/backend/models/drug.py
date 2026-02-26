@@ -36,6 +36,7 @@ class Drug(Base, TimestampMixin):
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     item_seq: Mapped[str] = mapped_column(String(20), unique=True, nullable=False, index=True)
     item_name: Mapped[str] = mapped_column(String(500), nullable=False)
+    slug: Mapped[str] = mapped_column(String(200), unique=True, nullable=False, index=True)
     entp_name: Mapped[str | None] = mapped_column(String(200))
     etc_otc_code: Mapped[str | None] = mapped_column(String(20))
     class_no: Mapped[str | None] = mapped_column(String(10))

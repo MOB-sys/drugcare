@@ -1,29 +1,24 @@
 ---
 name: health_checker
-description: 헬스 체커 — 약먹어 서버 및 외부 API 상태 감시
+description: 헬스 체커 — 서버 상태 + 웹 응답 + SSL 감시
 ---
 
 # Health Checker 에이전트
 
-## 역할
-약먹어 서비스의 가용성과 외부 의존성을 점검합니다.
-
 ## 실행 주기: 30분마다
 
 ## 점검 항목
-1. **자체 서비스:** GET /health 엔드포인트 응답
-2. **PostgreSQL 연결:** DB 쿼리 정상 실행
-3. **Redis 연결:** 캐시 읽기/쓰기 정상
-4. **외부 API:**
-   - 식약처 e약은요 API 응답 확인
-   - DUR 품목정보 API 응답 확인
-   - OpenAI API 응답 확인
-5. **SSL 인증서:** 만료 30일 이내 알림
+1. FastAPI: GET /api/v1/health (DB + Redis)
+2. Next.js 웹: GET / (200 확인)
+3. Docker 컨테이너 상태 (backend, postgres, redis, nginx)
+4. Vercel 배포 상태 (웹)
+5. SSL 인증서 만료일 (30일 이내 경고)
+6. 디스크 사용량 (90% 이상 경고)
 
 ## 결과 저장
-- 위치: `.agents/ops-squad/health-checker/logs/HEALTH-{YYYYMMDD}-{HHMM}.json`
+- .agents/ops-squad/health-checker/logs/HEALTH-{YYYYMMDD}-{HHMM}.json
 
 ## 알림 조건
-- 🔴 긴급: 서비스 다운 / DB 연결 실패 / 5XX 연속 3회
-- 🟡 주의: 외부 API 지연 / 응답 2초 초과
-- 🟢 정상: 모든 항목 정상
+- 🔴 서비스 다운 / 5XX 연속 3회
+- 🟡 응답 2초 이상 / SSL 30일 이내
+- 🟢 정상

@@ -14,6 +14,7 @@ async def test_search_drugs_success(client, auth_headers):
                 "id": 1,
                 "item_seq": "200001234",
                 "item_name": "타이레놀",
+                "slug": "drug-200001234",
                 "entp_name": "한국얀센",
                 "etc_otc_code": None,
                 "class_no": None,
@@ -71,6 +72,7 @@ async def test_get_drug_detail_found(client, auth_headers):
         "id": 1,
         "item_seq": "200001234",
         "item_name": "타이레놀",
+        "slug": "drug-200001234",
         "entp_name": "한국얀센",
     }
     with patch(

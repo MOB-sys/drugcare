@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --color-brand: #00bfa5;
+  --color-brand-dark: #00a08a;
+  --color-danger: #e53e3e;
+  --color-warning: #ed8936;
+  --color-safe: #38a169;
+}
+
+body {
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    "Helvetica Neue",
+    "Segoe UI",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Segoe UI Symbol",
+    sans-serif;
+}

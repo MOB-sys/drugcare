@@ -11,6 +11,10 @@ from src.backend.schemas.drug import DrugDetail, DrugSearchItem
 from src.backend.utils.cache import cache_get, cache_set, hash_query, make_cache_key
 from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
 
+# slug/count 캐시 TTL (초)
+CACHE_TTL_DRUG_SLUGS = 60 * 60 * 24       # 24시간
+CACHE_TTL_DRUG_COUNT = 60 * 60 * 24       # 24시간
+
 
 async def search_drugs(
     db: AsyncSession,
@@ -103,3 +107,87 @@ async def get_drug_detail(
     result = DrugDetail.model_validate(drug).model_dump()
     await cache_set(redis, cache_key, result, CACHE_TTL_DRUG_DETAIL)
     return result
+
+
+async def get_drug_by_slug(
+    db: AsyncSession,
+    redis: Redis,
+    slug: str,
+) -> dict | None:
+    """slug로 의약품 상세 정보를 조회한다.
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+        slug: 의약품 slug (예: drug-200001234).
+
+    Returns:
+        DrugDetail 구조의 dict 또는 None.
+    """
+    cache_key = make_cache_key("drug", "by-slug", slug)
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    stmt = select(Drug).where(Drug.slug == slug)
+    row = await db.execute(stmt)
+    drug = row.scalar_one_or_none()
+
+    if drug is None:
+        return None
+
+    result = DrugDetail.model_validate(drug).model_dump()
+    await cache_set(redis, cache_key, result, CACHE_TTL_DRUG_DETAIL)
+    return result
+
+
+async def get_all_drug_slugs(
+    db: AsyncSession,
+    redis: Redis,
+) -> list[str]:
+    """모든 의약품 slug 목록을 반환한다 (SSG generateStaticParams용).
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+
+    Returns:
+        slug 문자열 리스트.
+    """
+    cache_key = make_cache_key("drug", "slugs", "all")
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    stmt = select(Drug.slug)
+    rows = await db.execute(stmt)
+    slugs = [row[0] for row in rows.all()]
+
+    await cache_set(redis, cache_key, slugs, CACHE_TTL_DRUG_SLUGS)
+    return slugs
+
+
+async def count_drugs(
+    db: AsyncSession,
+    redis: Redis,
+) -> int:
+    """전체 의약품 건수를 반환한다.
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+
+    Returns:
+        의약품 총 건수.
+    """
+    cache_key = make_cache_key("drug", "count")
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    stmt = select(func.count()).select_from(Drug)
+    result = await db.execute(stmt)
+    count = result.scalar_one()
+
+    await cache_set(redis, cache_key, count, CACHE_TTL_DRUG_COUNT)
+    return count
