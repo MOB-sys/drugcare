@@ -41,6 +41,8 @@ async def check_interactions(
         ApiResponse[InteractionCheckResponse] 포맷의 dict.
     """
     result = await interaction_service.check_interactions(
-        db, redis, request_body.items,
+        db,
+        redis,
+        request_body.items,
     )
     return success_response(result)

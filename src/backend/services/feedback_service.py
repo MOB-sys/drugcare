@@ -10,9 +10,7 @@ from src.backend.schemas.feedback import FeedbackCreate
 logger = logging.getLogger(__name__)
 
 
-async def create_feedback(
-    db: AsyncSession, device_id: str, data: FeedbackCreate
-) -> dict:
+async def create_feedback(db: AsyncSession, device_id: str, data: FeedbackCreate) -> dict:
     """피드백을 생성하고 저장한다.
 
     Args:
@@ -34,7 +32,12 @@ async def create_feedback(
     await db.commit()
     await db.refresh(feedback)
 
-    logger.info("피드백 생성 — id=%d, device=%s, category=%s", feedback.id, device_id, data.category)
+    logger.info(
+        "피드백 생성 — id=%d, device=%s, category=%s",
+        feedback.id,
+        device_id,
+        data.category,
+    )
 
     return {
         "id": feedback.id,

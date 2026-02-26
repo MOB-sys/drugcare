@@ -19,9 +19,7 @@ class RequestLoggerMiddleware(BaseHTTPMiddleware):
     - 메서드, 경로, 상태 코드, 처리 시간(ms)을 로그에 기록.
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         """요청을 로깅하고 X-Request-ID 헤더를 추가한다.
 
         Args:

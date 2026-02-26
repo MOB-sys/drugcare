@@ -34,9 +34,7 @@ class Reminder(Base, TimestampMixin):
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     memo: Mapped[str | None] = mapped_column(String(500))
 
-    __table_args__ = (
-        Index("ix_reminders_device_active", "device_id", "is_active"),
-    )
+    __table_args__ = (Index("ix_reminders_device_active", "device_id", "is_active"),)
 
     def __repr__(self) -> str:
         """리마인더 모델의 문자열 표현을 반환한다."""

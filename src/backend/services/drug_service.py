@@ -2,18 +2,18 @@
 
 import math
 
+from redis.asyncio import Redis
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from redis.asyncio import Redis
 
+from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
 from src.backend.models.drug import Drug
 from src.backend.schemas.drug import DrugDetail, DrugSearchItem
 from src.backend.utils.cache import cache_get, cache_set, hash_query, make_cache_key
-from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
 
 # slug/count 캐시 TTL (초)
-CACHE_TTL_DRUG_SLUGS = 60 * 60 * 24       # 24시간
-CACHE_TTL_DRUG_COUNT = 60 * 60 * 24       # 24시간
+CACHE_TTL_DRUG_SLUGS = 60 * 60 * 24  # 24시간
+CACHE_TTL_DRUG_COUNT = 60 * 60 * 24  # 24시간
 
 
 async def search_drugs(

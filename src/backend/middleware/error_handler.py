@@ -20,9 +20,7 @@ class ErrorHandlerMiddleware(BaseHTTPMiddleware):
     - 그 외 예외: 500 Internal Server Error로 반환하고 상세 로그를 기록.
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         """요청을 처리하고, 예외 발생 시 표준 에러 응답을 반환한다.
 
         Args:

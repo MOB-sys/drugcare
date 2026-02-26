@@ -1,8 +1,8 @@
 """약먹어 FastAPI 애플리케이션 — 메인 엔트리포인트."""
 
 import logging
-from contextlib import asynccontextmanager
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,7 +15,16 @@ from src.backend.middleware.error_handler import ErrorHandlerMiddleware
 from src.backend.middleware.rate_limiter import RateLimiterMiddleware
 from src.backend.middleware.request_logger import RequestLoggerMiddleware
 from src.backend.middleware.security_headers import SecurityHeadersMiddleware
-from src.backend.routers import cabinet, drugs, feedback, health, interactions, metrics, reminders, supplements
+from src.backend.routers import (
+    cabinet,
+    drugs,
+    feedback,
+    health,
+    interactions,
+    metrics,
+    reminders,
+    supplements,
+)
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
@@ -63,11 +72,15 @@ app = FastAPI(
 # 실행 순서: ErrorHandler → RequestLogger → SecurityHeaders → RateLimiter → DeviceAuth → CORS
 
 # CORS 미들웨어 (가장 안쪽)
-_cors_origins = ["*"] if settings.is_development else [
-    "https://yakmeogeo.com",
-    "https://www.yakmeogeo.com",
-    "http://localhost:3000",
-]
+_cors_origins = (
+    ["*"]
+    if settings.is_development
+    else [
+        "https://yakmeogeo.com",
+        "https://www.yakmeogeo.com",
+        "http://localhost:3000",
+    ]
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,

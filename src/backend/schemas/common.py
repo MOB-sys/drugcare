@@ -1,7 +1,7 @@
 """API 표준 응답 스키마."""
 
 from datetime import datetime
-from typing import Any, Generic, TypeVar
+from typing import Generic, TypeVar
 
 from pydantic import BaseModel, Field
 

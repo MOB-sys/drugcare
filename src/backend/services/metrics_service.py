@@ -3,7 +3,7 @@
 import logging
 from datetime import datetime, timedelta, timezone
 
-from sqlalchemy import func, select, text
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.models.app_metric import AppMetric
@@ -13,9 +13,7 @@ from src.backend.schemas.metrics import MetricEventCreate
 logger = logging.getLogger(__name__)
 
 
-async def record_event(
-    db: AsyncSession, device_id: str, data: MetricEventCreate
-) -> dict:
+async def record_event(db: AsyncSession, device_id: str, data: MetricEventCreate) -> dict:
     """메트릭 이벤트를 기록한다.
 
     Args:
@@ -70,23 +68,35 @@ async def get_dashboard(db: AsyncSession, period_days: int = 30) -> dict:
     active_7d = (await db.execute(active_7d_q)).scalar() or 0
 
     # 전체 상호작용 체크 수
-    total_checks_q = select(func.count()).where(
-        AppMetric.event_type == "interaction_check",
-        AppMetric.created_at >= period_start,
-    ).select_from(AppMetric)
+    total_checks_q = (
+        select(func.count())
+        .where(
+            AppMetric.event_type == "interaction_check",
+            AppMetric.created_at >= period_start,
+        )
+        .select_from(AppMetric)
+    )
     total_checks = (await db.execute(total_checks_q)).scalar() or 0
 
     # 주간 상호작용 체크 수
-    weekly_checks_q = select(func.count()).where(
-        AppMetric.event_type == "interaction_check",
-        AppMetric.created_at >= week_start,
-    ).select_from(AppMetric)
+    weekly_checks_q = (
+        select(func.count())
+        .where(
+            AppMetric.event_type == "interaction_check",
+            AppMetric.created_at >= week_start,
+        )
+        .select_from(AppMetric)
+    )
     weekly_checks = (await db.execute(weekly_checks_q)).scalar() or 0
 
     # 전체 피드백 수
-    total_feedbacks_q = select(func.count()).where(
-        Feedback.created_at >= period_start,
-    ).select_from(Feedback)
+    total_feedbacks_q = (
+        select(func.count())
+        .where(
+            Feedback.created_at >= period_start,
+        )
+        .select_from(Feedback)
+    )
     total_feedbacks = (await db.execute(total_feedbacks_q)).scalar() or 0
 
     # 디바이스당 평균 이벤트 수

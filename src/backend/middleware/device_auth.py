@@ -7,8 +7,6 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.requests import Request
 from starlette.responses import Response
 
-from src.backend.utils.response import error_response
-
 logger = logging.getLogger(__name__)
 
 # 인증 면제 경로 목록 (exact match)
@@ -39,9 +37,7 @@ class DeviceAuthMiddleware(BaseHTTPMiddleware):
     - 둘 다 없으면 web-{uuid4} 생성 후 Set-Cookie.
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         """요청의 디바이스 인증을 확인하고 처리한다."""
         path = request.url.path
 

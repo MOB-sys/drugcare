@@ -21,9 +21,7 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     - Strict-Transport-Security (프로덕션 환경만)
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         """응답에 보안 헤더를 추가한다.
 
         Args:
@@ -42,8 +40,6 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
 
         settings = get_settings()
         if not settings.is_development:
-            response.headers["Strict-Transport-Security"] = (
-                "max-age=31536000; includeSubDomains"
-            )
+            response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
 
         return response

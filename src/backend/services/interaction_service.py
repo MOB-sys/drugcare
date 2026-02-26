@@ -3,19 +3,19 @@
 import json
 from itertools import combinations
 
-from sqlalchemy import or_, and_, select
-from sqlalchemy.ext.asyncio import AsyncSession
 from redis.asyncio import Redis
+from sqlalchemy import and_, or_, select
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.backend.models.interaction import Interaction, ItemType, Severity
+from src.backend.core.config import get_settings
+from src.backend.core.redis import CACHE_TTL_INTERACTION
+from src.backend.models.interaction import Interaction, Severity
 from src.backend.schemas.interaction import (
     InteractionCheckResponse,
     InteractionItem,
     InteractionResult,
 )
-from src.backend.core.config import get_settings
 from src.backend.utils.cache import cache_get, cache_set, hash_query, make_cache_key
-from src.backend.core.redis import CACHE_TTL_INTERACTION
 
 settings = get_settings()
 
@@ -51,7 +51,9 @@ async def check_interactions(
         [(it.item_type.value, it.item_id) for it in items],
     )
     cache_key = make_cache_key(
-        "interaction", "check", hash_query(json.dumps(sorted_key_data)),
+        "interaction",
+        "check",
+        hash_query(json.dumps(sorted_key_data)),
     )
 
     cached = await cache_get(redis, cache_key)
@@ -87,6 +89,7 @@ async def check_interactions(
     # AI 설명 추가 (API 키가 설정된 경우에만)
     if settings.OPENAI_API_KEY:
         from src.backend.services.ai_explanation_service import enhance_results
+
         enhanced = await enhance_results(redis, results_list)
         response_dict["results"] = enhanced
 

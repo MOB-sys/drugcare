@@ -34,9 +34,7 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
     - Redis 장애 시 요청을 통과시킨다 (graceful degradation).
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         """요청의 레이트 리밋을 확인하고 처리한다.
 
         Args:

@@ -15,9 +15,6 @@ jobs:
   backend-lint:
     name: Backend Lint
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src/backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -25,15 +22,12 @@ jobs:
           python-version: "3.11"
           cache: pip
       - run: pip install ruff mypy
-      - run: ruff check .
-      - run: ruff format --check .
+      - run: ruff check src/backend/
+      - run: ruff format --check src/backend/
 
   backend-test:
     name: Backend Test
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: src/backend
     services:
       postgres:
         image: postgres:16
@@ -67,7 +61,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -e ".[test]"
+      - run: pip install -e ".[dev]"
       - run: pytest --cov --cov-report=xml --cov-fail-under=70
 
   # ── Flutter ──

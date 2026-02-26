@@ -2,18 +2,18 @@
 
 import math
 
+from redis.asyncio import Redis
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from redis.asyncio import Redis
 
+from src.backend.core.redis import CACHE_TTL_SUPPLEMENT_DETAIL, CACHE_TTL_SUPPLEMENT_SEARCH
 from src.backend.models.supplement import Supplement
 from src.backend.schemas.supplement import SupplementDetail, SupplementSearchItem
 from src.backend.utils.cache import cache_get, cache_set, hash_query, make_cache_key
-from src.backend.core.redis import CACHE_TTL_SUPPLEMENT_DETAIL, CACHE_TTL_SUPPLEMENT_SEARCH
 
 # slug/count 캐시 TTL (초)
-CACHE_TTL_SUPPLEMENT_SLUGS = 60 * 60 * 24   # 24시간
-CACHE_TTL_SUPPLEMENT_COUNT = 60 * 60 * 24   # 24시간
+CACHE_TTL_SUPPLEMENT_SLUGS = 60 * 60 * 24  # 24시간
+CACHE_TTL_SUPPLEMENT_COUNT = 60 * 60 * 24  # 24시간
 
 
 async def search_supplements(
