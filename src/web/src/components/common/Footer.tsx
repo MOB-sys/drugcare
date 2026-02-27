@@ -26,6 +26,16 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/drugs" className="hover:text-[var(--color-primary)] transition-colors">
+                  의약품 목록
+                </Link>
+              </li>
+              <li>
+                <Link href="/supplements" className="hover:text-[var(--color-primary)] transition-colors">
+                  건강기능식품 목록
+                </Link>
+              </li>
+              <li>
                 <Link href="/tips" className="hover:text-[var(--color-primary)] transition-colors">
                   건강팁
                 </Link>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MediCheckLogo } from "@/components/common/MediCheckLogo";
+import { AdBanner } from "@/components/ads/AdBanner";
 
 export default function HomePage() {
   return (
@@ -59,6 +60,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* 홈 광고 */}
+      <AdBanner slot="home-mid" format="auto" className="max-w-3xl mx-auto px-4" />
 
       {/* Features */}
       <section className="py-16">

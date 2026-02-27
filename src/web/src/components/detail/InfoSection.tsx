@@ -3,13 +3,14 @@
 interface InfoSectionProps {
   title: string;
   content: string | null;
+  id?: string;
 }
 
-export function InfoSection({ title, content }: InfoSectionProps) {
+export function InfoSection({ title, content, id }: InfoSectionProps) {
   if (!content) return null;
 
   return (
-    <section className="py-4 border-b border-gray-100 last:border-b-0">
+    <section id={id} className="py-4 border-b border-gray-100 last:border-b-0 scroll-mt-24">
       <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-2">{title}</h2>
       <p className="text-gray-700 leading-relaxed whitespace-pre-line break-keep">{content}</p>
     </section>

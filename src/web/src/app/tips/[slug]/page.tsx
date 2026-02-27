@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTipBySlug, getAllTipSlugs } from "@/lib/data/tips";
 import { AdBanner } from "@/components/ads/AdBanner";
+import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -75,7 +76,15 @@ export default async function TipDetailPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <article className="max-w-3xl mx-auto px-4 py-8">
+      <Breadcrumbs
+        items={[
+          { label: "홈", href: "/" },
+          { label: "건강팁", href: "/tips" },
+          { label: tip.title },
+        ]}
+      />
+
+      <article className="max-w-3xl mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-3 break-keep">
           {tip.title}
         </h1>

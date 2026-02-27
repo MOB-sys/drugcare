@@ -8,6 +8,7 @@ import { FilterChips } from "@/components/check/FilterChips";
 import { SearchResults } from "@/components/check/SearchResults";
 import { SelectedItemsBar } from "@/components/check/SelectedItemsBar";
 import { CheckButton } from "@/components/check/CheckButton";
+import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 
 export default function CheckPage() {
   const router = useRouter();
@@ -24,39 +25,48 @@ export default function CheckPage() {
   }
 
   return (
-    <section className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2">상호작용 체크</h1>
-      <p className="text-gray-500 mb-6">
-        복용 중인 약물과 영양제를 검색해서 선택하세요.
-      </p>
+    <>
+      <Breadcrumbs
+        items={[
+          { label: "홈", href: "/" },
+          { label: "상호작용 체크" },
+        ]}
+      />
 
-      <div className="space-y-4">
-        <SearchInput value={search.query} onChange={search.setQuery} />
-        <FilterChips current={search.filter} onChange={search.setFilter} />
+      <section className="max-w-2xl mx-auto px-4 py-6">
+        <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2">상호작용 체크</h1>
+        <p className="text-gray-500 mb-6">
+          복용 중인 약물과 영양제를 검색해서 선택하세요.
+        </p>
 
-        <div className="border border-gray-200 rounded-xl bg-white overflow-hidden shadow-sm">
-          <SearchResults
-            results={search.results}
-            isLoading={search.isLoading}
-            query={search.query}
-            isSelected={search.isSelected}
-            canAddMore={search.canAddMore}
-            onToggle={search.toggleItem}
+        <div className="space-y-4">
+          <SearchInput value={search.query} onChange={search.setQuery} />
+          <FilterChips current={search.filter} onChange={search.setFilter} />
+
+          <div className="border border-gray-200 rounded-xl bg-white overflow-hidden shadow-sm">
+            <SearchResults
+              results={search.results}
+              isLoading={search.isLoading}
+              query={search.query}
+              isSelected={search.isSelected}
+              canAddMore={search.canAddMore}
+              onToggle={search.toggleItem}
+            />
+          </div>
+
+          <SelectedItemsBar
+            items={search.selectedItems}
+            onRemove={search.removeItem}
+            onClearAll={search.clearAll}
+          />
+
+          <CheckButton
+            items={search.selectedItems}
+            isLoading={isChecking}
+            onClick={handleCheck}
           />
         </div>
-
-        <SelectedItemsBar
-          items={search.selectedItems}
-          onRemove={search.removeItem}
-          onClearAll={search.clearAll}
-        />
-
-        <CheckButton
-          items={search.selectedItems}
-          isLoading={isChecking}
-          onClick={handleCheck}
-        />
-      </div>
-    </section>
+      </section>
+    </>
   );
 }

@@ -7,6 +7,8 @@ import { MediCheckLogo } from "./MediCheckLogo";
 
 const NAV_ITEMS = [
   { href: "/check", label: "상호작용 체크" },
+  { href: "/drugs", label: "의약품" },
+  { href: "/supplements", label: "건강기능식품" },
   { href: "/tips", label: "건강팁" },
   { href: "/cabinet", label: "내 복약함" },
 ] as const;
