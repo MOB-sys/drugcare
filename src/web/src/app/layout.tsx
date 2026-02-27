@@ -8,6 +8,8 @@ import { SmartAppBanner } from "@/components/common/SmartAppBanner";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_ID;
+const NAVER_VERIFY = process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION;
+const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -39,6 +41,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ko_KR",
     siteName: "MediCheck",
+    images: [
+      {
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com"}/api/og?title=MediCheck&type=default`,
+        width: 1200,
+        height: 630,
+        alt: "MediCheck — 약/영양제 상호작용 체커",
+      },
+    ],
   },
   appleWebApp: {
     capable: true,
@@ -58,6 +68,8 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
+        {/* 네이버 서치어드바이저 사이트 소유 확인 */}
+        {NAVER_VERIFY && <meta name="naver-site-verification" content={NAVER_VERIFY} />}
         {/* Pretendard 폰트 preload — CLS 방지 */}
         <link
           rel="preload"
@@ -108,6 +120,20 @@ export default function RootLayout({
             crossOrigin="anonymous"
             strategy="lazyOnload"
           />
+        )}
+
+        {/* Kakao SDK — 카카오톡 공유 */}
+        {KAKAO_JS_KEY && (
+          <>
+            <Script
+              src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js"
+              crossOrigin="anonymous"
+              strategy="afterInteractive"
+            />
+            <Script id="kakao-init" strategy="afterInteractive">
+              {`(function check(){if(window.Kakao&&!window.Kakao.isInitialized()){window.Kakao.init('${KAKAO_JS_KEY}')}else{setTimeout(check,200)}})();`}
+            </Script>
+          </>
         )}
       </body>
     </html>

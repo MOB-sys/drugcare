@@ -92,6 +92,23 @@ export default async function SupplementDetailPage({ params }: PageProps) {
     category: supp.category ?? "건강기능식품",
   };
 
+  /* FAQ JSON-LD — 상세 정보를 Q&A로 구조화 */
+  const faqEntries: { question: string; answer: string }[] = [];
+  if (supp.functionality) faqEntries.push({ question: `${supp.product_name}의 기능성은?`, answer: supp.functionality });
+  if (supp.main_ingredient) faqEntries.push({ question: `${supp.product_name}의 주성분은?`, answer: supp.main_ingredient });
+  if (supp.intake_method) faqEntries.push({ question: `${supp.product_name}의 섭취방법은?`, answer: supp.intake_method });
+  if (supp.precautions) faqEntries.push({ question: `${supp.product_name} 섭취 시 주의사항은?`, answer: supp.precautions });
+
+  const faqJsonLd = faqEntries.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqEntries.map((e) => ({
+      "@type": "Question",
+      name: e.question,
+      acceptedAnswer: { "@type": "Answer", text: e.answer },
+    })),
+  } : null;
+
   /* 목차 아이템 구성 */
   const tocItems: TocItem[] = [
     supp.functionality && { id: "functionality", label: "기능성" },
@@ -107,6 +124,12 @@ export default async function SupplementDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
       <Breadcrumbs
         items={[

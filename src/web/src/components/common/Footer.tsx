@@ -53,9 +53,27 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* App download */}
+          {/* Legal + Support */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">앱 다운로드</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-3">안내</h3>
+            <ul className="space-y-2 text-sm text-gray-500">
+              <li>
+                <Link href="/privacy" className="hover:text-[var(--color-primary)] transition-colors">
+                  개인정보처리방침
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-[var(--color-primary)] transition-colors">
+                  이용약관
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-[var(--color-primary)] transition-colors">
+                  문의하기
+                </Link>
+              </li>
+            </ul>
+            <h3 className="text-sm font-semibold text-gray-700 mt-5 mb-3">앱 다운로드</h3>
             <div className="flex flex-col gap-2 text-sm">
               <a
                 href="https://apps.apple.com/app/yakmeogeo"

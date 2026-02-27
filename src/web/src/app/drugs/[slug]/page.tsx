@@ -89,6 +89,24 @@ export default async function DrugDetailPage({ params }: PageProps) {
     warning: drug.atpn_warn_qesitm ?? undefined,
   };
 
+  /* FAQ JSON-LD — 상세 정보를 Q&A로 구조화 */
+  const faqEntries: { question: string; answer: string }[] = [];
+  if (drug.efcy_qesitm) faqEntries.push({ question: `${drug.item_name}의 효능·효과는?`, answer: drug.efcy_qesitm });
+  if (drug.use_method_qesitm) faqEntries.push({ question: `${drug.item_name}의 용법·용량은?`, answer: drug.use_method_qesitm });
+  if (drug.se_qesitm) faqEntries.push({ question: `${drug.item_name}의 부작용은?`, answer: drug.se_qesitm });
+  if (drug.intrc_qesitm) faqEntries.push({ question: `${drug.item_name}의 상호작용 주의사항은?`, answer: drug.intrc_qesitm });
+  if (drug.deposit_method_qesitm) faqEntries.push({ question: `${drug.item_name}의 보관방법은?`, answer: drug.deposit_method_qesitm });
+
+  const faqJsonLd = faqEntries.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqEntries.map((e) => ({
+      "@type": "Question",
+      name: e.question,
+      acceptedAnswer: { "@type": "Answer", text: e.answer },
+    })),
+  } : null;
+
   /* 목차 아이템 구성 — 내용이 있는 섹션만 */
   const tocItems: TocItem[] = [
     drug.efcy_qesitm && { id: "efficacy", label: "효능·효과" },
@@ -107,6 +125,12 @@ export default async function DrugDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {faqJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        />
+      )}
 
       <Breadcrumbs
         items={[
