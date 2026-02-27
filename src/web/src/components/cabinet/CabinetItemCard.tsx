@@ -4,14 +4,15 @@ import type { CabinetItem } from "@/types/cabinet";
 
 interface CabinetItemCardProps {
   item: CabinetItem;
+  isDeleting?: boolean;
   onDelete: (id: number) => void;
 }
 
-export function CabinetItemCard({ item, onDelete }: CabinetItemCardProps) {
+export function CabinetItemCard({ item, isDeleting, onDelete }: CabinetItemCardProps) {
   const dateStr = new Date(item.created_at).toLocaleDateString("ko-KR");
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+    <div className={`flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all ${isDeleting ? "opacity-50 pointer-events-none" : ""}`}>
       <span
         className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-medium ${
           item.item_type === "drug"
@@ -29,12 +30,17 @@ export function CabinetItemCard({ item, onDelete }: CabinetItemCardProps) {
       </div>
       <button
         onClick={() => onDelete(item.id)}
-        className="shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+        disabled={isDeleting}
+        className="shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
         aria-label={`${item.nickname || item.item_name} 삭제`}
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        {isDeleting ? (
+          <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+        ) : (
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        )}
       </button>
     </div>
   );

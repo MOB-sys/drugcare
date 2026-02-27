@@ -53,6 +53,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           },
         ],
       },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+      },
     };
   } catch {
     return { title: "약물 정보" };

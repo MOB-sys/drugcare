@@ -182,11 +182,48 @@ body {
   header,
   footer,
   nav[aria-label="breadcrumb"],
-  .no-print {
+  .no-print,
+  aside,
+  .smart-app-banner {
     display: none !important;
   }
   body {
     background: white !important;
     color: black !important;
+    font-size: 12pt !important;
+  }
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  article {
+    max-width: 100% !important;
+  }
+  /* 카드를 인쇄에 적합하게 */
+  .rounded-xl {
+    border-radius: 4px !important;
+  }
+  .shadow-sm, .shadow-md, .shadow-lg {
+    box-shadow: none !important;
+  }
+  /* 결과 카드 페이지 브레이크 */
+  [data-interaction-card] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 12pt;
+  }
+  /* 링크 URL 표시 */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #666;
+  }
+  /* 인쇄 타임스탬프 */
+  .print-timestamp::after {
+    content: "인쇄: " attr(data-print-date);
+    display: block;
+    font-size: 9pt;
+    color: #999;
+    margin-top: 8pt;
   }
 }

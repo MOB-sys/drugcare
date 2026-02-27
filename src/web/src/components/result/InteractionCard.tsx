@@ -14,7 +14,7 @@ export function InteractionCard({ interaction }: InteractionCardProps) {
   const config = SEVERITY_CONFIG[interaction.severity as Severity] ?? SEVERITY_CONFIG.info;
 
   return (
-    <div className={`rounded-xl border p-4 shadow-sm ${config.cardClassName}`}>
+    <div data-interaction-card className={`rounded-xl border p-4 shadow-sm ${config.cardClassName}`}>
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full text-left flex items-start justify-between gap-3"

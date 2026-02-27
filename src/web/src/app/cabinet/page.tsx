@@ -8,7 +8,7 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import Link from "next/link";
 
 export default function CabinetPage() {
-  const { items, isLoading, error, removeItem } = useCabinet();
+  const { items, isLoading, error, deletingIds, removeItem } = useCabinet();
 
   const checkParams = items
     .map((it) => `${it.item_type}:${it.item_id}:${encodeURIComponent(it.nickname || it.item_name)}`)
@@ -48,6 +48,7 @@ export default function CabinetPage() {
                 <CabinetItemCard
                   key={item.id}
                   item={item}
+                  isDeleting={deletingIds.has(item.id)}
                   onDelete={removeItem}
                 />
               ))}

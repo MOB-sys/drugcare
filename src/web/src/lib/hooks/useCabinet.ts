@@ -13,6 +13,7 @@ interface UseCabinetReturn {
   items: CabinetItem[];
   isLoading: boolean;
   error: string | null;
+  deletingIds: Set<number>;
   addItem: (
     itemType: "drug" | "supplement",
     itemId: number,
@@ -26,6 +27,7 @@ export function useCabinet(): UseCabinetReturn {
   const [items, setItems] = useState<CabinetItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deletingIds, setDeletingIds] = useState<Set<number>>(new Set());
 
   const fetchItems = useCallback(async () => {
     setIsLoading(true);
@@ -69,14 +71,21 @@ export function useCabinet(): UseCabinetReturn {
   );
 
   const removeItem = useCallback(async (id: number): Promise<boolean> => {
+    setDeletingIds((prev) => new Set(prev).add(id));
     try {
       await deleteCabinetItem(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
       return true;
     } catch {
       return false;
+    } finally {
+      setDeletingIds((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
     }
   }, []);
 
-  return { items, isLoading, error, addItem, removeItem, refresh: fetchItems };
+  return { items, isLoading, error, deletingIds, addItem, removeItem, refresh: fetchItems };
 }
