@@ -2,9 +2,31 @@ import Link from "next/link";
 import { PillRightLogo } from "@/components/common/PillRightLogo";
 import { AdBanner } from "@/components/ads/AdBanner";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "PillRight",
+  url: SITE_URL,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${SITE_URL}/check?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+
 export default function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+
       {/* Hero */}
       <section className="bg-gradient-to-b from-[var(--color-primary)] to-[var(--color-primary-dark)] text-white py-20">
         <div className="max-w-3xl mx-auto px-4 text-center">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { AdBanner } from "@/components/ads/AdBanner";
 
 export const metadata: Metadata = {
   title: "개인정보처리방침",
@@ -101,6 +102,8 @@ export default function PrivacyPage() {
             <p>본 개인정보처리방침이 변경되는 경우, 변경 사항을 서비스 내 공지사항을 통해 안내하며, 변경된 방침은 공지 후 7일이 경과한 시점부터 효력이 발생합니다.</p>
           </section>
         </div>
+
+        <AdBanner slot="legal-bottom" format="auto" className="mt-8" />
       </article>
     </>
   );

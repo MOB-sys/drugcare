@@ -5,6 +5,7 @@ import Link from "next/link";
 import { searchDrugs } from "@/lib/api/drugs";
 import { searchSupplements } from "@/lib/api/supplements";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { AdBanner } from "@/components/ads/AdBanner";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import type { DrugSearchItem } from "@/types/drug";
 import type { SupplementSearchItem } from "@/types/supplement";
@@ -269,6 +270,9 @@ export default function ComparePage() {
             </Link>
           </div>
         )}
+
+        {/* 비교 결과 하단 광고 */}
+        <AdBanner slot="compare-mid" format="auto" className="max-w-4xl mx-auto" />
 
         {!itemA && !itemB && (
           <div className="text-center py-12 text-[var(--color-text-muted)]">

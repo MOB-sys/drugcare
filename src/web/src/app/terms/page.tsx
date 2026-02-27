@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { AdBanner } from "@/components/ads/AdBanner";
 
 export const metadata: Metadata = {
   title: "이용약관",
@@ -98,6 +99,8 @@ export default function TermsPage() {
             <p>서비스 이용과 관련하여 분쟁이 발생한 경우, 서비스 제공자의 소재지를 관할하는 법원을 전속 관할 법원으로 합니다.</p>
           </section>
         </div>
+
+        <AdBanner slot="legal-bottom" format="auto" className="mt-8" />
       </article>
     </>
   );

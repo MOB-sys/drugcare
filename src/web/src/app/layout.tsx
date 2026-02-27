@@ -21,7 +21,13 @@ export const viewport: Viewport = {
   ],
 };
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  alternates: {
+    canonical: "./",
+  },
   title: {
     default: "PillRight — 약/영양제 상호작용 체커",
     template: "%s | PillRight",

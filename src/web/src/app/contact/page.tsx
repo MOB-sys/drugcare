@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { AdBanner } from "@/components/ads/AdBanner";
 
 export const metadata: Metadata = {
   title: "문의하기",
@@ -89,6 +90,8 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
+
+        <AdBanner slot="legal-bottom" format="auto" />
 
         {/* 추가 안내 */}
         <div className="text-center text-sm text-[var(--color-text-muted)]">
