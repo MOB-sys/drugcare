@@ -89,10 +89,17 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
+        {/* Skip to content — 접근성 */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[var(--color-primary)] focus:text-white focus:text-sm focus:font-medium focus:shadow-lg"
+        >
+          본문으로 건너뛰기
+        </a>
         <Header />
         <DisclaimerBanner />
         <SmartAppBanner />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1" role="main">{children}</main>
         <Footer />
 
         {/* Google Analytics 4 */}

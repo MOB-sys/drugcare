@@ -198,33 +198,64 @@ export default function ComparePage() {
           </div>
         )}
 
-        {/* 비교 테이블 */}
+        {/* 비교 테이블 — PC: 3컬럼 그리드, 모바일: 카드 뷰 */}
         {itemA && itemB && !loading && (
-          <div className="bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] overflow-hidden shadow-sm">
-            {/* 헤더 */}
-            <div className="grid grid-cols-[140px_1fr_1fr] border-b border-[var(--color-border)] bg-[var(--color-primary-50)]">
-              <div className="p-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase">항목</div>
-              <div className="p-3 text-sm font-semibold text-[var(--color-primary)] border-l border-[var(--color-border)] truncate">{itemA.name}</div>
-              <div className="p-3 text-sm font-semibold text-[var(--color-primary)] border-l border-[var(--color-border)] truncate">{itemB.name}</div>
+          <>
+            {/* PC 테이블 (md 이상) */}
+            <div className="hidden md:block bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] overflow-hidden shadow-sm">
+              <div className="grid grid-cols-[140px_1fr_1fr] border-b border-[var(--color-border)] bg-[var(--color-primary-50)]">
+                <div className="p-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase">항목</div>
+                <div className="p-3 text-sm font-semibold text-[var(--color-primary)] border-l border-[var(--color-border)] truncate">{itemA.name}</div>
+                <div className="p-3 text-sm font-semibold text-[var(--color-primary)] border-l border-[var(--color-border)] truncate">{itemB.name}</div>
+              </div>
+              {uniqueFields.map((field) => {
+                const valA = itemA.details[field.key];
+                const valB = itemB.details[field.key];
+                if (!valA && !valB) return null;
+                return (
+                  <div key={field.key} className="grid grid-cols-[140px_1fr_1fr] border-b last:border-b-0 border-[var(--color-border-light)]">
+                    <div className="p-3 text-sm font-medium text-[var(--color-text-secondary)] bg-[var(--color-surface-hover)]">{field.label}</div>
+                    <div className="p-3 text-sm text-[var(--color-text)] leading-relaxed whitespace-pre-line border-l border-[var(--color-border-light)] break-keep">
+                      {valA || <span className="text-[var(--color-text-muted)]">—</span>}
+                    </div>
+                    <div className="p-3 text-sm text-[var(--color-text)] leading-relaxed whitespace-pre-line border-l border-[var(--color-border-light)] break-keep">
+                      {valB || <span className="text-[var(--color-text-muted)]">—</span>}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-            {/* 행 */}
-            {uniqueFields.map((field) => {
-              const valA = itemA.details[field.key];
-              const valB = itemB.details[field.key];
-              if (!valA && !valB) return null;
-              return (
-                <div key={field.key} className="grid grid-cols-[140px_1fr_1fr] border-b last:border-b-0 border-[var(--color-border-light)]">
-                  <div className="p-3 text-sm font-medium text-[var(--color-text-secondary)] bg-[var(--color-surface-hover)]">{field.label}</div>
-                  <div className="p-3 text-sm text-[var(--color-text)] leading-relaxed whitespace-pre-line border-l border-[var(--color-border-light)] break-keep">
-                    {valA || <span className="text-[var(--color-text-muted)]">—</span>}
+
+            {/* 모바일 카드 뷰 (md 미만) */}
+            <div className="md:hidden space-y-4">
+              {uniqueFields.map((field) => {
+                const valA = itemA.details[field.key];
+                const valB = itemB.details[field.key];
+                if (!valA && !valB) return null;
+                return (
+                  <div key={field.key} className="bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] overflow-hidden shadow-sm">
+                    <div className="px-4 py-2 bg-[var(--color-primary-50)] text-sm font-semibold text-[var(--color-primary)]">
+                      {field.label}
+                    </div>
+                    <div className="divide-y divide-[var(--color-border-light)]">
+                      <div className="px-4 py-3">
+                        <p className="text-xs font-medium text-[var(--color-text-muted)] mb-1">{itemA.name}</p>
+                        <p className="text-sm text-[var(--color-text)] leading-relaxed whitespace-pre-line break-keep">
+                          {valA || <span className="text-[var(--color-text-muted)]">—</span>}
+                        </p>
+                      </div>
+                      <div className="px-4 py-3">
+                        <p className="text-xs font-medium text-[var(--color-text-muted)] mb-1">{itemB.name}</p>
+                        <p className="text-sm text-[var(--color-text)] leading-relaxed whitespace-pre-line break-keep">
+                          {valB || <span className="text-[var(--color-text-muted)]">—</span>}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="p-3 text-sm text-[var(--color-text)] leading-relaxed whitespace-pre-line border-l border-[var(--color-border-light)] break-keep">
-                    {valB || <span className="text-[var(--color-text-muted)]">—</span>}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          </>
         )}
 
         {/* 상호작용 체크 유도 */}

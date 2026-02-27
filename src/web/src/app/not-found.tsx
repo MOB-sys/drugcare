@@ -3,6 +3,11 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <section className="max-w-xl mx-auto px-4 py-24 text-center">
+      <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-[var(--color-primary-50)] flex items-center justify-center">
+        <svg className="w-8 h-8 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
       <div className="text-6xl font-bold text-[var(--color-primary)] mb-4">404</div>
       <h1 className="text-2xl font-bold text-gray-900 mb-3">
         페이지를 찾을 수 없습니다
