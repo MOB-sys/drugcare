@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getAllDrugSlugs } from "@/lib/api/drugs";
 import { getAllSupplementSlugs } from "@/lib/api/supplements";
 import { getAllTipSlugs } from "@/lib/data/tips";
+import { ALL_LETTERS } from "@/lib/utils/korean";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
 
@@ -51,5 +52,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  return [...staticPages, ...tipEntries, ...drugEntries, ...suppEntries];
+  /* A~Z 브라우즈 페이지 — 내부 링크 강화 */
+  const browseEntries: MetadataRoute.Sitemap = ALL_LETTERS.flatMap((letter) => [
+    { url: `${BASE_URL}/drugs/browse/${encodeURIComponent(letter)}`, changeFrequency: "weekly" as const, priority: 0.6 },
+    { url: `${BASE_URL}/supplements/browse/${encodeURIComponent(letter)}`, changeFrequency: "weekly" as const, priority: 0.6 },
+  ]);
+
+  return [...staticPages, ...browseEntries, ...tipEntries, ...drugEntries, ...suppEntries];
 }
