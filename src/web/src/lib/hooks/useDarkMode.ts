@@ -7,7 +7,7 @@ type Theme = "light" | "dark" | "system";
 const STORAGE_KEY = "pillright_theme";
 
 export function useDarkMode() {
-  const [theme, setThemeState] = useState<Theme>("system");
+  const [theme, setThemeState] = useState<Theme>("light");
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
