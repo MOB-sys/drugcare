@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { addCabinetItem } from "@/lib/api/cabinet";
 import { ApiError } from "@/lib/api/client";
+import { useToastContext } from "@/components/common/ToastProvider";
 
 interface AddToCabinetButtonProps {
   itemType: "drug" | "supplement";
@@ -16,6 +17,7 @@ export function AddToCabinetButton({
   itemName,
 }: AddToCabinetButtonProps) {
   const [status, setStatus] = useState<"idle" | "loading" | "added" | "duplicate">("idle");
+  const { addToast } = useToastContext();
 
   async function handleClick() {
     if (status === "added" || status === "duplicate" || status === "loading") return;
@@ -23,11 +25,14 @@ export function AddToCabinetButton({
     try {
       await addCabinetItem({ item_type: itemType, item_id: itemId, nickname: itemName });
       setStatus("added");
+      addToast(`${itemName}을(를) 복약함에 추가했습니다.`, "success");
     } catch (e) {
       if (e instanceof ApiError && e.status === 409) {
         setStatus("duplicate");
+        addToast("이미 복약함에 추가된 항목입니다.", "info");
       } else {
         setStatus("idle");
+        addToast("복약함 추가에 실패했습니다. 다시 시도해주세요.", "error");
       }
     }
   }

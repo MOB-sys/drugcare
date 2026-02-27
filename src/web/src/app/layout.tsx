@@ -7,6 +7,7 @@ import { DisclaimerBanner } from "@/components/common/DisclaimerBanner";
 import { SmartAppBanner } from "@/components/common/SmartAppBanner";
 import { WebVitals } from "@/components/common/WebVitals";
 import { ServiceWorkerRegister } from "@/components/common/ServiceWorkerRegister";
+import { ToastProvider } from "@/components/common/ToastProvider";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_ID;
@@ -109,7 +110,9 @@ export default function RootLayout({
         <Header />
         <DisclaimerBanner />
         <SmartAppBanner />
-        <main id="main-content" className="flex-1" role="main">{children}</main>
+        <ToastProvider>
+          <main id="main-content" className="flex-1" role="main">{children}</main>
+        </ToastProvider>
         <Footer />
         <WebVitals />
         <ServiceWorkerRegister />

@@ -67,6 +67,7 @@ export default function CheckPage() {
               results={search.results}
               isLoading={search.isLoading}
               query={search.query}
+              searchError={search.searchError}
               isSelected={search.isSelected}
               canAddMore={search.canAddMore}
               onToggle={search.toggleItem}

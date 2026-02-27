@@ -1,6 +1,11 @@
 import { render, screen, cleanup, fireEvent, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
 import { AddToCabinetButton } from "./AddToCabinetButton";
+import { ToastProvider } from "@/components/common/ToastProvider";
+
+function renderWithToast(ui: React.ReactElement) {
+  return render(<ToastProvider>{ui}</ToastProvider>);
+}
 
 afterEach(cleanup);
 
@@ -37,12 +42,12 @@ afterEach(() => {
 
 describe("AddToCabinetButton", () => {
   it("renders default label", () => {
-    render(<AddToCabinetButton itemType="drug" itemId={10} itemName="타이레놀" />);
+    renderWithToast(<AddToCabinetButton itemType="drug" itemId={10} itemName="타이레놀" />);
     expect(screen.getAllByText("복약함에 추가").length).toBeGreaterThanOrEqual(1);
   });
 
   it("shows added state on success", async () => {
-    render(<AddToCabinetButton itemType="drug" itemId={10} itemName="타이레놀" />);
+    renderWithToast(<AddToCabinetButton itemType="drug" itemId={10} itemName="타이레놀" />);
     fireEvent.click(screen.getByRole("button"));
     await waitFor(() => {
       expect(screen.getAllByText("추가됨!").length).toBeGreaterThanOrEqual(1);
@@ -51,7 +56,7 @@ describe("AddToCabinetButton", () => {
 
   it("shows duplicate state on 409", async () => {
     mockFetch409();
-    render(<AddToCabinetButton itemType="drug" itemId={10} itemName="타이레놀" />);
+    renderWithToast(<AddToCabinetButton itemType="drug" itemId={10} itemName="타이레놀" />);
     fireEvent.click(screen.getByRole("button"));
     await waitFor(() => {
       expect(screen.getAllByText("이미 추가됨").length).toBeGreaterThanOrEqual(1);

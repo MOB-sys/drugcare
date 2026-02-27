@@ -25,6 +25,7 @@ export interface UseSearchReturn {
   setFilter: (f: SearchFilter) => void;
   results: SearchResultItem[];
   isLoading: boolean;
+  searchError: string | null;
   selectedItems: SelectedItem[];
   toggleItem: (item: SelectedItem) => void;
   removeItem: (item_id: number, item_type: string) => void;
@@ -46,6 +47,7 @@ export function useSearch(): UseSearchReturn {
   const [filter, setFilter] = useState<SearchFilter>("all");
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const abortRef = useRef<AbortController | null>(null);
 
@@ -84,6 +86,7 @@ export function useSearch(): UseSearchReturn {
   useEffect(() => {
     if (!debouncedQuery.trim()) {
       setResults([]);
+      setSearchError(null);
       return;
     }
 
@@ -93,6 +96,7 @@ export function useSearch(): UseSearchReturn {
 
     async function doSearch() {
       setIsLoading(true);
+      setSearchError(null);
       try {
         const merged: SearchResultItem[] = [];
 
@@ -108,9 +112,14 @@ export function useSearch(): UseSearchReturn {
         if (!controller.signal.aborted) {
           setResults(merged);
         }
-      } catch {
+      } catch (error) {
         if (!controller.signal.aborted) {
           setResults([]);
+          const message =
+            error instanceof Error && error.message.includes("시간이 초과")
+              ? "요청 시간이 초과되었습니다. 다시 시도해주세요."
+              : "검색 중 오류가 발생했습니다. 다시 시도해주세요.";
+          setSearchError(message);
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -130,6 +139,7 @@ export function useSearch(): UseSearchReturn {
     setFilter,
     results,
     isLoading,
+    searchError,
     selectedItems,
     toggleItem,
     removeItem,

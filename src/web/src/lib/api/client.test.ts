@@ -10,10 +10,12 @@ function mockFetch(body: unknown, status = 200) {
 }
 
 beforeEach(() => {
+  vi.useFakeTimers();
   vi.stubEnv("NEXT_PUBLIC_API_URL", "http://test-api:8000");
 });
 
 afterEach(() => {
+  vi.useRealTimers();
   vi.restoreAllMocks();
 });
 
@@ -30,7 +32,7 @@ describe("fetchApi", () => {
     expect(result).toEqual({ id: 1, name: "test" });
   });
 
-  it("throws ApiError on HTTP error", async () => {
+  it("throws ApiError on 4xx without retry", async () => {
     global.fetch = mockFetch(
       { success: false, data: null, error: "Not Found", meta: { timestamp: "" } },
       404,
@@ -43,16 +45,23 @@ describe("fetchApi", () => {
     });
   });
 
-  it("throws ApiError on 500 server error", async () => {
-    global.fetch = mockFetch(
-      { success: false, data: null, error: "Internal Server Error", meta: { timestamp: "" } },
-      500,
-    );
-
-    await expect(fetchApi("/api/v1/broken")).rejects.toThrow(ApiError);
-    await expect(fetchApi("/api/v1/broken")).rejects.toMatchObject({
+  it("retries on 5xx then fails", async () => {
+    const fn = vi.fn().mockResolvedValue({
+      ok: false,
       status: 500,
+      json: () => Promise.resolve({
+        success: false, data: null, error: "Server Error", meta: { timestamp: "" },
+      }),
     });
+    global.fetch = fn;
+
+    const promise = fetchApi("/api/v1/broken");
+    promise.catch(() => {}); // prevent unhandled rejection
+    await vi.advanceTimersByTimeAsync(500);
+    await vi.advanceTimersByTimeAsync(1000);
+
+    await expect(promise).rejects.toThrow(ApiError);
+    expect(fn).toHaveBeenCalledTimes(3); // 1 initial + 2 retries
   });
 
   it("throws ApiError when success is false", async () => {
@@ -63,6 +72,8 @@ describe("fetchApi", () => {
       meta: { timestamp: "" },
     });
 
+    // success: false with 200 status → 4xx-like (won't retry since ok:true but success:false throws ApiError with status 200, which is < 400)
+    // Actually this throws ApiError(200, ...) which is < 400, so no retry
     await expect(fetchApi("/api/v1/logic-error")).rejects.toThrow("비즈니스 로직 에러");
   });
 
@@ -77,17 +88,17 @@ describe("fetchApi", () => {
     await expect(fetchApi("/api/v1/empty")).rejects.toThrow(ApiError);
   });
 
-  it("handles non-JSON error response", async () => {
+  it("handles non-JSON error response (4xx)", async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: false,
-      status: 502,
+      status: 400,
       json: () => Promise.reject(new Error("not json")),
     });
 
-    await expect(fetchApi("/api/v1/gateway")).rejects.toThrow(ApiError);
-    await expect(fetchApi("/api/v1/gateway")).rejects.toMatchObject({
-      status: 502,
-      message: "API 오류: 502",
+    await expect(fetchApi("/api/v1/bad")).rejects.toThrow(ApiError);
+    await expect(fetchApi("/api/v1/bad")).rejects.toMatchObject({
+      status: 400,
+      message: "API 오류: 400",
     });
   });
 
@@ -112,9 +123,23 @@ describe("fetchApi", () => {
     );
   });
 
-  it("handles network failure", async () => {
-    global.fetch = vi.fn().mockRejectedValue(new TypeError("Failed to fetch"));
+  it("retries on network failure then recovers", async () => {
+    const fn = vi.fn()
+      .mockRejectedValueOnce(new TypeError("Failed to fetch"))
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({
+          success: true, data: "recovered", error: null, meta: { timestamp: "" },
+        }),
+      });
+    global.fetch = fn;
 
-    await expect(fetchApi("/api/v1/test")).rejects.toThrow("Failed to fetch");
+    const promise = fetchApi("/api/v1/test");
+    await vi.advanceTimersByTimeAsync(500);
+    const result = await promise;
+
+    expect(result).toBe("recovered");
+    expect(fn).toHaveBeenCalledTimes(2);
   });
 });
