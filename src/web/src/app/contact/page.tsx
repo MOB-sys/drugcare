@@ -8,9 +8,44 @@ export const metadata: Metadata = {
   description: "PillRight 서비스에 대한 문의, 오류 신고, 데이터 수정 요청 등을 보내주세요.",
 };
 
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "약물 정보는 어디서 가져오나요?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "식품의약품안전처 의약품안전나라 및 건강기능식품 정보 공공 API에서 수집합니다. 정기적으로 데이터를 업데이트하고 있습니다.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "상호작용 정보는 정확한가요?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "공공 데이터와 AI 분석을 기반으로 제공됩니다. 다만, 이 정보는 참고용이며 의사/약사의 전문적 판단을 대체하지 않습니다. 실제 복용 결정은 반드시 전문가와 상담하세요.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "회원가입이 필요한가요?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "아닙니다. PillRight는 회원가입 없이 모든 기능을 이용할 수 있습니다. 복약함 데이터는 기기에 저장됩니다.",
+      },
+    },
+  ],
+};
+
 export default function ContactPage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+      />
       <Breadcrumbs
         items={[
           { label: "홈", href: "/" },

@@ -5,6 +5,7 @@ import { Header } from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
 import { DisclaimerBanner } from "@/components/common/DisclaimerBanner";
 import { SmartAppBanner } from "@/components/common/SmartAppBanner";
+import { WebVitals } from "@/components/common/WebVitals";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_ID;
@@ -84,6 +85,8 @@ export default function RootLayout({
           type="font/woff2"
           crossOrigin="anonymous"
         />
+        {/* OpenSearch — 브라우저 주소창 검색 통합 */}
+        <link rel="search" type="application/opensearchdescription+xml" title="PillRight" href="/opensearch.xml" />
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -107,6 +110,7 @@ export default function RootLayout({
         <SmartAppBanner />
         <main id="main-content" className="flex-1" role="main">{children}</main>
         <Footer />
+        <WebVitals />
 
         {/* Google Analytics 4 */}
         {GA_ID && (
