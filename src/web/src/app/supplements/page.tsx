@@ -7,9 +7,9 @@ import { AdBanner } from "@/components/ads/AdBanner";
 export const metadata: Metadata = {
   title: "건강기능식품 목록 — A-Z 인덱스",
   description:
-    "MediCheck에 등록된 건강기능식품을 가나다순으로 찾아보세요. 기능성, 성분, 섭취방법 정보를 확인할 수 있습니다.",
+    "PillRight에 등록된 건강기능식품을 가나다순으로 찾아보세요. 기능성, 성분, 섭취방법 정보를 확인할 수 있습니다.",
   openGraph: {
-    title: "건강기능식품 목록 — MediCheck",
+    title: "건강기능식품 목록 — PillRight",
     description: "건강기능식품 가나다순 인덱스",
     type: "website",
   },

@@ -1,6 +1,6 @@
-/** MediCheck brand logo — shield + check SVG symbol with text. */
+/** PillRight brand logo — shield + check SVG symbol with text. */
 
-interface MediCheckLogoProps {
+interface PillRightLogoProps {
   size?: "sm" | "md" | "lg";
   showText?: boolean;
   className?: string;
@@ -12,7 +12,7 @@ const SIZES = {
   lg: { icon: 40, text: "text-2xl" },
 } as const;
 
-export function MediCheckLogo({ size = "md", showText = true, className = "" }: MediCheckLogoProps) {
+export function PillRightLogo({ size = "md", showText = true, className = "" }: PillRightLogoProps) {
   const s = SIZES[size];
 
   return (
@@ -51,7 +51,7 @@ export function MediCheckLogo({ size = "md", showText = true, className = "" }: 
       </svg>
       {showText && (
         <span className={`font-bold tracking-tight text-[var(--color-primary)] ${s.text}`}>
-          MediCheck
+          PillRight
         </span>
       )}
     </span>

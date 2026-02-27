@@ -11,7 +11,7 @@ vi.mock("next/navigation", () => ({
 describe("Header", () => {
   it("renders the brand name", () => {
     render(<Header />);
-    expect(screen.getAllByText("MediCheck").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("PillRight").length).toBeGreaterThanOrEqual(1);
   });
 
   it("renders navigation links", () => {

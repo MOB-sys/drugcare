@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MediCheckLogo } from "./MediCheckLogo";
+import { PillRightLogo } from "./PillRightLogo";
 
 export function Footer() {
   return (
@@ -8,7 +8,7 @@ export function Footer() {
         <div className="grid gap-8 sm:grid-cols-3">
           {/* Brand */}
           <div>
-            <MediCheckLogo size="sm" className="mb-3" />
+            <PillRightLogo size="sm" className="mb-3" />
             <p className="text-xs text-gray-400 leading-relaxed">
               약과 영양제 상호작용을
               <br />
@@ -76,7 +76,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-gray-700 mt-5 mb-3">앱 다운로드</h3>
             <div className="flex flex-col gap-2 text-sm">
               <a
-                href="https://apps.apple.com/app/yakmeogeo"
+                href="https://apps.apple.com/app/pillright"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-[var(--color-primary)] transition-colors"
@@ -84,7 +84,7 @@ export function Footer() {
                 App Store
               </a>
               <a
-                href="https://play.google.com/store/apps/details?id=com.yakmeogeo.app"
+                href="https://play.google.com/store/apps/details?id=com.pillright.app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-[var(--color-primary)] transition-colors"
@@ -98,11 +98,11 @@ export function Footer() {
         {/* Disclaimer + Copyright */}
         <div className="mt-8 pt-6 border-t border-gray-100 text-center text-xs text-gray-400 space-y-2">
           <p>
-            MediCheck는 의학적 진단이나 치료를 제공하지 않습니다.
+            PillRight는 의학적 진단이나 치료를 제공하지 않습니다.
             <br />
             제공되는 정보는 참고용이며, 반드시 의사 또는 약사와 상담하세요.
           </p>
-          <p>&copy; {new Date().getFullYear()} MediCheck. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} PillRight. All rights reserved.</p>
         </div>
       </div>
     </footer>

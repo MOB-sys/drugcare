@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "MediCheck — 약/영양제 상호작용 체커",
-    short_name: "MediCheck",
+    name: "PillRight — 약/영양제 상호작용 체커",
+    short_name: "PillRight",
     description: "이 약이랑 이 영양제, 같이 먹어도 될까? 3초 만에 확인하는 복약 안전 체커.",
     start_url: "/",
     display: "standalone",

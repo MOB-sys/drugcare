@@ -39,7 +39,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
 
   return {
     title,
-    description: `${nameList.join(", ")} 복약 상호작용 체크 결과 — MediCheck에서 확인하세요.`,
+    description: `${nameList.join(", ")} 복약 상호작용 체크 결과 — PillRight에서 확인하세요.`,
     openGraph: { title, type: "article" },
   };
 }

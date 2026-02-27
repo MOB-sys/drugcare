@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MediCheckLogo } from "./MediCheckLogo";
+import { PillRightLogo } from "./PillRightLogo";
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
 
 const NAV_ITEMS = [
@@ -22,8 +22,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-surface)]/80 backdrop-blur-md">
       <nav className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-        <Link href="/" aria-label="MediCheck 홈">
-          <MediCheckLogo size="sm" />
+        <Link href="/" aria-label="PillRight 홈">
+          <PillRightLogo size="sm" />
         </Link>
 
         {/* Desktop nav */}

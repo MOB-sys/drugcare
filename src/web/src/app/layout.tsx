@@ -23,8 +23,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "MediCheck — 약/영양제 상호작용 체커",
-    template: "%s | MediCheck",
+    default: "PillRight — 약/영양제 상호작용 체커",
+    template: "%s | PillRight",
   },
   description:
     "이 약이랑 이 영양제, 같이 먹어도 돼? 3초 만에 확인하는 복약 안전 체커. 의약품·건강기능식품 상호작용 정보를 무료로 확인하세요.",
@@ -34,26 +34,26 @@ export const metadata: Metadata = {
     "복약 체크",
     "약물 상호작용 확인",
     "건강기능식품",
-    "MediCheck",
-    "메디체크",
+    "PillRight",
+    "필라이트",
   ],
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    siteName: "MediCheck",
+    siteName: "PillRight",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com"}/api/og?title=MediCheck&type=default`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/api/og?title=PillRight&type=default`,
         width: 1200,
         height: 630,
-        alt: "MediCheck — 약/영양제 상호작용 체커",
+        alt: "PillRight — 약/영양제 상호작용 체커",
       },
     ],
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "MediCheck",
+    title: "PillRight",
   },
   formatDetection: {
     telephone: false,
@@ -84,7 +84,7 @@ export default function RootLayout({
         {/* 다크모드 깜빡임 방지 */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('medicheck_theme');var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}})()`,
+            __html: `(function(){try{var t=localStorage.getItem('pillright_theme');var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}})()`,
           }}
         />
       </head>

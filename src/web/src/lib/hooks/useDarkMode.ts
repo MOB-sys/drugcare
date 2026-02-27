@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 
 type Theme = "light" | "dark" | "system";
 
-const STORAGE_KEY = "medicheck_theme";
+const STORAGE_KEY = "pillright_theme";
 
 export function useDarkMode() {
   const [theme, setThemeState] = useState<Theme>("system");

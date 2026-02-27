@@ -3,7 +3,7 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "이용약관",
-  description: "MediCheck 서비스 이용약관. 서비스 이용 조건, 면책사항, 약물 정보 제공 범위를 안내합니다.",
+  description: "PillRight 서비스 이용약관. 서비스 이용 조건, 면책사항, 약물 정보 제공 범위를 안내합니다.",
 };
 
 export default function TermsPage() {
@@ -23,7 +23,7 @@ export default function TermsPage() {
         <div className="space-y-8 text-[var(--color-text)] text-sm leading-relaxed break-keep">
           <section>
             <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-3">제1조 (목적)</h2>
-            <p>본 약관은 MediCheck(이하 &quot;서비스&quot;)가 제공하는 약물·건강기능식품 정보 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
+            <p>본 약관은 PillRight(이하 &quot;서비스&quot;)가 제공하는 약물·건강기능식품 정보 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
           </section>
 
           <section>

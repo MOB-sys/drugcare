@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description = supp.functionality
       ? `${supp.product_name} — ${supp.functionality.slice(0, 120)}`
       : `${supp.product_name} 건강기능식품 상세 정보를 확인하세요.`;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
     return {
       title,
       description,

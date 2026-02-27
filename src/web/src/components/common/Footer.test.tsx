@@ -15,7 +15,7 @@ describe("Footer", () => {
   it("renders copyright", () => {
     render(<Footer />);
     expect(
-      screen.getAllByText(/MediCheck. All rights reserved/).length,
+      screen.getAllByText(/PillRight. All rights reserved/).length,
     ).toBeGreaterThanOrEqual(1);
   });
 });

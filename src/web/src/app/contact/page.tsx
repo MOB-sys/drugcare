@@ -4,7 +4,7 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "문의하기",
-  description: "MediCheck 서비스에 대한 문의, 오류 신고, 데이터 수정 요청 등을 보내주세요.",
+  description: "PillRight 서비스에 대한 문의, 오류 신고, 데이터 수정 요청 등을 보내주세요.",
 };
 
 export default function ContactPage() {
@@ -20,7 +20,7 @@ export default function ContactPage() {
       <section className="max-w-3xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2">문의하기</h1>
         <p className="text-[var(--color-text-secondary)] mb-8">
-          MediCheck 서비스에 대한 문의사항이나 피드백을 보내주세요.
+          PillRight 서비스에 대한 문의사항이나 피드백을 보내주세요.
         </p>
 
         <div className="grid gap-4 sm:grid-cols-2 mb-8">
@@ -34,10 +34,10 @@ export default function ContactPage() {
             <h2 className="font-semibold text-[var(--color-text)] mb-1">일반 문의</h2>
             <p className="text-sm text-[var(--color-text-secondary)] mb-3">서비스 이용, 기능 제안, 일반적인 질문</p>
             <a
-              href="mailto:support@yakmeogeo.com"
+              href="mailto:support@pillright.com"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-primary)] hover:underline"
             >
-              support@yakmeogeo.com
+              support@pillright.com
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
@@ -54,10 +54,10 @@ export default function ContactPage() {
             <h2 className="font-semibold text-[var(--color-text)] mb-1">데이터 오류 신고</h2>
             <p className="text-sm text-[var(--color-text-secondary)] mb-3">약물/영양제 정보 오류, 상호작용 데이터 수정 요청</p>
             <a
-              href="mailto:data@yakmeogeo.com?subject=[데이터 오류] "
+              href="mailto:data@pillright.com?subject=[데이터 오류] "
               className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-primary)] hover:underline"
             >
-              data@yakmeogeo.com
+              data@pillright.com
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
@@ -84,7 +84,7 @@ export default function ContactPage() {
             <div>
               <h3 className="font-medium text-[var(--color-text)] mb-1">회원가입이 필요한가요?</h3>
               <p className="text-sm text-[var(--color-text-secondary)]">
-                아닙니다. MediCheck는 회원가입 없이 모든 기능을 이용할 수 있습니다. 복약함 데이터는 기기에 저장됩니다.
+                아닙니다. PillRight는 회원가입 없이 모든 기능을 이용할 수 있습니다. 복약함 데이터는 기기에 저장됩니다.
               </p>
             </div>
           </div>

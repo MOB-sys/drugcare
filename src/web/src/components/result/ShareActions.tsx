@@ -48,7 +48,7 @@ export function ShareActions() {
         objectType: "feed",
         content: {
           title: document.title,
-          description: "MediCheck — 약/영양제 상호작용 체커",
+          description: "PillRight — 약/영양제 상호작용 체커",
           imageUrl: `${window.location.origin}/icon-512`,
           link: { mobileWebUrl: window.location.href, webUrl: window.location.href },
         },

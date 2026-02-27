@@ -3,7 +3,7 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 
 export const metadata: Metadata = {
   title: "개인정보처리방침",
-  description: "MediCheck 개인정보처리방침. 수집하는 개인정보 항목, 이용 목적, 보유 기간 등을 안내합니다.",
+  description: "PillRight 개인정보처리방침. 수집하는 개인정보 항목, 이용 목적, 보유 기간 등을 안내합니다.",
 };
 
 export default function PrivacyPage() {
@@ -23,7 +23,7 @@ export default function PrivacyPage() {
         <div className="prose-policy space-y-8 text-[var(--color-text)] text-sm leading-relaxed break-keep">
           <section>
             <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-3">1. 개인정보의 수집 및 이용 목적</h2>
-            <p>MediCheck(이하 &quot;서비스&quot;)는 다음의 목적을 위해 최소한의 개인정보를 처리합니다.</p>
+            <p>PillRight(이하 &quot;서비스&quot;)는 다음의 목적을 위해 최소한의 개인정보를 처리합니다.</p>
             <ul className="list-disc ml-5 mt-2 space-y-1">
               <li>복약함 관리 서비스 제공</li>
               <li>서비스 이용 통계 분석 및 품질 개선</li>
@@ -92,7 +92,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-3">8. 개인정보보호 책임자</h2>
             <ul className="list-none mt-2 space-y-1">
-              <li>이메일: <a href="mailto:support@yakmeogeo.com" className="text-[var(--color-info)] hover:underline">support@yakmeogeo.com</a></li>
+              <li>이메일: <a href="mailto:support@pillright.com" className="text-[var(--color-info)] hover:underline">support@pillright.com</a></li>
             </ul>
           </section>
 

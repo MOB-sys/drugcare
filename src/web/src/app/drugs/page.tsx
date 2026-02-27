@@ -7,9 +7,9 @@ import { AdBanner } from "@/components/ads/AdBanner";
 export const metadata: Metadata = {
   title: "의약품 목록 — A-Z 인덱스",
   description:
-    "MediCheck에 등록된 의약품을 가나다순으로 찾아보세요. 효능, 용법, 상호작용 정보를 확인할 수 있습니다.",
+    "PillRight에 등록된 의약품을 가나다순으로 찾아보세요. 효능, 용법, 상호작용 정보를 확인할 수 있습니다.",
   openGraph: {
-    title: "의약품 목록 — MediCheck",
+    title: "의약품 목록 — PillRight",
     description: "의약품 가나다순 인덱스",
     type: "website",
   },

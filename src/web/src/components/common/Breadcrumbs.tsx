@@ -19,7 +19,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
       "@type": "ListItem",
       position: i + 1,
       name: item.label,
-      ...(item.href ? { item: `${process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com"}${item.href}` } : {}),
+      ...(item.href ? { item: `${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}${item.href}` } : {}),
     })),
   };
 

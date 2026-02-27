@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 
-const STORAGE_KEY = "medicheck_recent_searches";
+const STORAGE_KEY = "pillright_recent_searches";
 const MAX_RECENT = 8;
 
 export function useRecentSearches() {

@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const tip = getTipBySlug(slug);
   if (!tip) return { title: "건강팁" };
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
   return {
     title: tip.title,
     description: tip.description,
@@ -53,8 +53,8 @@ export default async function TipDetailPage({ params }: PageProps) {
     "@type": "Article",
     headline: tip.title,
     description: tip.description,
-    author: { "@type": "Organization", name: "MediCheck" },
-    publisher: { "@type": "Organization", name: "MediCheck" },
+    author: { "@type": "Organization", name: "PillRight" },
+    publisher: { "@type": "Organization", name: "PillRight" },
     keywords: tip.tags.join(", "),
   };
 
@@ -116,7 +116,7 @@ export default async function TipDetailPage({ params }: PageProps) {
             지금 복용 중인 약, 괜찮은지 확인해보세요
           </p>
           <p className="text-sm text-gray-500 mb-4">
-            MediCheck에서 3초 만에 상호작용을 체크할 수 있습니다.
+            PillRight에서 3초 만에 상호작용을 체크할 수 있습니다.
           </p>
           <Link
             href="/check"

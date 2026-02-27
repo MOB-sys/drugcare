@@ -10,7 +10,7 @@ const SUPPLEMENT_BG = "#ECFDF5";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
-  const title = searchParams.get("title") || "MediCheck";
+  const title = searchParams.get("title") || "PillRight";
   const description = searchParams.get("description") || "";
   const type = searchParams.get("type") || "drug";
 
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
               fontWeight: 700,
             }}
           >
-            M
+            P
           </div>
           <span
             style={{
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
               color: PRIMARY_COLOR,
             }}
           >
-            MediCheck
+            PillRight
           </span>
         </div>
 
@@ -129,7 +129,7 @@ export async function GET(request: NextRequest) {
             color: "#999",
           }}
         >
-          medicheck.kr
+          pillright.com
         </div>
       </div>
     ),

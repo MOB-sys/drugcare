@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { MediCheckLogo } from "@/components/common/MediCheckLogo";
+import { PillRightLogo } from "@/components/common/PillRightLogo";
 import { AdBanner } from "@/components/ads/AdBanner";
 
 export default function HomePage() {
@@ -8,7 +8,7 @@ export default function HomePage() {
       {/* Hero */}
       <section className="bg-gradient-to-b from-[var(--color-primary)] to-[var(--color-primary-dark)] text-white py-20">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <MediCheckLogo size="lg" showText={false} className="justify-center mb-6 [&_path]:fill-white [&_rect]:fill-[var(--color-accent)]" />
+          <PillRightLogo size="lg" showText={false} className="justify-center mb-6 [&_path]:fill-white [&_rect]:fill-[var(--color-accent)]" />
           <h1 className="text-4xl font-bold mb-4 break-keep leading-tight">
             이 약이랑 이 영양제,
             <br />
@@ -68,7 +68,7 @@ export default function HomePage() {
       <section className="py-16">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">
-            MediCheck로 할 수 있는 것
+            PillRight로 할 수 있는 것
           </h2>
           <div className="grid gap-6 sm:grid-cols-3">
             <Link href="/check" className="group block bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">

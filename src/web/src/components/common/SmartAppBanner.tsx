@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 
-const APP_STORE_URL = "https://apps.apple.com/app/yakmeogeo";
-const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.yakmeogeo.app";
+const APP_STORE_URL = "https://apps.apple.com/app/pillright";
+const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.pillright.app";
 
 export function SmartAppBanner() {
   const [visible, setVisible] = useState(false);
@@ -34,7 +34,7 @@ export function SmartAppBanner() {
           매일 복약 리마인더는 앱에서!
         </p>
         <p className="text-xs text-blue-200 truncate">
-          MediCheck 앱으로 복용 시간을 놓치지 마세요
+          PillRight 앱으로 복용 시간을 놓치지 마세요
         </p>
       </div>
       <a

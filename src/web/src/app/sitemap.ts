@@ -3,7 +3,7 @@ import { getAllDrugSlugs } from "@/lib/api/drugs";
 import { getAllSupplementSlugs } from "@/lib/api/supplements";
 import { getAllTipSlugs } from "@/lib/data/tips";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [

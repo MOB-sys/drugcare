@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description = drug.efcy_qesitm
       ? `${drug.item_name} — ${drug.efcy_qesitm.slice(0, 120)}`
       : `${drug.item_name} 의약품 상세 정보를 확인하세요.`;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://yakmeogeo.com";
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
     return {
       title,
       description,
