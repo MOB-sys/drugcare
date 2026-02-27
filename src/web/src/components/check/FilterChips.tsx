@@ -15,11 +15,12 @@ const FILTERS: { value: SearchFilter; label: string }[] = [
 
 export function FilterChips({ current, onChange }: FilterChipsProps) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2" role="group" aria-label="검색 필터">
       {FILTERS.map((f) => (
         <button
           key={f.value}
           onClick={() => onChange(f.value)}
+          aria-pressed={current === f.value}
           className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
             current === f.value
               ? "bg-[var(--color-primary)] text-white shadow-sm"

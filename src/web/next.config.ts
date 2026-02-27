@@ -36,6 +36,24 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          {
+            key: "X-Robots-Tag",
+            value: "index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://www.googletagmanager.com https://t1.kakaocdn.net https://*.sentry.io",
+              "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+              "img-src 'self' data: blob: https: http://nedrug.mfds.go.kr https://nedrug.mfds.go.kr",
+              "font-src 'self' https://cdn.jsdelivr.net",
+              "connect-src 'self' https://www.google-analytics.com https://*.sentry.io https://pagead2.googlesyndication.com",
+              "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+              "object-src 'none'",
+              "base-uri 'self'",
+            ].join("; "),
+          },
         ],
       },
       {

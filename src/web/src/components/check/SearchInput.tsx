@@ -60,12 +60,16 @@ export function SearchInput({
           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
         />
       </svg>
+      <label htmlFor="search-input" className="sr-only">약물 또는 영양제 검색</label>
       <input
+        id="search-input"
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onFocus={() => setShowDropdown(true)}
         placeholder="약물 또는 영양제를 검색하세요"
+        aria-label="약물 또는 영양제 검색"
+        autoComplete="off"
         className="w-full pl-11 pr-10 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-base bg-white"
       />
       {value && (
