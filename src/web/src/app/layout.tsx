@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/common/Header";
@@ -8,6 +8,16 @@ import { SmartAppBanner } from "@/components/common/SmartAppBanner";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_ID;
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#1B3A5C" },
+    { media: "(prefers-color-scheme: dark)", color: "#0F172A" },
+  ],
+};
 
 export const metadata: Metadata = {
   title: {
@@ -30,6 +40,14 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     siteName: "MediCheck",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "MediCheck",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export default function RootLayout({
@@ -38,8 +56,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-gray-900 antialiased">
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        {/* Pretendard 폰트 preload — CLS 방지 */}
+        <link
+          rel="preload"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        {/* 다크모드 깜빡임 방지 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('medicheck_theme');var d=t==='dark'||(t!=='light'&&window.matchMedia('(prefers-color-scheme:dark)').matches);if(d)document.documentElement.classList.add('dark')}catch(e){}})()`,
+          }}
+        />
+      </head>
+      <body className="min-h-screen flex flex-col bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
         <Header />
         <DisclaimerBanner />
         <SmartAppBanner />

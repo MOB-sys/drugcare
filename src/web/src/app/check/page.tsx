@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSearch } from "@/lib/hooks/useSearch";
+import { useRecentSearches } from "@/lib/hooks/useRecentSearches";
 import { SearchInput } from "@/components/check/SearchInput";
 import { FilterChips } from "@/components/check/FilterChips";
 import { SearchResults } from "@/components/check/SearchResults";
@@ -13,11 +14,22 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 export default function CheckPage() {
   const router = useRouter();
   const search = useSearch();
+  const recent = useRecentSearches();
   const [isChecking, setIsChecking] = useState(false);
+
+  function handleQueryChange(q: string) {
+    search.setQuery(q);
+  }
+
+  function handleSearchSelect(q: string) {
+    recent.addSearch(q);
+  }
 
   function handleCheck() {
     if (search.selectedItems.length < 2) return;
     setIsChecking(true);
+    /* 검색어가 있었으면 최근 검색에 추가 */
+    if (search.query.trim()) recent.addSearch(search.query);
     const encoded = search.selectedItems
       .map((i) => `${i.item_type}:${i.item_id}:${encodeURIComponent(i.name)}`)
       .join(",");
@@ -40,7 +52,14 @@ export default function CheckPage() {
         </p>
 
         <div className="space-y-4">
-          <SearchInput value={search.query} onChange={search.setQuery} />
+          <SearchInput
+            value={search.query}
+            onChange={handleQueryChange}
+            recentSearches={recent.recentSearches}
+            onSearchSelect={handleSearchSelect}
+            onRemoveRecent={recent.removeSearch}
+            onClearRecent={recent.clearAll}
+          />
           <FilterChips current={search.filter} onChange={search.setFilter} />
 
           <div className="border border-gray-200 rounded-xl bg-white overflow-hidden shadow-sm">

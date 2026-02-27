@@ -3,7 +3,7 @@ import { MediCheckLogo } from "./MediCheckLogo";
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-white py-10 mt-auto">
+    <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-10 mt-auto">
       <div className="max-w-5xl mx-auto px-4">
         <div className="grid gap-8 sm:grid-cols-3">
           {/* Brand */}
@@ -38,6 +38,11 @@ export function Footer() {
               <li>
                 <Link href="/tips" className="hover:text-[var(--color-primary)] transition-colors">
                   건강팁
+                </Link>
+              </li>
+              <li>
+                <Link href="/compare" className="hover:text-[var(--color-primary)] transition-colors">
+                  약물 비교
                 </Link>
               </li>
               <li>

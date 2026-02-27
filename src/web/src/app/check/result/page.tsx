@@ -5,6 +5,7 @@ import { ResultSummaryCard } from "@/components/result/ResultSummaryCard";
 import { InteractionCard } from "@/components/result/InteractionCard";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { ShareActions } from "@/components/result/ShareActions";
 import type { InteractionCheckItem } from "@/types/interaction";
 
 interface PageProps {
@@ -120,6 +121,11 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
                 <p className="text-[var(--color-primary)]/80">{data.disclaimer || "이 정보는 참고용이며, 의사/약사의 전문적 판단을 대체하지 않습니다. 반드시 전문가와 상담하세요."}</p>
               </div>
             </div>
+          </div>
+
+          {/* 공유/인쇄 */}
+          <div className="flex items-center justify-between">
+            <ShareActions />
           </div>
 
           {/* 광고 */}

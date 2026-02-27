@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
         hostname: "nedrug.mfds.go.kr",
       },
     ],
+    formats: ["image/avif", "image/webp"],
   },
   async rewrites() {
     return [
@@ -35,7 +36,17 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        /* 정적 자산 장기 캐싱 */
+        source: "/icon-:size(\\d+)",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
     ];
+  },
+  experimental: {
+    optimizeCss: true,
   },
 };
 
