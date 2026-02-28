@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getDrugBySlug, getAllDrugSlugs, getRelatedDrugs } from "@/lib/api/drugs";
 import { InfoSection } from "@/components/detail/InfoSection";
 import { IngredientsTable } from "@/components/detail/IngredientsTable";
+import { DURSafetySection } from "@/components/detail/DURSafetySection";
 import { CheckCTA } from "@/components/detail/CheckCTA";
 import { AddToCabinetButton } from "@/components/detail/AddToCabinetButton";
 import { AdBanner } from "@/components/ads/AdBanner";
@@ -121,6 +122,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
     drug.atpn_qesitm && { id: "precautions", label: "주의사항" },
     drug.intrc_qesitm && { id: "interactions", label: "상호작용" },
     drug.se_qesitm && { id: "side-effects", label: "부작용" },
+    drug.dur_safety?.length && { id: "dur-safety", label: "DUR 안전성" },
     drug.deposit_method_qesitm && { id: "storage", label: "보관방법" },
   ].filter(Boolean) as TocItem[];
 
@@ -194,6 +196,11 @@ export default async function DrugDetailPage({ params }: PageProps) {
               <InfoSection id="precautions" title="주의사항" content={drug.atpn_qesitm} />
               <InfoSection id="interactions" title="상호작용" content={drug.intrc_qesitm} />
               <InfoSection id="side-effects" title="부작용" content={drug.se_qesitm} />
+
+              {drug.dur_safety && drug.dur_safety.length > 0 && (
+                <DURSafetySection items={drug.dur_safety} />
+              )}
+
               <InfoSection id="storage" title="보관방법" content={drug.deposit_method_qesitm} />
             </div>
 

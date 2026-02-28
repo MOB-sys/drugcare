@@ -8,7 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
 from src.backend.models.drug import Drug
-from src.backend.schemas.drug import DrugDetail, DrugSearchItem
+from src.backend.models.drug_dur_info import DrugDURInfo
+from src.backend.schemas.drug import DURSafetyItem, DrugDetail, DrugSearchItem
 from src.backend.utils.cache import cache_get, cache_set, hash_query, make_cache_key
 
 # slug/count 캐시 TTL (초)
@@ -75,6 +76,22 @@ async def search_drugs(
     return result
 
 
+async def _fetch_dur_safety(db: AsyncSession, item_seq: str) -> list[dict]:
+    """약물의 DUR 안전성 정보를 조회한다.
+
+    Args:
+        db: 비동기 DB 세션.
+        item_seq: 약물 품목기준코드.
+
+    Returns:
+        DURSafetyItem dict 리스트.
+    """
+    stmt = select(DrugDURInfo).where(DrugDURInfo.item_seq == item_seq)
+    rows = await db.execute(stmt)
+    dur_items = rows.scalars().all()
+    return [DURSafetyItem.model_validate(item).model_dump() for item in dur_items]
+
+
 async def get_drug_detail(
     db: AsyncSession,
     redis: Redis,
@@ -105,6 +122,7 @@ async def get_drug_detail(
         return None
 
     result = DrugDetail.model_validate(drug).model_dump()
+    result["dur_safety"] = await _fetch_dur_safety(db, drug.item_seq)
     await cache_set(redis, cache_key, result, CACHE_TTL_DRUG_DETAIL)
     return result
 
@@ -137,6 +155,7 @@ async def get_drug_by_slug(
         return None
 
     result = DrugDetail.model_validate(drug).model_dump()
+    result["dur_safety"] = await _fetch_dur_safety(db, drug.item_seq)
     await cache_set(redis, cache_key, result, CACHE_TTL_DRUG_DETAIL)
     return result
 

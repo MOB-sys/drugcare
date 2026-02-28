@@ -42,6 +42,25 @@ function toSupplementResult(s: SupplementSearchItem): SearchResultItem {
   return { item_type: "supplement", item_id: s.id, name: s.product_name, sub: s.company };
 }
 
+function parsePreselect(param: string | null): SelectedItem[] {
+  if (!param) return [];
+  try {
+    return param.split(",").reduce<SelectedItem[]>((acc, part) => {
+      const [type, id, ...nameParts] = part.split(":");
+      if ((type === "drug" || type === "supplement") && id && nameParts.length) {
+        acc.push({
+          item_type: type,
+          item_id: Number(id),
+          name: decodeURIComponent(nameParts.join(":")),
+        });
+      }
+      return acc;
+    }, []);
+  } catch {
+    return [];
+  }
+}
+
 export function useSearch(): UseSearchReturn {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<SearchFilter>("all");
@@ -50,6 +69,18 @@ export function useSearch(): UseSearchReturn {
   const [searchError, setSearchError] = useState<string | null>(null);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const abortRef = useRef<AbortController | null>(null);
+  const preselectApplied = useRef(false);
+
+  /* URL ?preselect= 파라미터에서 초기 선택 아이템 복원 */
+  useEffect(() => {
+    if (preselectApplied.current) return;
+    preselectApplied.current = true;
+    const params = new URLSearchParams(window.location.search);
+    const items = parsePreselect(params.get("preselect"));
+    if (items.length > 0) {
+      setSelectedItems(items);
+    }
+  }, []);
 
   const debouncedQuery = useDebounce(query);
 

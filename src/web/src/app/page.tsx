@@ -2,6 +2,8 @@ import Link from "next/link";
 import { PillRightLogo } from "@/components/common/PillRightLogo";
 import { AdBanner } from "@/components/ads/AdBanner";
 
+export const revalidate = 86400; // ISR: 24시간마다 재생성
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
 
 const websiteJsonLd = {

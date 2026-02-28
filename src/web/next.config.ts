@@ -17,12 +17,23 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/:path*`,
-      },
-    ];
+    return {
+      beforeFiles: [
+        /* Next.js 자체 API 라우트(/api/og 등)는 rewrite 제외 */
+        {
+          source: "/api/og",
+          destination: "/api/og",
+        },
+      ],
+      afterFiles: [
+        /* 나머지 /api/* 요청은 백엔드로 프록시 */
+        {
+          source: "/api/:path*",
+          destination: `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/:path*`,
+        },
+      ],
+      fallback: [],
+    };
   },
   async headers() {
     return [

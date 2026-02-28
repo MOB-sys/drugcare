@@ -17,6 +17,14 @@ export interface DrugSearchItem {
   item_image: string | null;
 }
 
+export interface DURSafetyItem {
+  dur_type: string;
+  type_name: string | null;
+  ingr_name: string | null;
+  prohibition_content: string | null;
+  remark: string | null;
+}
+
 export interface DrugDetail {
   id: number;
   item_seq: string;
@@ -37,4 +45,5 @@ export interface DrugDetail {
   se_qesitm: string | null;
   deposit_method_qesitm: string | null;
   item_image: string | null;
+  dur_safety: DURSafetyItem[] | null;
 }

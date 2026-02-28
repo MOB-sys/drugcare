@@ -11,6 +11,18 @@ class IngredientInfo(BaseModel):
     unit: str | None = None
 
 
+class DURSafetyItem(BaseModel):
+    """DUR 안전성 정보 아이템."""
+
+    dur_type: str
+    type_name: str | None = None
+    ingr_name: str | None = None
+    prohibition_content: str | None = None
+    remark: str | None = None
+
+    model_config = {"from_attributes": True}
+
+
 class DrugSearchItem(BaseModel):
     """약물 검색 결과 아이템."""
 
@@ -48,5 +60,6 @@ class DrugDetail(BaseModel):
     se_qesitm: str | None = None
     deposit_method_qesitm: str | None = None
     item_image: str | None = None
+    dur_safety: list[DURSafetyItem] | None = None
 
     model_config = {"from_attributes": True}
