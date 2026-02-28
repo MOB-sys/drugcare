@@ -59,41 +59,20 @@ export default function ContactPage() {
           PillRight 서비스에 대한 문의사항이나 피드백을 보내주세요.
         </p>
 
-        <div className="grid gap-4 sm:grid-cols-2 mb-8">
-          {/* 일반 문의 */}
+        <div className="mb-8">
           <div className="bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] p-6">
             <div className="w-10 h-10 rounded-lg bg-[var(--color-primary-50)] flex items-center justify-center mb-4">
               <svg className="w-5 h-5 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h2 className="font-semibold text-[var(--color-text)] mb-1">일반 문의</h2>
-            <p className="text-sm text-[var(--color-text-secondary)] mb-3">서비스 이용, 기능 제안, 일반적인 질문</p>
+            <h2 className="font-semibold text-[var(--color-text)] mb-1">이메일 문의</h2>
+            <p className="text-sm text-[var(--color-text-secondary)] mb-3">서비스 이용, 기능 제안, 데이터 오류 신고 등 모든 문의</p>
             <a
               href="mailto:support@pillright.com"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-primary)] hover:underline"
             >
               support@pillright.com
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-            </a>
-          </div>
-
-          {/* 데이터 오류 */}
-          <div className="bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)] p-6">
-            <div className="w-10 h-10 rounded-lg bg-[var(--color-primary-50)] flex items-center justify-center mb-4">
-              <svg className="w-5 h-5 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            </div>
-            <h2 className="font-semibold text-[var(--color-text)] mb-1">데이터 오류 신고</h2>
-            <p className="text-sm text-[var(--color-text-secondary)] mb-3">약물/영양제 정보 오류, 상호작용 데이터 수정 요청</p>
-            <a
-              href="mailto:data@pillright.com?subject=[데이터 오류] "
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-primary)] hover:underline"
-            >
-              data@pillright.com
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
               </svg>
