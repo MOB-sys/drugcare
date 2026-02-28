@@ -193,13 +193,13 @@ class EDrugCollector:
                 chart, bar_code, material_name, ingredients,
                 efcy_qesitm, use_method_qesitm, atpn_warn_qesitm,
                 atpn_qesitm, intrc_qesitm, se_qesitm,
-                deposit_method_qesitm, item_image
+                deposit_method_qesitm, item_image, slug
             ) VALUES (
                 :item_seq, :item_name, :entp_name, :etc_otc_code, :class_no,
-                :chart, :bar_code, :material_name, :ingredients::jsonb,
+                :chart, :bar_code, :material_name, CAST(:ingredients AS jsonb),
                 :efcy_qesitm, :use_method_qesitm, :atpn_warn_qesitm,
                 :atpn_qesitm, :intrc_qesitm, :se_qesitm,
-                :deposit_method_qesitm, :item_image
+                :deposit_method_qesitm, :item_image, :slug
             )
             ON CONFLICT (item_seq) DO UPDATE SET
                 item_name = EXCLUDED.item_name,
@@ -243,6 +243,7 @@ class EDrugCollector:
             "se_qesitm": parsed.get("se_qesitm"),
             "deposit_method_qesitm": parsed.get("deposit_method_qesitm"),
             "item_image": parsed.get("item_image"),
+            "slug": f"drug-{parsed.get('item_seq', '')}",
         }
 
         await session.execute(upsert_sql, params)

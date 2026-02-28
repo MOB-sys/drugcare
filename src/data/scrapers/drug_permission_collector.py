@@ -7,7 +7,8 @@ import re
 from typing import Any
 
 import httpx
-from sqlalchemy import select, text
+from sqlalchemy import cast, select, text
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.config import get_settings
@@ -241,7 +242,7 @@ class DrugPermissionCollector:
 
         update_sql = text("""
             UPDATE drugs
-            SET ingredients = :ingredients::jsonb,
+            SET ingredients = CAST(:ingredients AS jsonb),
                 updated_at = NOW()
             WHERE item_seq = :item_seq
         """)
@@ -279,8 +280,8 @@ class DrugPermissionCollector:
         result = await session.execute(
             select(Drug.item_seq).where(
                 (Drug.ingredients.is_(None))
-                | (Drug.ingredients == "[]")
-                | (Drug.ingredients == "null")
+                | (Drug.ingredients == cast("[]", JSONB))
+                | (Drug.ingredients == cast("null", JSONB))
             )
         )
         target_seqs = [row[0] for row in result.fetchall()]

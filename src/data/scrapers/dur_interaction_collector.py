@@ -171,6 +171,56 @@ class DURInteractionCollector:
 
         return lookup
 
+    async def _ensure_drug_exists(
+        self,
+        session: AsyncSession,
+        item_seq: str,
+        item_name: str,
+        drug_lookup: dict[str, dict[str, Any]],
+    ) -> dict[str, Any] | None:
+        """약물이 DB에 없으면 기본 레코드를 삽입하고 lookup에 추가한다.
+
+        Args:
+            session: 비동기 DB 세션.
+            item_seq: 품목기준코드.
+            item_name: 제품명.
+            drug_lookup: item_seq → {id, name} 매핑.
+
+        Returns:
+            약물 정보 딕셔너리 {id, name}. 실패 시 None.
+        """
+        if item_seq in drug_lookup:
+            return drug_lookup[item_seq]
+
+        try:
+            slug = f"drug-{item_seq}"
+            insert_sql = text("""
+                INSERT INTO drugs (item_seq, item_name, slug)
+                VALUES (:item_seq, :item_name, :slug)
+                ON CONFLICT (item_seq) DO NOTHING
+                RETURNING id
+            """)
+            result = await session.execute(insert_sql, {
+                "item_seq": item_seq,
+                "item_name": item_name,
+                "slug": slug,
+            })
+            row = result.first()
+            if row:
+                drug_lookup[item_seq] = {"id": row[0], "name": item_name}
+                return drug_lookup[item_seq]
+            # ON CONFLICT hit — fetch existing
+            fetch_sql = text("SELECT id, item_name FROM drugs WHERE item_seq = :seq")
+            result = await session.execute(fetch_sql, {"seq": item_seq})
+            row = result.first()
+            if row:
+                drug_lookup[item_seq] = {"id": row[0], "name": row[1]}
+                return drug_lookup[item_seq]
+        except Exception as e:
+            logger.warning("약물 자동 삽입 실패 (item_seq=%s): %s", item_seq, e)
+
+        return None
+
     async def _load_existing_source_ids(
         self,
         session: AsyncSession,
@@ -381,8 +431,20 @@ class DURInteractionCollector:
                 # 파싱 (약물 lookup으로 매칭)
                 parsed = parse_dur_item(raw_item, drug_lookup)
                 if parsed is None:
-                    self.stats["skipped"] += 1
-                    continue
+                    # 약물이 DB에 없는 경우 자동 삽입 시도
+                    from src.data.parsers.dur_parser import _normalize_dur_item
+                    normalized = _normalize_dur_item(raw_item)
+                    seq_a = str(normalized.get("item_seq", ""))
+                    seq_b = str(normalized.get("mixture_item_seq", ""))
+                    name_a = normalized.get("item_name", "")
+                    name_b = normalized.get("mixture_item_name", "")
+                    if seq_a and seq_b and name_a and name_b:
+                        await self._ensure_drug_exists(session, seq_a, name_a, drug_lookup)
+                        await self._ensure_drug_exists(session, seq_b, name_b, drug_lookup)
+                        parsed = parse_dur_item(raw_item, drug_lookup)
+                    if parsed is None:
+                        self.stats["skipped"] += 1
+                        continue
 
                 # 검증
                 is_valid, errors = validate_interaction(parsed)
