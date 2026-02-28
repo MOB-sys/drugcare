@@ -3,6 +3,8 @@ import { tips } from "@/lib/data/tips";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { TipsList } from "@/components/tips/TipsList";
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+
 export const metadata: Metadata = {
   title: "건강팁 — 약과 영양제, 똑똑하게 복용하기",
   description:
@@ -11,6 +13,14 @@ export const metadata: Metadata = {
     title: "건강팁 — PillRight",
     description: "약과 영양제, 똑똑하게 복용하는 방법",
     type: "website",
+    images: [
+      {
+        url: `${siteUrl}/api/og?title=${encodeURIComponent("건강팁 — 약과 영양제, 똑똑하게 복용하기")}&type=tip`,
+        width: 1200,
+        height: 630,
+        alt: "건강팁 — PillRight",
+      },
+    ],
   },
 };
 

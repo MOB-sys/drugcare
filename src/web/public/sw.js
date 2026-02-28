@@ -1,6 +1,7 @@
 /** PillRight Service Worker — 오프라인 지원 + 정적 자산 캐싱 */
 
-const CACHE_NAME = "pillright-v1";
+const CACHE_VERSION = "2";
+const CACHE_NAME = `pillright-v${CACHE_VERSION}`;
 const OFFLINE_URL = "/offline";
 
 const PRECACHE_ASSETS = [OFFLINE_URL];
@@ -18,7 +19,9 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)),
+        keys
+          .filter((key) => key.startsWith("pillright-") && key !== CACHE_NAME)
+          .map((key) => caches.delete(key)),
       ),
     ),
   );

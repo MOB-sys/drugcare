@@ -93,9 +93,9 @@ export default async function SupplementsIndexPage() {
         {/* 검색 유도 */}
         <Link
           href="/check"
-          className="block w-full p-4 mb-8 rounded-xl bg-emerald-50 border border-emerald-200 text-center hover:bg-emerald-100/50 transition-colors"
+          className="block w-full p-4 mb-8 rounded-xl bg-[var(--color-primary-50)] border border-[var(--color-primary-100)] text-center hover:bg-[var(--color-primary-50)]/80 transition-colors"
         >
-          <p className="text-sm font-medium text-emerald-700">
+          <p className="text-sm font-medium text-[var(--color-primary)]">
             찾으시는 영양제가 있으신가요? →{" "}
             <span className="underline">상호작용 체크에서 검색하기</span>
           </p>
@@ -111,7 +111,7 @@ export default async function SupplementsIndexPage() {
                 href={isActive ? `#index-${key}` : undefined}
                 className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium transition-colors ${
                   isActive
-                    ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                    ? "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
                     : "bg-gray-100 text-gray-300 cursor-default"
                 }`}
                 onClick={isActive ? (e) => {
@@ -129,7 +129,7 @@ export default async function SupplementsIndexPage() {
         <div className="space-y-8">
           {activeKeys.map((key) => (
             <div key={key} id={`index-${key}`} className="scroll-mt-28">
-              <h2 className="text-lg font-bold text-[var(--color-primary)] border-b border-emerald-200 pb-1 mb-3">
+              <h2 className="text-lg font-bold text-[var(--color-primary)] border-b border-[var(--color-primary-100)] pb-1 mb-3">
                 {key}
               </h2>
               <ul className="grid gap-1 sm:grid-cols-2">
@@ -137,7 +137,7 @@ export default async function SupplementsIndexPage() {
                   <li key={supp.id}>
                     <Link
                       href={`/supplements/${supp.slug}`}
-                      className="block px-3 py-2 rounded-lg hover:bg-emerald-50 transition-colors"
+                      className="block px-3 py-2 rounded-lg hover:bg-[var(--color-primary-50)] transition-colors"
                     >
                       <span className="text-sm font-medium text-gray-900">{supp.product_name}</span>
                       {supp.company && (

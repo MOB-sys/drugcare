@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 
-const APP_STORE_URL = "https://apps.apple.com/app/pillright";
-const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.pillright.app";
+const APP_STORE_URL = "https://apps.apple.com/kr/app/pillright/id0000000000";
+const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.pillright.app&hl=ko";
 
 export function SmartAppBanner() {
   const [visible, setVisible] = useState(false);

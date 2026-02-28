@@ -98,6 +98,16 @@ export default function TermsPage() {
             <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-3">제10조 (분쟁 해결)</h2>
             <p>서비스 이용과 관련하여 분쟁이 발생한 경우, 서비스 제공자의 소재지를 관할하는 법원을 전속 관할 법원으로 합니다.</p>
           </section>
+
+          <section>
+            <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-3">운영 정보</h2>
+            <ul className="space-y-1">
+              <li><strong>서비스명:</strong> PillRight</li>
+              <li><strong>운영자:</strong> PillRight Team</li>
+              <li><strong>문의:</strong> <a href="mailto:support@pillright.com" className="text-[var(--color-primary)] hover:underline">support@pillright.com</a></li>
+              <li><strong>웹사이트:</strong> <a href="https://pillright.com" className="text-[var(--color-primary)] hover:underline">https://pillright.com</a></li>
+            </ul>
+          </section>
         </div>
 
         <AdBanner slot="legal-bottom" format="auto" className="mt-8" />

@@ -76,7 +76,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-gray-700 mt-5 mb-3">앱 다운로드</h3>
             <div className="flex flex-col gap-2 text-sm">
               <a
-                href="https://apps.apple.com/app/pillright"
+                href="https://apps.apple.com/kr/app/pillright/id0000000000"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-[var(--color-primary)] transition-colors"
@@ -84,7 +84,7 @@ export function Footer() {
                 App Store
               </a>
               <a
-                href="https://play.google.com/store/apps/details?id=com.pillright.app"
+                href="https://play.google.com/store/apps/details?id=com.pillright.app&hl=ko"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-[var(--color-primary)] transition-colors"
