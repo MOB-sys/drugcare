@@ -32,9 +32,8 @@ RUN groupadd --gid 1000 appuser && \
 # Copy installed packages from builder
 COPY --from=builder /install /usr/local
 
-# Copy application source
+# Copy application source + migrations
 COPY alembic.ini ./
-COPY alembic/ ./alembic/
 COPY src/ ./src/
 
 # Set ownership
