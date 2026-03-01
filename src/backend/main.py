@@ -76,8 +76,9 @@ _cors_origins = (
     ["*"]
     if settings.is_development
     else [
-        "https://yakmeogeo.com",
-        "https://www.yakmeogeo.com",
+        "https://pillright.com",
+        "https://www.pillright.com",
+        "https://api.pillright.com",
         "http://localhost:3000",
     ]
 )

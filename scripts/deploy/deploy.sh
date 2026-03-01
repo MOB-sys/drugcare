@@ -2,20 +2,20 @@
 set -euo pipefail
 
 # ==============================================================================
-# 약먹어 (YakMeogeo) — Deployment Script
+# PillRight — Production Deployment Script
 # ==============================================================================
 
-COMPOSE="docker-compose"
+COMPOSE="docker compose -f docker-compose.prod.yml"
 HEALTH_URL="http://localhost:8000/api/v1/health"
 MAX_RETRIES=30
 RETRY_INTERVAL=2
 
-echo "=== 약먹어 배포 시작 ==="
+echo "=== PillRight 배포 시작 ==="
 
 # 1. Check .env file exists
 if [ ! -f .env ]; then
     echo "ERROR: .env 파일이 존재하지 않습니다."
-    echo "  .env.example 을 참고하여 .env 파일을 생성하세요."
+    echo "  .env.production.example 을 참고하여 .env 파일을 생성하세요."
     exit 1
 fi
 
@@ -28,7 +28,7 @@ echo ">>> 데이터베이스 서비스 시작..."
 $COMPOSE up -d postgres redis
 
 echo ">>> 데이터베이스 준비 대기..."
-sleep 5
+sleep 10
 
 # 4. Run Alembic migrations
 echo ">>> Alembic 마이그레이션 실행..."
