@@ -36,6 +36,8 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         multiDexEnabled = true
+        manifestPlaceholders["admobAppId"] = "ca-app-pub-3940256099942544~3347511713"
+        manifestPlaceholders["useCleartextTraffic"] = "true"
     }
 
     signingConfigs {
@@ -62,6 +64,11 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
+            val prodAdmobId = project.findProperty("ADMOB_ANDROID_APP_ID") as? String
+            if (prodAdmobId != null) {
+                manifestPlaceholders["admobAppId"] = prodAdmobId
+            }
+            manifestPlaceholders["useCleartextTraffic"] = "false"
         }
     }
 }

@@ -12,7 +12,14 @@ describe("EmptyState", () => {
 
   it("links to /check page", () => {
     render(<EmptyState />);
-    const link = screen.getByRole("link");
-    expect(link.getAttribute("href")).toBe("/check");
+    const links = screen.getAllByRole("link");
+    const checkLink = links.find((l) => l.getAttribute("href") === "/check");
+    expect(checkLink).toBeDefined();
+  });
+
+  it("renders app store download links", () => {
+    render(<EmptyState />);
+    expect(screen.getByText("App Store")).toBeDefined();
+    expect(screen.getByText("Google Play")).toBeDefined();
   });
 });

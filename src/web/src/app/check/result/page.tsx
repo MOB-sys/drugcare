@@ -6,6 +6,7 @@ import { InteractionCard } from "@/components/result/InteractionCard";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { ShareActions } from "@/components/result/ShareActions";
+import { AppPromotionCTA } from "@/components/result/AppPromotionCTA";
 import type { InteractionCheckItem } from "@/types/interaction";
 
 interface PageProps {
@@ -127,6 +128,9 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
           <div className="flex items-center justify-between">
             <ShareActions />
           </div>
+
+          {/* 앱 유도 */}
+          <AppPromotionCTA />
 
           {/* 광고 */}
           <AdBanner slot="check-result-bottom" format="auto" />

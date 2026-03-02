@@ -51,7 +51,7 @@ fi
 
 # --- SSL 만료일 ---
 SSL_EXPIRY="N/A"
-DOMAIN="yakmeogeo.com"
+DOMAIN="${DOMAIN:-pillright.com}"
 if [ "$WEB_STATUS" != "000" ] && echo "$WEB_BASE" | grep -q "https"; then
     SSL_EXPIRY=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN":443 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2 || echo "unknown")
 fi

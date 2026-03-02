@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-const APP_STORE_URL = "https://apps.apple.com/kr/app/pillright/id0000000000";
-const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.pillright.app&hl=ko";
+import { getStoreUrlForPlatform } from "@/lib/constants/appStore";
 
 export function SmartAppBanner() {
   const [visible, setVisible] = useState(false);
@@ -23,9 +21,7 @@ export function SmartAppBanner() {
     setVisible(false);
   }
 
-  const storeUrl = /iphone|ipad|ipod/i.test(navigator.userAgent)
-    ? APP_STORE_URL
-    : PLAY_STORE_URL;
+  const storeUrl = getStoreUrlForPlatform("smart-banner");
 
   return (
     <div className="bg-[var(--color-primary)] text-white px-4 py-3 flex items-center gap-3" data-testid="smart-app-banner">
@@ -34,7 +30,7 @@ export function SmartAppBanner() {
           매일 복약 리마인더는 앱에서!
         </p>
         <p className="text-xs text-blue-200 truncate">
-          PillRight 앱으로 복용 시간을 놓치지 마세요
+          약먹어 앱으로 복용 시간을 놓치지 마세요
         </p>
       </div>
       <a

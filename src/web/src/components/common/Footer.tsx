@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { PillRightLogo } from "./PillRightLogo";
+import { getStoreUrl } from "@/lib/constants/appStore";
 
 export function Footer() {
+  const iosUrl = getStoreUrl("ios", "website", "footer");
+  const androidUrl = getStoreUrl("android", "website", "footer");
+
   return (
     <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] py-10 mt-auto">
       <div className="max-w-5xl mx-auto px-4">
@@ -76,7 +80,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-gray-700 mt-5 mb-3">앱 다운로드</h3>
             <div className="flex flex-col gap-2 text-sm">
               <a
-                href="https://apps.apple.com/kr/app/pillright/id0000000000"
+                href={iosUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-[var(--color-primary)] transition-colors"
@@ -84,7 +88,7 @@ export function Footer() {
                 App Store
               </a>
               <a
-                href="https://play.google.com/store/apps/details?id=com.pillright.app&hl=ko"
+                href={androidUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-500 hover:text-[var(--color-primary)] transition-colors"

@@ -9,7 +9,7 @@
         android:label="약먹어"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true">
+        android:usesCleartextTraffic="${useCleartextTraffic}">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -32,7 +32,7 @@
         <!-- AdMob App ID (test) -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="${admobAppId}"/>
 
         <!-- flutter_local_notifications boot receiver -->
         <receiver
