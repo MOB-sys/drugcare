@@ -32,6 +32,7 @@ from src.data.scrapers.dur_interaction_collector import DURInteractionCollector
 from src.data.scrapers.dur_safety_collector import DURSafetyCollector
 from src.data.scrapers.drug_permission_collector import DrugPermissionCollector
 from src.data.scrapers.edrug_collector import EDrugCollector
+from src.data.scrapers.supplement_collector import SupplementCollector
 
 # 로깅 설정
 logging.basicConfig(
@@ -93,6 +94,11 @@ def parse_args() -> argparse.Namespace:
         help="DUR 안전성 API 수집 (임부금기/노인주의/용량주의/투여기간주의/효능군중복)",
     )
     parser.add_argument(
+        "--supplements",
+        action="store_true",
+        help="건강기능식품 API 수집 (식약처 C003)",
+    )
+    parser.add_argument(
         "--max-pages",
         type=int,
         default=None,
@@ -102,7 +108,7 @@ def parse_args() -> argparse.Namespace:
     args = parser.parse_args()
 
     # 인자가 하나도 없으면 도움말 출력
-    if not (args.all or args.edrug or args.permission or args.dur or args.dur_safety):
+    if not (args.all or args.edrug or args.permission or args.dur or args.dur_safety or args.supplements):
         parser.print_help()
         sys.exit(1)
 
@@ -197,6 +203,28 @@ async def run_dur_safety_collector(max_pages: int | None = None) -> dict[str, in
         await collector.close()
 
 
+async def run_supplement_collector(max_pages: int | None = None) -> dict[str, int]:
+    """건강기능식품 수집기를 실행한다.
+
+    Args:
+        max_pages: 최대 수집 배치 수.
+
+    Returns:
+        수집 통계 딕셔너리.
+    """
+    logger.info("=" * 60)
+    logger.info("건강기능식품 수집기 시작")
+    logger.info("=" * 60)
+
+    collector = SupplementCollector()
+    try:
+        async with async_session_factory() as session:
+            stats = await collector.collect(session, max_pages=max_pages)
+        return stats
+    finally:
+        await collector.close()
+
+
 def print_summary(all_stats: dict[str, dict[str, int]], elapsed_sec: float) -> None:
     """수집 결과 요약을 출력한다.
 
@@ -255,6 +283,11 @@ async def main() -> None:
         if args.all or args.dur_safety:
             stats = await run_dur_safety_collector(max_pages)
             all_stats["DUR 안전성"] = stats
+
+        # 5. 건강기능식품 수집
+        if args.all or args.supplements:
+            stats = await run_supplement_collector(max_pages)
+            all_stats["건강기능식품"] = stats
 
     except KeyboardInterrupt:
         logger.warning("사용자에 의해 수집 중단")

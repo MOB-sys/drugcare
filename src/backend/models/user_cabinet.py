@@ -31,7 +31,9 @@ class UserCabinet(Base, TimestampMixin):
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     device_id: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
-    item_type: Mapped[CabinetItemType] = mapped_column(Enum(CabinetItemType), nullable=False)
+    item_type: Mapped[CabinetItemType] = mapped_column(
+        Enum(CabinetItemType, values_callable=lambda e: [x.value for x in e]), nullable=False,
+    )
     item_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
     item_name: Mapped[str] = mapped_column(String(500), nullable=False)
     nickname: Mapped[str | None] = mapped_column(String(200))

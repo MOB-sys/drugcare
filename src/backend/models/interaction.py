@@ -53,13 +53,19 @@ class Interaction(Base, TimestampMixin):
     __tablename__ = "interactions"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    item_a_type: Mapped[ItemType] = mapped_column(Enum(ItemType), nullable=False)
+    item_a_type: Mapped[ItemType] = mapped_column(
+        Enum(ItemType, values_callable=lambda e: [x.value for x in e]), nullable=False,
+    )
     item_a_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
     item_a_name: Mapped[str] = mapped_column(String(500), nullable=False)
-    item_b_type: Mapped[ItemType] = mapped_column(Enum(ItemType), nullable=False)
+    item_b_type: Mapped[ItemType] = mapped_column(
+        Enum(ItemType, values_callable=lambda e: [x.value for x in e]), nullable=False,
+    )
     item_b_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
     item_b_name: Mapped[str] = mapped_column(String(500), nullable=False)
-    severity: Mapped[Severity] = mapped_column(Enum(Severity), nullable=False)
+    severity: Mapped[Severity] = mapped_column(
+        Enum(Severity, values_callable=lambda e: [x.value for x in e]), nullable=False,
+    )
     description: Mapped[str | None] = mapped_column(Text)
     mechanism: Mapped[str | None] = mapped_column(Text)
     recommendation: Mapped[str | None] = mapped_column(Text)

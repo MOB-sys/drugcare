@@ -24,6 +24,8 @@ class InteractionCheckRequest(BaseModel):
 class InteractionResult(BaseModel):
     """단일 상호작용 결과."""
 
+    model_config = {"from_attributes": True}
+
     item_a_name: str
     item_b_name: str
     severity: Severity
