@@ -108,14 +108,17 @@ export function SearchInput({
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {recentSearches.map((q) => (
-                  <span key={q} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-50 text-sm text-gray-700 hover:bg-gray-100 transition-colors group">
-                    <button onClick={() => handleSelect(q)} className="hover:text-[var(--color-primary)]">
+                  <div key={q} className="inline-flex items-center gap-1 rounded-lg bg-gray-50 text-sm text-gray-700 hover:bg-gray-100 transition-colors group">
+                    <button
+                      onClick={() => handleSelect(q)}
+                      className="pl-2.5 py-1 hover:text-[var(--color-primary)]"
+                    >
                       {q}
                     </button>
                     {onRemoveRecent && (
                       <button
-                        onClick={(e) => { e.stopPropagation(); onRemoveRecent(q); }}
-                        className="text-gray-300 hover:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => onRemoveRecent(q)}
+                        className="pr-2 py-1 text-gray-300 hover:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity"
                         aria-label={`${q} 삭제`}
                       >
                         <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -123,7 +126,7 @@ export function SearchInput({
                         </svg>
                       </button>
                     )}
-                  </span>
+                  </div>
                 ))}
               </div>
             </div>

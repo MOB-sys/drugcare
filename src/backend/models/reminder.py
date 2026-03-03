@@ -2,7 +2,7 @@
 
 from datetime import time
 
-from sqlalchemy import BigInteger, Boolean, Index, String, Time
+from sqlalchemy import BigInteger, Boolean, Index, Integer, String, Time
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -30,7 +30,7 @@ class Reminder(Base, TimestampMixin):
     cabinet_item_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
     item_name: Mapped[str] = mapped_column(String(500), nullable=False)
     reminder_time: Mapped[time] = mapped_column(Time, nullable=False)
-    days_of_week: Mapped[list[int]] = mapped_column(ARRAY(BigInteger), nullable=False)
+    days_of_week: Mapped[list[int]] = mapped_column(ARRAY(Integer), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     memo: Mapped[str | None] = mapped_column(String(500))
 

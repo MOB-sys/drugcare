@@ -88,10 +88,15 @@ async def check_interactions(
 
     # AI 설명 추가 (API 키가 설정된 경우에만)
     if settings.OPENAI_API_KEY:
-        from src.backend.services.ai_explanation_service import enhance_results
+        try:
+            from src.backend.services.ai_explanation_service import enhance_results
 
-        enhanced = await enhance_results(redis, results_list)
-        response_dict["results"] = enhanced
+            enhanced = await enhance_results(redis, results_list)
+            response_dict["results"] = enhanced
+        except Exception:
+            import logging
+
+            logging.getLogger(__name__).warning("AI 설명 생성 실패 — 기본 결과 반환", exc_info=True)
 
     await cache_set(redis, cache_key, response_dict, CACHE_TTL_INTERACTION)
     return response_dict

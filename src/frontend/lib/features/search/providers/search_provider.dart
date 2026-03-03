@@ -107,52 +107,67 @@ class SearchNotifier extends StateNotifier<SearchState> {
     final page = state.currentPage;
     const pageSize = AppConstants.defaultPageSize;
 
-    // 약물 검색
-    if (filter == null || filter == ItemType.drug) {
+    final searchDrug = filter == null || filter == ItemType.drug;
+    final searchSupplement = filter == null || filter == ItemType.supplement;
+
+    // 로딩 상태 설정
+    if (searchDrug) {
       state = state.copyWith(drugResults: const AsyncValue.loading());
-      try {
-        final drugService = _ref.read(drugServiceProvider);
-        final result = await drugService.searchDrugs(
-          query,
-          page: page,
-          pageSize: pageSize,
-        );
-        if (mounted) {
-          state = state.copyWith(drugResults: AsyncValue.data(result));
-        }
-      } catch (e, st) {
-        if (mounted) {
-          state = state.copyWith(drugResults: AsyncValue.error(e, st));
-        }
-      }
     } else {
-      state = state.copyWith(
-        drugResults: const AsyncValue.data(null),
-      );
+      state = state.copyWith(drugResults: const AsyncValue.data(null));
+    }
+    if (searchSupplement) {
+      state = state.copyWith(supplementResults: const AsyncValue.loading());
+    } else {
+      state = state.copyWith(supplementResults: const AsyncValue.data(null));
     }
 
-    // 영양제 검색
-    if (filter == null || filter == ItemType.supplement) {
-      state = state.copyWith(supplementResults: const AsyncValue.loading());
-      try {
-        final supplementService = _ref.read(supplementServiceProvider);
-        final result = await supplementService.searchSupplements(
-          query,
-          page: page,
-          pageSize: pageSize,
-        );
-        if (mounted) {
-          state = state.copyWith(supplementResults: AsyncValue.data(result));
-        }
-      } catch (e, st) {
-        if (mounted) {
-          state = state.copyWith(supplementResults: AsyncValue.error(e, st));
-        }
-      }
-    } else {
-      state = state.copyWith(
-        supplementResults: const AsyncValue.data(null),
+    // 병렬 검색 실행
+    final futures = <Future<void>>[];
+
+    if (searchDrug) {
+      futures.add(_searchDrugs(query, page, pageSize));
+    }
+    if (searchSupplement) {
+      futures.add(_searchSupplements(query, page, pageSize));
+    }
+
+    await Future.wait(futures);
+  }
+
+  Future<void> _searchDrugs(String query, int page, int pageSize) async {
+    try {
+      final drugService = _ref.read(drugServiceProvider);
+      final result = await drugService.searchDrugs(
+        query,
+        page: page,
+        pageSize: pageSize,
       );
+      if (mounted) {
+        state = state.copyWith(drugResults: AsyncValue.data(result));
+      }
+    } catch (e, st) {
+      if (mounted) {
+        state = state.copyWith(drugResults: AsyncValue.error(e, st));
+      }
+    }
+  }
+
+  Future<void> _searchSupplements(String query, int page, int pageSize) async {
+    try {
+      final supplementService = _ref.read(supplementServiceProvider);
+      final result = await supplementService.searchSupplements(
+        query,
+        page: page,
+        pageSize: pageSize,
+      );
+      if (mounted) {
+        state = state.copyWith(supplementResults: AsyncValue.data(result));
+      }
+    } catch (e, st) {
+      if (mounted) {
+        state = state.copyWith(supplementResults: AsyncValue.error(e, st));
+      }
     }
   }
 

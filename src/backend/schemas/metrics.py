@@ -1,5 +1,6 @@
 """메트릭스 스키마."""
 
+from datetime import datetime
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -23,9 +24,11 @@ class MetricEventCreate(BaseModel):
 class MetricEventResponse(BaseModel):
     """메트릭 이벤트 응답."""
 
+    model_config = {"from_attributes": True}
+
     id: int
     event_type: str
-    created_at: str
+    created_at: datetime
 
 
 class KillCriteriaDashboard(BaseModel):

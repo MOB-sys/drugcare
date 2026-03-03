@@ -12,6 +12,14 @@ from src.backend.utils.response import error_response, success_response
 router = APIRouter(prefix="/reminders", tags=["reminders"])
 
 
+def _get_device_id(request: Request) -> str:
+    """요청에서 device_id를 안전하게 추출한다."""
+    device_id = getattr(request.state, "device_id", None)
+    if not device_id:
+        raise ValueError("device_id")
+    return device_id
+
+
 @router.post(
     "",
     response_model=ApiResponse[ReminderResponse],
@@ -33,7 +41,7 @@ async def create_reminder(
     Returns:
         ApiResponse[ReminderResponse] 포맷의 dict.
     """
-    device_id = request.state.device_id
+    device_id = _get_device_id(request)
     result = await reminder_service.create_reminder(db, device_id, data)
 
     if result is None:
@@ -63,7 +71,7 @@ async def list_reminders(
     Returns:
         ApiResponse[list[ReminderResponse]] 포맷의 dict.
     """
-    device_id = request.state.device_id
+    device_id = _get_device_id(request)
     items = await reminder_service.list_reminders(db, device_id, active_only)
     return success_response(items)
 
@@ -91,7 +99,7 @@ async def update_reminder(
     Returns:
         ApiResponse[ReminderResponse] 포맷의 dict 또는 404 에러.
     """
-    device_id = request.state.device_id
+    device_id = _get_device_id(request)
     result = await reminder_service.update_reminder(db, device_id, reminder_id, data)
 
     if result is None:
@@ -121,7 +129,7 @@ async def delete_reminder(
     Returns:
         ApiResponse 포맷의 dict 또는 404 에러.
     """
-    device_id = request.state.device_id
+    device_id = _get_device_id(request)
     result = await reminder_service.delete_reminder(db, device_id, reminder_id)
 
     if result is None:

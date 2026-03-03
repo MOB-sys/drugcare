@@ -32,7 +32,11 @@ sleep 10
 
 # 4. Run Alembic migrations
 echo ">>> Alembic 마이그레이션 실행..."
-$COMPOSE run --rm backend alembic upgrade head
+if ! $COMPOSE run --rm backend alembic upgrade head; then
+    echo "ERROR: 마이그레이션 실패 — 배포를 중단합니다."
+    $COMPOSE logs --tail=20 backend
+    exit 1
+fi
 
 # 5. Start all services
 echo ">>> 전체 서비스 시작..."

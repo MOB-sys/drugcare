@@ -32,7 +32,7 @@ class Supplement(Base, TimestampMixin):
     company: Mapped[str | None] = mapped_column(String(200))
     registration_no: Mapped[str | None] = mapped_column(String(50), unique=True)
     main_ingredient: Mapped[str | None] = mapped_column(String(200))
-    ingredients: Mapped[dict | None] = mapped_column(JSONB, default=list)
+    ingredients: Mapped[list | None] = mapped_column(JSONB, default=list)
     functionality: Mapped[str | None] = mapped_column(Text)
     precautions: Mapped[str | None] = mapped_column(Text)
     intake_method: Mapped[str | None] = mapped_column(Text)

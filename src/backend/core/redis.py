@@ -14,7 +14,14 @@ CACHE_TTL_SUPPLEMENT_SEARCH = 60 * 60 * 24  # 24시간
 CACHE_TTL_SUPPLEMENT_DETAIL = 60 * 60 * 24 * 3  # 3일
 CACHE_TTL_AI_EXPLANATION = 60 * 60 * 24 * 30  # 30일
 
-pool = ConnectionPool.from_url(settings.REDIS_URL, decode_responses=True)
+pool = ConnectionPool.from_url(
+    settings.REDIS_URL,
+    decode_responses=True,
+    max_connections=20,
+    socket_timeout=5,
+    socket_connect_timeout=5,
+    retry_on_timeout=True,
+)
 
 
 def get_redis() -> Redis:

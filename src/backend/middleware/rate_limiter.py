@@ -51,7 +51,7 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
 
         group = _get_endpoint_group(request.method)
         limit = RATE_LIMITS.get(group, 60)
-        client_ip = request.client.host if request.client else "unknown"
+        client_ip = _get_client_ip(request)
         key = f"ratelimit:{client_ip}:{group}"
 
         try:
@@ -68,6 +68,21 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
             logger.warning("Redis 연결 실패 — 레이트 리밋 검사를 건너뜁니다: %s", key)
 
         return await call_next(request)
+
+
+def _get_client_ip(request: Request) -> str:
+    """클라이언트 IP를 추출한다 (리버스 프록시 환경 지원).
+
+    Args:
+        request: HTTP 요청.
+
+    Returns:
+        클라이언트 IP 문자열.
+    """
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
 
 
 def _get_endpoint_group(method: str) -> str:

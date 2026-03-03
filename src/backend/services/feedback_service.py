@@ -29,7 +29,7 @@ async def create_feedback(db: AsyncSession, device_id: str, data: FeedbackCreate
         os_info=data.os_info,
     )
     db.add(feedback)
-    await db.commit()
+    await db.flush()
     await db.refresh(feedback)
 
     logger.info(
@@ -39,10 +39,6 @@ async def create_feedback(db: AsyncSession, device_id: str, data: FeedbackCreate
         data.category,
     )
 
-    return {
-        "id": feedback.id,
-        "category": feedback.category,
-        "content": feedback.content,
-        "app_version": feedback.app_version,
-        "created_at": feedback.created_at.isoformat(),
-    }
+    from src.backend.schemas.feedback import FeedbackResponse
+
+    return FeedbackResponse.model_validate(feedback).model_dump()

@@ -1,5 +1,7 @@
 """피드백 스키마."""
 
+from datetime import datetime
+
 from pydantic import BaseModel, Field
 
 
@@ -24,8 +26,10 @@ class FeedbackCreate(BaseModel):
 class FeedbackResponse(BaseModel):
     """피드백 응답."""
 
+    model_config = {"from_attributes": True}
+
     id: int
     category: str
     content: str
     app_version: str
-    created_at: str
+    created_at: datetime

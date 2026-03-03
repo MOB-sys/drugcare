@@ -12,6 +12,14 @@ from src.backend.utils.response import error_response, success_response
 router = APIRouter(prefix="/cabinet", tags=["cabinet"])
 
 
+def _get_device_id(request: Request) -> str:
+    """요청에서 device_id를 안전하게 추출한다."""
+    device_id = getattr(request.state, "device_id", None)
+    if not device_id:
+        raise ValueError("device_id")
+    return device_id
+
+
 @router.post(
     "",
     response_model=ApiResponse[CabinetItemResponse],
@@ -33,7 +41,7 @@ async def add_cabinet_item(
     Returns:
         ApiResponse[CabinetItemResponse] 포맷의 dict.
     """
-    device_id = request.state.device_id
+    device_id = _get_device_id(request)
     result = await cabinet_service.add_item(db, device_id, data)
 
     if result is None:
@@ -63,7 +71,7 @@ async def list_cabinet_items(
     Returns:
         ApiResponse[list[CabinetItemResponse]] 포맷의 dict.
     """
-    device_id = request.state.device_id
+    device_id = _get_device_id(request)
     items = await cabinet_service.list_items(db, device_id)
     return success_response(items)
 
@@ -89,7 +97,7 @@ async def delete_cabinet_item(
     Returns:
         ApiResponse 포맷의 dict 또는 404 에러.
     """
-    device_id = request.state.device_id
+    device_id = _get_device_id(request)
     result = await cabinet_service.delete_item(db, device_id, item_id)
 
     if result is None:

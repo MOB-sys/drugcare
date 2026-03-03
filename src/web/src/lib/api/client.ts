@@ -67,7 +67,10 @@ async function fetchApiOnce<T>(
 
     return json.data;
   } catch (error) {
-    if (error instanceof DOMException && error.name === "AbortError") {
+    if (
+      (typeof DOMException !== "undefined" && error instanceof DOMException && error.name === "AbortError") ||
+      (error instanceof Error && error.name === "AbortError")
+    ) {
       throw new ApiError(408, "요청 시간이 초과되었습니다.");
     }
     throw error;

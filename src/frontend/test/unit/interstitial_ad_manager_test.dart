@@ -33,14 +33,14 @@ void main() {
 
     test('Android 전면 광고 테스트 ID가 올바르다', () {
       expect(
-        AdConstants.androidInterstitialTestId,
+        AdConstants.androidInterstitialId,
         'ca-app-pub-3940256099942544/1033173712',
       );
     });
 
     test('iOS 전면 광고 테스트 ID가 올바르다', () {
       expect(
-        AdConstants.iosInterstitialTestId,
+        AdConstants.iosInterstitialId,
         'ca-app-pub-3940256099942544/4411468910',
       );
     });

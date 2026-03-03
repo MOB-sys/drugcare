@@ -79,7 +79,6 @@ _cors_origins = (
         "https://pillright.com",
         "https://www.pillright.com",
         "https://api.pillright.com",
-        "http://localhost:3000",
     ]
 )
 app.add_middleware(

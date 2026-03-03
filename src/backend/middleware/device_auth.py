@@ -7,6 +7,8 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.requests import Request
 from starlette.responses import Response
 
+from src.backend.core.config import get_settings
+
 logger = logging.getLogger(__name__)
 
 # 인증 면제 경로 목록 (exact match)
@@ -65,12 +67,14 @@ class DeviceAuthMiddleware(BaseHTTPMiddleware):
         new_session_id = f"web-{uuid4()}"
         request.state.device_id = new_session_id
         response = await call_next(request)
+        settings = get_settings()
         response.set_cookie(
             key="session_id",
             value=new_session_id,
             max_age=60 * 60 * 24 * 365,
             httponly=True,
             samesite="lax",
+            secure=not settings.is_development,
         )
         return response
 

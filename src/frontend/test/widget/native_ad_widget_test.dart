@@ -9,14 +9,14 @@ void main() {
   group('NativeAdWidget', () {
     test('Android 네이티브 광고 테스트 ID가 올바르다', () {
       expect(
-        AdConstants.androidNativeTestId,
+        AdConstants.androidNativeId,
         'ca-app-pub-3940256099942544/2247696110',
       );
     });
 
     test('iOS 네이티브 광고 테스트 ID가 올바르다', () {
       expect(
-        AdConstants.iosNativeTestId,
+        AdConstants.iosNativeId,
         'ca-app-pub-3940256099942544/3986624511',
       );
     });

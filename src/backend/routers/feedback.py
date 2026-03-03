@@ -12,6 +12,14 @@ from src.backend.utils.response import success_response
 router = APIRouter(prefix="/feedback", tags=["feedback"])
 
 
+def _get_device_id(request: Request) -> str:
+    """요청에서 device_id를 안전하게 추출한다."""
+    device_id = getattr(request.state, "device_id", None)
+    if not device_id:
+        raise ValueError("device_id")
+    return device_id
+
+
 @router.post(
     "",
     response_model=ApiResponse[FeedbackResponse],
@@ -33,6 +41,6 @@ async def submit_feedback(
     Returns:
         ApiResponse[FeedbackResponse] 포맷의 dict.
     """
-    device_id = request.state.device_id
+    device_id = _get_device_id(request)
     result = await feedback_service.create_feedback(db, device_id, data)
     return success_response(result)

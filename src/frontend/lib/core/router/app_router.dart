@@ -95,7 +95,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/result',
         builder: (context, state) {
-          final items = state.extra as List<SelectedSearchItem>;
+          final items = state.extra as List<SelectedSearchItem>? ?? const [];
           return ResultScreen(selectedItems: items);
         },
       ),

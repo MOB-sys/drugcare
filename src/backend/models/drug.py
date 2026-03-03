@@ -43,7 +43,7 @@ class Drug(Base, TimestampMixin):
     chart: Mapped[str | None] = mapped_column(Text)
     bar_code: Mapped[str | None] = mapped_column(String(50))
     material_name: Mapped[str | None] = mapped_column(Text)
-    ingredients: Mapped[dict | None] = mapped_column(JSONB, default=list)
+    ingredients: Mapped[list | None] = mapped_column(JSONB, default=list)
     efcy_qesitm: Mapped[str | None] = mapped_column(Text)
     use_method_qesitm: Mapped[str | None] = mapped_column(Text)
     atpn_warn_qesitm: Mapped[str | None] = mapped_column(Text)

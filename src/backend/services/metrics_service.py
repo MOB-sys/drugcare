@@ -31,14 +31,12 @@ async def record_event(db: AsyncSession, device_id: str, data: MetricEventCreate
         app_version=data.app_version,
     )
     db.add(metric)
-    await db.commit()
+    await db.flush()
     await db.refresh(metric)
 
-    return {
-        "id": metric.id,
-        "event_type": metric.event_type,
-        "created_at": metric.created_at.isoformat(),
-    }
+    from src.backend.schemas.metrics import MetricEventResponse
+
+    return MetricEventResponse.model_validate(metric).model_dump()
 
 
 async def get_dashboard(db: AsyncSession, period_days: int = 30) -> dict:
