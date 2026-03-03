@@ -281,7 +281,7 @@ class DURInteractionCollector:
 
             return "updated"
 
-        # 새 레코드 삽입
+        # 새 레코드 삽입 (유니크 인덱스 충돌 시 무시)
         insert_sql = text("""
             INSERT INTO interactions (
                 item_a_type, item_a_id, item_a_name,
@@ -294,6 +294,8 @@ class DURInteractionCollector:
                 :severity, :description, :mechanism, :recommendation,
                 :source, :source_id, :evidence_level
             )
+            ON CONFLICT (item_a_type, item_a_id, item_b_type, item_b_id, severity, source)
+            DO NOTHING
         """)
 
         await session.execute(insert_sql, {
