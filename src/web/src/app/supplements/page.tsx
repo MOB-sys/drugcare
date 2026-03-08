@@ -41,7 +41,7 @@ export default async function SupplementsIndexPage() {
   let allSupps: SuppIndexItem[] = [];
 
   try {
-    const res = await searchSupplements("", 1, 200);
+    const res = await searchSupplements("", 1, 100);
     allSupps = res.items.map((s) => ({
       id: s.id,
       product_name: s.product_name,
@@ -49,8 +49,8 @@ export default async function SupplementsIndexPage() {
       company: s.company,
       category: s.category,
     }));
-  } catch {
-    /* API 미연결 시 빈 목록 */
+  } catch (err) {
+    console.error("[supplements/page] searchSupplements failed:", err);
   }
 
   const groups = new Map<string, SuppIndexItem[]>();
@@ -102,25 +102,24 @@ export default async function SupplementsIndexPage() {
         </Link>
 
         {/* 인덱스 바 */}
-        <nav className="flex flex-wrap gap-1 mb-8 sticky top-16 bg-[var(--color-bg)] py-2 z-10" aria-label="가나다 인덱스">
+        <nav className="flex flex-wrap gap-1 mb-8 sticky top-16 bg-[var(--color-bg)] py-2 z-10 scroll-smooth" aria-label="가나다 인덱스">
           {allKeys.map((key) => {
             const isActive = activeKeys.includes(key);
-            return (
+            return isActive ? (
               <a
                 key={key}
-                href={isActive ? `#index-${key}` : undefined}
-                className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium transition-colors ${
-                  isActive
-                    ? "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
-                    : "bg-gray-100 text-gray-300 cursor-default"
-                }`}
-                onClick={isActive ? (e) => {
-                  e.preventDefault();
-                  document.getElementById(`index-${key}`)?.scrollIntoView({ behavior: "smooth" });
-                } : undefined}
+                href={`#index-${key}`}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium transition-colors bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
               >
                 {key}
               </a>
+            ) : (
+              <span
+                key={key}
+                className="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium bg-gray-100 text-gray-300 cursor-default"
+              >
+                {key}
+              </span>
             );
           })}
         </nav>
