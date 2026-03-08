@@ -23,7 +23,7 @@ router = APIRouter(prefix="/drugs", tags=["drugs"])
 async def search_drugs(
     q: str = Query("", description="검색어 (제품명, 성분명 등)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
-    page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
+    page_size: int = Query(20, ge=1, le=5000, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),
     redis: Redis = Depends(get_redis),
 ) -> dict:

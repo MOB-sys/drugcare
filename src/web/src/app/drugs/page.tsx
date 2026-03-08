@@ -40,9 +40,9 @@ interface DrugIndexItem {
 export default async function DrugsIndexPage() {
   let allDrugs: DrugIndexItem[] = [];
 
-  /* 인덱스 페이지용으로 첫 200개 로드 — 전체 목록은 검색으로 유도 */
+  /* 인덱스 페이지용으로 첫 100개 로드 — 전체 목록은 검색·browse로 유도 */
   try {
-    const res = await searchDrugs("", 1, 200);
+    const res = await searchDrugs("", 1, 100);
     allDrugs = res.items.map((d) => ({
       id: d.id,
       item_name: d.item_name,

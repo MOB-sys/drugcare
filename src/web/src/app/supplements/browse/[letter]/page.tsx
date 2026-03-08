@@ -39,7 +39,7 @@ export default async function SupplementBrowsePage({ params }: PageProps) {
   let supplements: SuppItem[] = [];
 
   try {
-    const res = await searchSupplements("", 1, 2000);
+    const res = await searchSupplements("", 1, 5000);
     supplements = res.items
       .filter((s) => matchesLetterKey(s.product_name, letter))
       .map((s) => ({ id: s.id, product_name: s.product_name, slug: s.slug, company: s.company }));

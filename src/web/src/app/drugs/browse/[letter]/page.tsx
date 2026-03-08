@@ -39,7 +39,7 @@ export default async function DrugBrowsePage({ params }: PageProps) {
   let drugs: DrugItem[] = [];
 
   try {
-    const res = await searchDrugs("", 1, 2000);
+    const res = await searchDrugs("", 1, 5000);
     drugs = res.items
       .filter((d) => matchesLetterKey(d.item_name, letter))
       .map((d) => ({ id: d.id, item_name: d.item_name, slug: d.slug, entp_name: d.entp_name }));
