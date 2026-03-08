@@ -59,7 +59,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
               "img-src 'self' data: blob: https: http://nedrug.mfds.go.kr https://nedrug.mfds.go.kr",
               "font-src 'self' https://cdn.jsdelivr.net",
-              "connect-src 'self' https://www.google-analytics.com https://*.sentry.io https://pagead2.googlesyndication.com",
+              "connect-src 'self' https://api.pillright.com https://www.google-analytics.com https://*.sentry.io https://pagead2.googlesyndication.com",
               "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
               "object-src 'none'",
               "base-uri 'self'",
