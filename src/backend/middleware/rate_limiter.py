@@ -19,6 +19,18 @@ EXEMPT_PATHS: set[str] = {
     "/openapi.json",
 }
 
+# 레이트 리밋 면제 경로 프리픽스 (SSG 빌드용 — 읽기 전용 엔드포인트)
+EXEMPT_PREFIXES: tuple[str, ...] = (
+    "/api/v1/drugs/slugs",
+    "/api/v1/drugs/by-slug/",
+    "/api/v1/drugs/search",
+    "/api/v1/drugs/count",
+    "/api/v1/supplements/slugs",
+    "/api/v1/supplements/by-slug/",
+    "/api/v1/supplements/search",
+    "/api/v1/supplements/count",
+)
+
 # 엔드포인트 그룹별 요청 제한 (req/min)
 RATE_LIMITS: dict[str, int] = {
     "search": 60,
@@ -46,7 +58,7 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
         """
         path = request.url.path
 
-        if path in EXEMPT_PATHS:
+        if path in EXEMPT_PATHS or path.startswith(EXEMPT_PREFIXES):
             return await call_next(request)
 
         group = _get_endpoint_group(request.method)

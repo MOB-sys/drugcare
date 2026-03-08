@@ -49,8 +49,8 @@ export default async function DrugsIndexPage() {
       slug: d.slug,
       entp_name: d.entp_name,
     }));
-  } catch {
-    /* API 미연결 시 빈 목록 */
+  } catch (err) {
+    console.error("[drugs/page] searchDrugs failed:", err);
   }
 
   /* 초성/알파벳 그룹핑 */
