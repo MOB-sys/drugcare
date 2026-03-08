@@ -38,25 +38,28 @@ async def search_supplements(
     Returns:
         PaginatedData 구조의 dict (items, total, page, page_size, total_pages).
     """
-    if not q.strip():
-        return {"items": [], "total": 0, "page": page, "page_size": page_size, "total_pages": 0}
-
     cache_key = make_cache_key("supplement", "search", hash_query(q), str(page), str(page_size))
     cached = await cache_get(redis, cache_key)
     if cached is not None:
         return cached
 
-    # 검색 조건
-    condition = Supplement.product_name.ilike(f"%{q}%")
+    # 검색 조건 (빈 쿼리면 전체 목록)
+    q_stripped = q.strip()
+    condition = Supplement.product_name.ilike(f"%{q_stripped}%") if q_stripped else None
 
     # 전체 건수 조회
-    count_stmt = select(func.count()).select_from(Supplement).where(condition)
+    count_stmt = select(func.count()).select_from(Supplement)
+    if condition is not None:
+        count_stmt = count_stmt.where(condition)
     total_result = await db.execute(count_stmt)
     total: int = total_result.scalar_one()
 
     # 페이지네이션 조회
     offset = (page - 1) * page_size
-    search_stmt = select(Supplement).where(condition).offset(offset).limit(page_size)
+    search_stmt = select(Supplement)
+    if condition is not None:
+        search_stmt = search_stmt.where(condition)
+    search_stmt = search_stmt.offset(offset).limit(page_size)
     rows = await db.execute(search_stmt)
     supplements = rows.scalars().all()
 
