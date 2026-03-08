@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
+import 'package:pillright/core/theme/app_colors.dart';
 
 /// 홈 화면 퀵 검색 바.
 ///

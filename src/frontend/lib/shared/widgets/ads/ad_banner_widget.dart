@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'package:yakmeogeo/core/constants/ad_constants.dart';
+import 'package:pillright/core/constants/ad_constants.dart';
 
 /// AdMob 배너 광고 래퍼 위젯.
 ///

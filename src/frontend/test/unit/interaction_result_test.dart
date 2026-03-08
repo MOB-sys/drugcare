@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/features/result/models/interaction_result.dart';
-import 'package:yakmeogeo/shared/models/severity.dart';
+import 'package:pillright/features/result/models/interaction_result.dart';
+import 'package:pillright/shared/models/severity.dart';
 
 void main() {
   group('InteractionResult', () {

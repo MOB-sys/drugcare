@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:yakmeogeo/core/constants/app_constants.dart';
-import 'package:yakmeogeo/core/theme/app_colors.dart';
+import 'package:pillright/core/constants/app_constants.dart';
+import 'package:pillright/core/theme/app_colors.dart';
 
 /// 설정 화면.
 ///

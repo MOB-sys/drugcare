@@ -1,4 +1,4 @@
-import 'package:yakmeogeo/shared/models/item_type.dart';
+import 'package:pillright/shared/models/item_type.dart';
 
 /// 복약함 아이템 (서버 응답).
 class CabinetItem {

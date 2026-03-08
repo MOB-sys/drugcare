@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
+import 'package:pillright/core/theme/app_colors.dart';
 
 /// 에러 상태 표시 위젯.
 ///

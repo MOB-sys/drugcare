@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:yakmeogeo/core/providers/service_providers.dart';
-import 'package:yakmeogeo/features/reminder/models/reminder.dart';
-import 'package:yakmeogeo/shared/services/notification_service.dart';
+import 'package:pillright/core/providers/service_providers.dart';
+import 'package:pillright/features/reminder/models/reminder.dart';
+import 'package:pillright/shared/services/notification_service.dart';
 
 /// 리마인더 화면 상태.
 class ReminderState {

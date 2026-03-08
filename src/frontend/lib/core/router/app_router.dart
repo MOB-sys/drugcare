@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:yakmeogeo/core/router/navigation_shell.dart';
-import 'package:yakmeogeo/features/cabinet/screens/cabinet_screen.dart';
-import 'package:yakmeogeo/features/home/screens/home_screen.dart';
-import 'package:yakmeogeo/features/reminder/models/reminder.dart';
-import 'package:yakmeogeo/features/reminder/screens/reminder_form_screen.dart';
-import 'package:yakmeogeo/features/reminder/screens/reminder_screen.dart';
-import 'package:yakmeogeo/features/result/screens/result_screen.dart';
-import 'package:yakmeogeo/features/search/models/selected_search_item.dart';
-import 'package:yakmeogeo/features/search/screens/search_screen.dart';
-import 'package:yakmeogeo/features/settings/screens/feedback_screen.dart';
-import 'package:yakmeogeo/features/settings/screens/legal_screen.dart';
-import 'package:yakmeogeo/features/settings/screens/settings_screen.dart';
+import 'package:pillright/core/router/navigation_shell.dart';
+import 'package:pillright/features/cabinet/screens/cabinet_screen.dart';
+import 'package:pillright/features/home/screens/home_screen.dart';
+import 'package:pillright/features/reminder/models/reminder.dart';
+import 'package:pillright/features/reminder/screens/reminder_form_screen.dart';
+import 'package:pillright/features/reminder/screens/reminder_screen.dart';
+import 'package:pillright/features/result/screens/result_screen.dart';
+import 'package:pillright/features/search/models/selected_search_item.dart';
+import 'package:pillright/features/search/screens/search_screen.dart';
+import 'package:pillright/features/settings/screens/feedback_screen.dart';
+import 'package:pillright/features/settings/screens/legal_screen.dart';
+import 'package:pillright/features/settings/screens/settings_screen.dart';
 
 /// 루트 네비게이터 키.
 final _rootNavigatorKey = GlobalKey<NavigatorState>();

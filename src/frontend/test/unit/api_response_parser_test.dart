@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/core/utils/api_response_parser.dart';
+import 'package:pillright/core/utils/api_response_parser.dart';
 
 void main() {
   group('ApiResponseParser', () {

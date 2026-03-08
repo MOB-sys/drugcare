@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'package:yakmeogeo/core/constants/ad_constants.dart';
+import 'package:pillright/core/constants/ad_constants.dart';
 
 /// 네이티브 광고 위젯.
 ///

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/features/search/models/selected_search_item.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/features/search/models/selected_search_item.dart';
+import 'package:pillright/shared/models/item_type.dart';
 
 /// 선택된 아이템 가로 스크롤 칩 바.
 ///

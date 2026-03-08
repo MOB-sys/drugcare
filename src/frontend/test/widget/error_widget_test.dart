@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/shared/widgets/common/error_widget.dart';
+import 'package:pillright/shared/widgets/common/error_widget.dart';
 
 void main() {
   group('AppErrorWidget', () {

@@ -12,7 +12,7 @@ describe("getStoreUrl", () => {
   it("generates Android Play Store URL with UTM params", () => {
     const url = getStoreUrl("android", "website", "banner");
     expect(url).toContain("play.google.com");
-    expect(url).toContain("com.yakmeogeo.app");
+    expect(url).toContain("com.pillright.app");
     expect(url).toContain("utm_source=website");
     expect(url).toContain("utm_medium=banner");
   });

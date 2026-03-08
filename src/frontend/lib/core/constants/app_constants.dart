@@ -4,10 +4,13 @@ class AppConstants {
   AppConstants._();
 
   /// 앱 이름.
-  static const String appName = '약먹어';
+  static const String appName = 'PillRight';
 
   /// 앱 부제.
-  static const String appTagline = '이 약이랑 이 영양제, 같이 먹어도 돼?';
+  static const String appTagline = '이 약이랑 이 영양제, 같이 먹어도 될까?';
+
+  /// 서브 태그라인.
+  static const String appSubTagline = '3초 만에 확인하는 복약 안전 체커';
 
   /// 면책조항 텍스트.
   static const String disclaimer =
@@ -15,7 +18,7 @@ class AppConstants {
 
   /// 면책조항 상세.
   static const String disclaimerDetail =
-      '약먹어에서 제공하는 정보는 공공 데이터를 기반으로 한 참고 정보입니다. '
+      'PillRight에서 제공하는 정보는 공공 데이터를 기반으로 한 참고 정보입니다. '
       '실제 복약 관련 결정은 반드시 담당 의사 또는 약사와 상의하세요.';
 
   /// 검색 결과 기본 페이지 사이즈.

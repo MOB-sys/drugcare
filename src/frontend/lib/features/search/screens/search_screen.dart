@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:yakmeogeo/core/constants/app_constants.dart';
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/features/search/providers/search_provider.dart';
-import 'package:yakmeogeo/features/search/widgets/search_result_list.dart';
-import 'package:yakmeogeo/features/search/widgets/selected_items_bar.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
-import 'package:yakmeogeo/shared/widgets/common/empty_state_widget.dart';
+import 'package:pillright/core/constants/app_constants.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/features/search/providers/search_provider.dart';
+import 'package:pillright/features/search/widgets/search_result_list.dart';
+import 'package:pillright/features/search/widgets/selected_items_bar.dart';
+import 'package:pillright/shared/models/item_type.dart';
+import 'package:pillright/shared/widgets/common/empty_state_widget.dart';
 
 /// 약물/영양제 통합 검색 화면.
 ///

@@ -1,4 +1,4 @@
-import 'package:yakmeogeo/shared/models/severity.dart';
+import 'package:pillright/shared/models/severity.dart';
 
 /// 개별 상호작용 결과.
 class InteractionResult {

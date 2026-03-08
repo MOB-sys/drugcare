@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:yakmeogeo/features/result/providers/interaction_provider.dart';
-import 'package:yakmeogeo/features/result/widgets/interaction_result_card.dart';
-import 'package:yakmeogeo/features/result/widgets/result_summary_card.dart';
-import 'package:yakmeogeo/features/search/models/selected_search_item.dart';
-import 'package:yakmeogeo/shared/widgets/ads/ad_banner_widget.dart';
-import 'package:yakmeogeo/shared/widgets/ads/interstitial_ad_manager.dart';
-import 'package:yakmeogeo/shared/widgets/common/disclaimer_banner.dart';
-import 'package:yakmeogeo/shared/widgets/common/error_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/loading_widget.dart';
+import 'package:pillright/features/result/providers/interaction_provider.dart';
+import 'package:pillright/features/result/widgets/interaction_result_card.dart';
+import 'package:pillright/features/result/widgets/result_summary_card.dart';
+import 'package:pillright/features/search/models/selected_search_item.dart';
+import 'package:pillright/shared/widgets/ads/ad_banner_widget.dart';
+import 'package:pillright/shared/widgets/ads/interstitial_ad_manager.dart';
+import 'package:pillright/shared/widgets/common/disclaimer_banner.dart';
+import 'package:pillright/shared/widgets/common/error_widget.dart';
+import 'package:pillright/shared/widgets/common/loading_widget.dart';
 
 /// 상호작용 결과 화면.
 ///

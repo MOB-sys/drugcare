@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:yakmeogeo/core/constants/app_constants.dart';
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/features/home/providers/home_provider.dart';
-import 'package:yakmeogeo/features/home/widgets/cabinet_summary_card.dart';
-import 'package:yakmeogeo/features/home/widgets/health_tip_card.dart';
-import 'package:yakmeogeo/features/home/widgets/quick_search_bar.dart';
-import 'package:yakmeogeo/shared/widgets/ads/native_ad_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/disclaimer_banner.dart';
+import 'package:pillright/core/constants/app_constants.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/features/home/providers/home_provider.dart';
+import 'package:pillright/features/home/widgets/cabinet_summary_card.dart';
+import 'package:pillright/features/home/widgets/health_tip_card.dart';
+import 'package:pillright/features/home/widgets/quick_search_bar.dart';
+import 'package:pillright/shared/widgets/ads/native_ad_widget.dart';
+import 'package:pillright/shared/widgets/common/disclaimer_banner.dart';
 
 /// 홈 화면.
 ///

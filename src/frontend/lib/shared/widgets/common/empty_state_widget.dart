@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
+import 'package:pillright/core/theme/app_colors.dart';
 
 /// 빈 상태 플레이스홀더 위젯.
 ///

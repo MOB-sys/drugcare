@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/features/cabinet/models/cabinet_item.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/features/cabinet/models/cabinet_item.dart';
+import 'package:pillright/shared/models/item_type.dart';
 
 /// 복약함 개별 아이템 타일.
 ///

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/core/constants/ad_constants.dart';
+import 'package:pillright/core/constants/ad_constants.dart';
 
 void main() {
   group('InterstitialAdManager', () {

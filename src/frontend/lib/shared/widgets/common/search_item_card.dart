@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/shared/models/item_type.dart';
 
 /// 통합 검색 결과 카드 위젯.
 ///

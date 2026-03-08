@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:yakmeogeo/core/constants/app_constants.dart';
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/features/cabinet/models/cabinet_item.dart';
-import 'package:yakmeogeo/features/cabinet/providers/cabinet_provider.dart';
-import 'package:yakmeogeo/features/cabinet/widgets/cabinet_item_tile.dart';
-import 'package:yakmeogeo/features/search/models/selected_search_item.dart';
-import 'package:yakmeogeo/shared/widgets/common/empty_state_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/error_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/loading_widget.dart';
+import 'package:pillright/core/constants/app_constants.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/features/cabinet/models/cabinet_item.dart';
+import 'package:pillright/features/cabinet/providers/cabinet_provider.dart';
+import 'package:pillright/features/cabinet/widgets/cabinet_item_tile.dart';
+import 'package:pillright/features/search/models/selected_search_item.dart';
+import 'package:pillright/shared/widgets/common/empty_state_widget.dart';
+import 'package:pillright/shared/widgets/common/error_widget.dart';
+import 'package:pillright/shared/widgets/common/loading_widget.dart';
 
 /// 복약함 관리 화면.
 ///

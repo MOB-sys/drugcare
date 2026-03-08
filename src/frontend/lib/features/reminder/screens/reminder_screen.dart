@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/features/reminder/providers/reminder_provider.dart';
-import 'package:yakmeogeo/features/reminder/widgets/reminder_tile.dart';
-import 'package:yakmeogeo/shared/widgets/common/empty_state_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/error_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/loading_widget.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/features/reminder/providers/reminder_provider.dart';
+import 'package:pillright/features/reminder/widgets/reminder_tile.dart';
+import 'package:pillright/shared/widgets/common/empty_state_widget.dart';
+import 'package:pillright/shared/widgets/common/error_widget.dart';
+import 'package:pillright/shared/widgets/common/loading_widget.dart';
 
 /// 리마인더 목록 화면.
 ///

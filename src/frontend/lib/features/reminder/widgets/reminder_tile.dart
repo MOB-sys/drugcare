@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/core/utils/date_utils.dart';
-import 'package:yakmeogeo/features/reminder/models/reminder.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/core/utils/date_utils.dart';
+import 'package:pillright/features/reminder/models/reminder.dart';
 
 /// 리마인더 리스트 아이템 타일.
 ///

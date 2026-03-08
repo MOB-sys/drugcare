@@ -1,6 +1,6 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'package:yakmeogeo/core/constants/ad_constants.dart';
+import 'package:pillright/core/constants/ad_constants.dart';
 
 /// 전면 광고 매니저 — 싱글톤.
 ///

@@ -30,7 +30,7 @@ export function SmartAppBanner() {
           매일 복약 리마인더는 앱에서!
         </p>
         <p className="text-xs text-blue-200 truncate">
-          약먹어 앱으로 복용 시간을 놓치지 마세요
+          PillRight 앱으로 복용 시간을 놓치지 마세요
         </p>
       </div>
       <a

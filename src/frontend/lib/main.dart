@@ -29,23 +29,25 @@ void main() async {
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
       ],
-      child: const YakMeogeoApp(),
+      child: const PillRightApp(),
     ),
   );
 }
 
-/// 약먹어 루트 위젯.
-class YakMeogeoApp extends ConsumerWidget {
-  /// [YakMeogeoApp] 생성자.
-  const YakMeogeoApp({super.key});
+/// PillRight 루트 위젯.
+class PillRightApp extends ConsumerWidget {
+  /// [PillRightApp] 생성자.
+  const PillRightApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      title: '약먹어',
+      title: 'PillRight',
       theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );

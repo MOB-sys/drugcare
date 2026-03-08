@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-
 /// 바텀 네비게이션 셸.
 ///
 /// [StatefulNavigationShell]을 감싸서 Material 3 [NavigationBar]와
@@ -28,8 +26,8 @@ class NavigationShell extends StatelessWidget {
             initialLocation: index == navigationShell.currentIndex,
           );
         },
-        backgroundColor: AppColors.surface,
-        indicatorColor: AppColors.primaryLight,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        indicatorColor: Theme.of(context).colorScheme.primaryContainer,
         height: 64,
         destinations: const [
           NavigationDestination(

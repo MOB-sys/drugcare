@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:yakmeogeo/core/providers/service_providers.dart';
-import 'package:yakmeogeo/core/theme/app_colors.dart';
+import 'package:pillright/core/providers/service_providers.dart';
+import 'package:pillright/core/theme/app_colors.dart';
 
 /// 피드백 카테고리 옵션 (코드, 라벨) 목록.
 const _categories = [

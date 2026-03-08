@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:yakmeogeo/core/constants/api_constants.dart';
-import 'package:yakmeogeo/features/cabinet/models/cabinet_item.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
-import 'package:yakmeogeo/shared/services/cabinet_service.dart';
+import 'package:pillright/core/constants/api_constants.dart';
+import 'package:pillright/features/cabinet/models/cabinet_item.dart';
+import 'package:pillright/shared/models/item_type.dart';
+import 'package:pillright/shared/services/cabinet_service.dart';
 
 class MockDio extends Mock implements Dio {}
 

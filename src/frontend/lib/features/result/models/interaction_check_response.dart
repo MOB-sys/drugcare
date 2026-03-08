@@ -1,4 +1,4 @@
-import 'package:yakmeogeo/features/result/models/interaction_result.dart';
+import 'package:pillright/features/result/models/interaction_result.dart';
 
 /// 상호작용 체크 전체 응답.
 class InteractionCheckResponse {

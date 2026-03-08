@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/core/constants/app_constants.dart';
-import 'package:yakmeogeo/core/theme/app_colors.dart';
+import 'package:pillright/core/constants/app_constants.dart';
+import 'package:pillright/core/theme/app_colors.dart';
 
 /// 법적 문서 화면 (이용약관 / 개인정보 처리방침).
 ///
@@ -66,7 +66,7 @@ class LegalScreen extends StatelessWidget {
 /// 이용약관 (베타 1.0.0).
 const String _termsContent = '''
 제1조 (목적)
-본 약관은 약먹어(이하 "서비스")가 제공하는 약물·영양제 상호작용 정보 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.
+본 약관은 PillRight(이하 "서비스")가 제공하는 약물·영양제 상호작용 정보 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.
 
 제2조 (서비스의 내용)
 1. 서비스는 의약품 및 건강기능식품(영양제) 간 상호작용 정보를 제공합니다.
@@ -106,7 +106,7 @@ const String _termsContent = '''
 
 /// 개인정보 처리방침 (베타 1.0.0).
 const String _privacyContent = '''
-약먹어(이하 "서비스")는 「개인정보 보호법」에 따라 이용자의 개인정보를 보호하고 이와 관련한 고충을 신속히 처리하기 위해 다음과 같이 개인정보 처리방침을 수립·공개합니다.
+PillRight(이하 "서비스")는 「개인정보 보호법」에 따라 이용자의 개인정보를 보호하고 이와 관련한 고충을 신속히 처리하기 위해 다음과 같이 개인정보 처리방침을 수립·공개합니다.
 
 1. 수집하는 개인정보 항목
 [필수] 디바이스 식별자 (UUID): 복약함 데이터 연동 및 맞춤 서비스 제공

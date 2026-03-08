@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/shared/models/severity.dart';
-import 'package:yakmeogeo/shared/widgets/common/severity_badge.dart';
+import 'package:pillright/shared/models/severity.dart';
+import 'package:pillright/shared/widgets/common/severity_badge.dart';
 
 void main() {
   group('SeverityBadge', () {

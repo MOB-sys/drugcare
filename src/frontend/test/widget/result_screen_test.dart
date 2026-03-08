@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/features/result/models/interaction_check_response.dart';
-import 'package:yakmeogeo/features/result/models/interaction_result.dart';
-import 'package:yakmeogeo/features/result/providers/interaction_provider.dart';
-import 'package:yakmeogeo/features/result/widgets/interaction_result_card.dart';
-import 'package:yakmeogeo/features/result/widgets/result_summary_card.dart';
-import 'package:yakmeogeo/features/search/models/selected_search_item.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
-import 'package:yakmeogeo/shared/models/severity.dart';
-import 'package:yakmeogeo/shared/widgets/common/disclaimer_banner.dart';
+import 'package:pillright/features/result/models/interaction_check_response.dart';
+import 'package:pillright/features/result/models/interaction_result.dart';
+import 'package:pillright/features/result/providers/interaction_provider.dart';
+import 'package:pillright/features/result/widgets/interaction_result_card.dart';
+import 'package:pillright/features/result/widgets/result_summary_card.dart';
+import 'package:pillright/features/search/models/selected_search_item.dart';
+import 'package:pillright/shared/models/item_type.dart';
+import 'package:pillright/shared/models/severity.dart';
+import 'package:pillright/shared/widgets/common/disclaimer_banner.dart';
 
 /// ResultScreen의 핵심 로직을 AdBannerWidget 없이 테스트한다.
 /// (google_mobile_ads 플랫폼 채널은 테스트 환경에서 사용 불가)

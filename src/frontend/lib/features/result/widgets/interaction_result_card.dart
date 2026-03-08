@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/features/result/models/interaction_result.dart';
-import 'package:yakmeogeo/shared/widgets/common/severity_badge.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/features/result/models/interaction_result.dart';
+import 'package:pillright/shared/widgets/common/severity_badge.dart';
 
 /// 개별 상호작용 결과 카드.
 ///

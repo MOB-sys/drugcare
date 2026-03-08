@@ -1,7 +1,7 @@
 /** App Store / Play Store URL 유틸리티 + UTM 추적 */
 
 const IOS_APP_ID = process.env.NEXT_PUBLIC_IOS_APP_ID || "0000000000";
-const ANDROID_PACKAGE = "com.yakmeogeo.app";
+const ANDROID_PACKAGE = "com.pillright.app";
 
 const APP_STORE_BASE = `https://apps.apple.com/kr/app/pillright/id${IOS_APP_ID}`;
 const PLAY_STORE_BASE = `https://play.google.com/store/apps/details?id=${ANDROID_PACKAGE}&hl=ko`;

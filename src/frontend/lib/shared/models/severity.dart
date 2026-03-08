@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
+import 'package:pillright/core/theme/app_colors.dart';
 
 /// 상호작용 심각도 등급.
 enum Severity {

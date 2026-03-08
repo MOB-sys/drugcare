@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 
-import 'package:yakmeogeo/core/constants/api_constants.dart';
-import 'package:yakmeogeo/core/utils/api_response_parser.dart';
-import 'package:yakmeogeo/features/cabinet/models/cabinet_item.dart';
+import 'package:pillright/core/constants/api_constants.dart';
+import 'package:pillright/core/utils/api_response_parser.dart';
+import 'package:pillright/features/cabinet/models/cabinet_item.dart';
 
 /// 복약함 관련 API 서비스.
 class CabinetService {

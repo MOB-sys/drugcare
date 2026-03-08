@@ -19,8 +19,9 @@ function parseItems(raw: string): { checkItems: InteractionCheckItem[]; names: M
 
   for (const segment of raw.split(",")) {
     const [type, id, name] = segment.split(":");
-    if ((type === "drug" || type === "supplement") && id && name) {
-      checkItems.push({ item_type: type, item_id: Number(id) });
+    const numId = Number(id);
+    if ((type === "drug" || type === "supplement") && id && name && !Number.isNaN(numId)) {
+      checkItems.push({ item_type: type, item_id: numId });
       names.set(`${type}:${id}`, decodeURIComponent(name));
     }
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/features/result/models/interaction_check_response.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/features/result/models/interaction_check_response.dart';
 
 /// 상호작용 결과 요약 카드.
 ///

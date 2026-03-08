@@ -1,4 +1,4 @@
-import 'package:yakmeogeo/shared/models/ingredient_info.dart';
+import 'package:pillright/shared/models/ingredient_info.dart';
 
 /// 약물 상세 정보.
 class DrugDetail {

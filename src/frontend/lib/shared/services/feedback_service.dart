@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
-import 'package:yakmeogeo/core/constants/api_constants.dart';
-import 'package:yakmeogeo/core/utils/api_response_parser.dart';
+import 'package:pillright/core/constants/api_constants.dart';
+import 'package:pillright/core/utils/api_response_parser.dart';
 
 /// 피드백 API 서비스.
 class FeedbackService {

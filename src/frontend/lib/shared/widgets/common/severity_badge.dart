@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:yakmeogeo/shared/models/severity.dart';
+import 'package:pillright/shared/models/severity.dart';
 
 /// 상호작용 심각도 배지 위젯.
 ///

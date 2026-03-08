@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 
-import 'package:yakmeogeo/core/constants/api_constants.dart';
-import 'package:yakmeogeo/core/utils/api_response_parser.dart';
-import 'package:yakmeogeo/features/result/models/interaction_check_response.dart';
-import 'package:yakmeogeo/features/result/models/interaction_item.dart';
+import 'package:pillright/core/constants/api_constants.dart';
+import 'package:pillright/core/utils/api_response_parser.dart';
+import 'package:pillright/features/result/models/interaction_check_response.dart';
+import 'package:pillright/features/result/models/interaction_item.dart';
 
 /// 상호작용 체크 API 서비스.
 class InteractionService {

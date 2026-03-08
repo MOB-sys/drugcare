@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
-import 'package:yakmeogeo/shared/widgets/common/search_item_card.dart';
+import 'package:pillright/shared/models/item_type.dart';
+import 'package:pillright/shared/widgets/common/search_item_card.dart';
 
 void main() {
   group('SearchItemCard', () {

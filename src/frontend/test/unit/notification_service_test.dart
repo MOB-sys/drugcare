@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/features/reminder/models/reminder.dart';
+import 'package:pillright/features/reminder/models/reminder.dart';
 
 void main() {
   group('NotificationService', () {

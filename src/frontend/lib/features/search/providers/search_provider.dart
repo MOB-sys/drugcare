@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:yakmeogeo/core/constants/app_constants.dart';
-import 'package:yakmeogeo/core/providers/service_providers.dart';
-import 'package:yakmeogeo/features/search/models/drug_search_item.dart';
-import 'package:yakmeogeo/features/search/models/selected_search_item.dart';
-import 'package:yakmeogeo/features/search/models/supplement_search_item.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
-import 'package:yakmeogeo/shared/models/paginated_result.dart';
+import 'package:pillright/core/constants/app_constants.dart';
+import 'package:pillright/core/providers/service_providers.dart';
+import 'package:pillright/features/search/models/drug_search_item.dart';
+import 'package:pillright/features/search/models/selected_search_item.dart';
+import 'package:pillright/features/search/models/supplement_search_item.dart';
+import 'package:pillright/shared/models/item_type.dart';
+import 'package:pillright/shared/models/paginated_result.dart';
 
 /// 검색 화면 상태.
 class SearchState {

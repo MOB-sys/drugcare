@@ -1,9 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:yakmeogeo/core/constants/api_constants.dart';
-import 'package:yakmeogeo/features/reminder/models/reminder.dart';
-import 'package:yakmeogeo/shared/services/reminder_service.dart';
+import 'package:pillright/core/constants/api_constants.dart';
+import 'package:pillright/features/reminder/models/reminder.dart';
+import 'package:pillright/shared/services/reminder_service.dart';
 
 class MockDio extends Mock implements Dio {}
 

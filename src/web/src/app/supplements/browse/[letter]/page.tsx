@@ -73,8 +73,8 @@ export default async function SupplementBrowsePage({ params }: PageProps) {
               href={`/supplements/browse/${encodeURIComponent(l)}`}
               className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium transition-colors ${
                 l === letter
-                  ? "bg-emerald-600 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-emerald-50"
+                  ? "bg-[var(--color-primary)] text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-[var(--color-primary-50)]"
               }`}
             >
               {l}
@@ -89,7 +89,7 @@ export default async function SupplementBrowsePage({ params }: PageProps) {
               <li key={supp.id}>
                 <Link
                   href={`/supplements/${supp.slug}`}
-                  className="block px-3 py-2 rounded-lg hover:bg-emerald-50 transition-colors"
+                  className="block px-3 py-2 rounded-lg hover:bg-[var(--color-primary-50)] transition-colors"
                 >
                   <span className="text-sm font-medium text-[var(--color-text)]">{supp.product_name}</span>
                   {supp.company && (

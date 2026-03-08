@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:yakmeogeo/core/providers/service_providers.dart';
-import 'package:yakmeogeo/features/cabinet/models/cabinet_item.dart';
+import 'package:pillright/core/providers/service_providers.dart';
+import 'package:pillright/features/cabinet/models/cabinet_item.dart';
 
 /// 복약함 상태.
 class CabinetState {

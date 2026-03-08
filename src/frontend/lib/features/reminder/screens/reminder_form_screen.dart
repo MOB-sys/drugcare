@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:yakmeogeo/core/providers/service_providers.dart';
-import 'package:yakmeogeo/core/theme/app_colors.dart';
-import 'package:yakmeogeo/core/utils/date_utils.dart';
-import 'package:yakmeogeo/features/cabinet/models/cabinet_item.dart';
-import 'package:yakmeogeo/features/reminder/models/reminder.dart';
-import 'package:yakmeogeo/features/reminder/providers/reminder_provider.dart';
-import 'package:yakmeogeo/shared/widgets/common/error_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/loading_widget.dart';
+import 'package:pillright/core/providers/service_providers.dart';
+import 'package:pillright/core/theme/app_colors.dart';
+import 'package:pillright/core/utils/date_utils.dart';
+import 'package:pillright/features/cabinet/models/cabinet_item.dart';
+import 'package:pillright/features/reminder/models/reminder.dart';
+import 'package:pillright/features/reminder/providers/reminder_provider.dart';
+import 'package:pillright/shared/widgets/common/error_widget.dart';
+import 'package:pillright/shared/widgets/common/loading_widget.dart';
 
 /// 복약함 아이템 목록 프로바이더 (폼에서 드롭다운용).
 final _cabinetItemsProvider =

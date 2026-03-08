@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:yakmeogeo/features/search/models/drug_search_item.dart';
-import 'package:yakmeogeo/features/search/models/selected_search_item.dart';
-import 'package:yakmeogeo/features/search/models/supplement_search_item.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
-import 'package:yakmeogeo/shared/models/paginated_result.dart';
-import 'package:yakmeogeo/shared/widgets/common/empty_state_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/error_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/loading_widget.dart';
-import 'package:yakmeogeo/shared/widgets/common/search_item_card.dart';
+import 'package:pillright/features/search/models/drug_search_item.dart';
+import 'package:pillright/features/search/models/selected_search_item.dart';
+import 'package:pillright/features/search/models/supplement_search_item.dart';
+import 'package:pillright/shared/models/item_type.dart';
+import 'package:pillright/shared/models/paginated_result.dart';
+import 'package:pillright/shared/widgets/common/empty_state_widget.dart';
+import 'package:pillright/shared/widgets/common/error_widget.dart';
+import 'package:pillright/shared/widgets/common/loading_widget.dart';
+import 'package:pillright/shared/widgets/common/search_item_card.dart';
 
 /// 검색 결과 통합 리스트 위젯.
 ///

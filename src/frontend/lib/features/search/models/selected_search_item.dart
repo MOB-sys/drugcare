@@ -1,4 +1,4 @@
-import 'package:yakmeogeo/shared/models/item_type.dart';
+import 'package:pillright/shared/models/item_type.dart';
 
 /// 검색에서 선택된 아이템 (상호작용 체크로 전달용 경량 모델).
 class SelectedSearchItem {

@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 
-import 'package:yakmeogeo/core/constants/api_constants.dart';
-import 'package:yakmeogeo/core/utils/api_response_parser.dart';
-import 'package:yakmeogeo/features/search/models/drug_detail.dart';
-import 'package:yakmeogeo/features/search/models/drug_search_item.dart';
-import 'package:yakmeogeo/shared/models/paginated_result.dart';
+import 'package:pillright/core/constants/api_constants.dart';
+import 'package:pillright/core/utils/api_response_parser.dart';
+import 'package:pillright/features/search/models/drug_detail.dart';
+import 'package:pillright/features/search/models/drug_search_item.dart';
+import 'package:pillright/shared/models/paginated_result.dart';
 
 /// 약물 관련 API 서비스.
 class DrugService {

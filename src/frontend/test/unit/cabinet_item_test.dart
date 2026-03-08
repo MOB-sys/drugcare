@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/features/cabinet/models/cabinet_item.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
+import 'package:pillright/features/cabinet/models/cabinet_item.dart';
+import 'package:pillright/shared/models/item_type.dart';
 
 void main() {
   group('CabinetItem', () {

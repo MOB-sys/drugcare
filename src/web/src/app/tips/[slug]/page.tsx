@@ -58,16 +58,29 @@ export default async function TipDetailPage({ params }: PageProps) {
     keywords: tip.tags.join(", "),
   };
 
-  /** 마크다운 텍스트를 간단히 HTML로 변환 */
-  const contentHtml = tip.content
-    .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-[var(--color-primary)] mt-8 mb-3">$1</h2>')
-    .replace(/^### (.+)$/gm, '<h3 class="text-lg font-semibold text-gray-800 mt-6 mb-2">$1</h3>')
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/^> (.+)$/gm, '<blockquote class="border-l-4 border-[var(--color-primary-100)] pl-4 text-sm text-gray-500 italic my-4">$1</blockquote>')
-    .replace(/^---$/gm, '<hr class="my-6 border-gray-200" />')
-    .replace(/\n\n/g, '</p><p class="text-gray-700 leading-relaxed mb-3">')
-    .replace(/^(?!<)/, '<p class="text-gray-700 leading-relaxed mb-3">')
-    .concat("</p>");
+  /** 마크다운 텍스트를 React 요소로 안전하게 변환 (dangerouslySetInnerHTML 미사용) */
+  const contentBlocks = tip.content.split("\n\n").map((block, i) => {
+    const trimmed = block.trim();
+    if (trimmed.startsWith("## ")) {
+      return <h2 key={i} className="text-xl font-bold text-[var(--color-primary)] mt-8 mb-3">{trimmed.slice(3)}</h2>;
+    }
+    if (trimmed.startsWith("### ")) {
+      return <h3 key={i} className="text-lg font-semibold text-gray-800 mt-6 mb-2">{trimmed.slice(4)}</h3>;
+    }
+    if (trimmed === "---") {
+      return <hr key={i} className="my-6 border-gray-200" />;
+    }
+    if (trimmed.startsWith("> ")) {
+      return <blockquote key={i} className="border-l-4 border-[var(--color-primary-100)] pl-4 text-sm text-gray-500 italic my-4">{trimmed.slice(2)}</blockquote>;
+    }
+    // 인라인 bold 처리
+    const parts = trimmed.split(/\*\*(.+?)\*\*/g);
+    return (
+      <p key={i} className="text-gray-700 leading-relaxed mb-3">
+        {parts.map((part, j) => (j % 2 === 1 ? <strong key={j}>{part}</strong> : part))}
+      </p>
+    );
+  });
 
   return (
     <>
@@ -102,10 +115,9 @@ export default async function TipDetailPage({ params }: PageProps) {
         </div>
 
         {/* 본문 */}
-        <div
-          className="prose prose-gray max-w-none"
-          dangerouslySetInnerHTML={{ __html: contentHtml }}
-        />
+        <div className="prose prose-gray max-w-none">
+          {contentBlocks}
+        </div>
 
         {/* 광고 */}
         <AdBanner slot="tip-detail-bottom" format="auto" />

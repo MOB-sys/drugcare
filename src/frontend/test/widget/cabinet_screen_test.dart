@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/features/cabinet/models/cabinet_item.dart';
-import 'package:yakmeogeo/features/cabinet/providers/cabinet_provider.dart';
-import 'package:yakmeogeo/features/cabinet/screens/cabinet_screen.dart';
-import 'package:yakmeogeo/shared/models/item_type.dart';
+import 'package:pillright/features/cabinet/models/cabinet_item.dart';
+import 'package:pillright/features/cabinet/providers/cabinet_provider.dart';
+import 'package:pillright/features/cabinet/screens/cabinet_screen.dart';
+import 'package:pillright/shared/models/item_type.dart';
 
 /// 테스트용 CabinetNotifier (서버 호출 없이 제어 가능).
 class FakeCabinetNotifier extends StateNotifier<CabinetState>

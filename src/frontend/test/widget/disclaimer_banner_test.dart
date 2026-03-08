@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:yakmeogeo/core/constants/app_constants.dart';
-import 'package:yakmeogeo/shared/widgets/common/disclaimer_banner.dart';
+import 'package:pillright/core/constants/app_constants.dart';
+import 'package:pillright/shared/widgets/common/disclaimer_banner.dart';
 
 void main() {
   group('DisclaimerBanner', () {
