@@ -1,7 +1,7 @@
-# 약먹어 (YakMeogeo) 남은 작업 리스트
+# PillRight 남은 작업 리스트
 
-> 마지막 업데이트: 2026-03-04
-> 코드 작업은 사실상 완료. 남은 건 계정 생성·API 키 발급·스토어 등록 등 수동 설정 작업.
+> 마지막 업데이트: 2026-03-08
+> 코드 작업 완료. 백엔드 서버 배포 완료. 남은 건 계정 생성·웹 배포·스토어 등록 등 수동 작업.
 
 ---
 
@@ -10,8 +10,8 @@
 | 테이블 | 건수 | 커버리지 |
 |--------|------|----------|
 | drugs | 12,422 | 성분 100%, 효능 99.8% (e약은요 기준), slug 100% |
-| supplements | 155 | 성분 100%, slug 100% |
-| interactions | 346,108 | 약-약 333,493 / 약-영양제 12,554 / 영양제-영양제 61 |
+| supplements | 155 (로컬) / 49 (서버) | 성분 100%, slug 100% |
+| interactions | 366,618 (서버) | 약-약 / 약-영양제 / 영양제-영양제 |
 | drug_dur_info | 31,728 | 임부/고령자/용량/기간/효능중복 |
 
 ## 테스트 현황
@@ -22,6 +22,18 @@
 | Web (vitest) | 114+ | ✅ 통과 |
 | Flutter (flutter_test) | 131 | ✅ 통과 |
 | CI/CD (GitHub Actions) | 8 jobs | ✅ 구성 완료 |
+
+## 완료된 작업
+
+- [x] **B-1.** 프로덕션 서버 (Vultr) — 158.247.247.74
+- [x] **B-2.** 도메인 DNS — `api.pillright.com` → Vultr IP
+- [x] **B-3.** SSL — Let's Encrypt (api.pillright.com)
+- [x] **B-4.** Docker 배포 — nginx + FastAPI + PostgreSQL + Redis (5 컨테이너)
+- [x] **B-6.** DB 마이그레이션 — v001~v004 완료 (9 테이블)
+- [x] **D-1.** Android 서명 키스토어 생성
+- [x] **E-1.** 개인정보처리방침 페이지 (`/privacy`) — 웹+앱 모두 완료
+- [x] **E-2.** 이용약관 페이지 (`/terms`) — 웹+앱 모두 완료
+- [x] **F-2.** 크론탭 등록 — health-check(30분), qa-monitor(6시간), daily-report(매일 09:00 KST)
 
 ---
 
@@ -36,35 +48,21 @@
   - 신청: https://www.foodsafetykorea.go.kr → 인증키 발급
   - 실행: `python -m scripts.data-import.run_collectors --supplements`
 
+- [ ] **A-3.** 서버 supplements 데이터 동기화 (로컬 155건 → 서버 49건 불일치)
+  - `seed_supplements_v2.sql` 서버에서 실행 필요
+
 ---
 
-## B. 프로덕션 배포 (인프라)
-
-- [ ] **B-1.** 프로덕션 DB (PostgreSQL) 프로비저닝
-  - Oracle Cloud / AWS RDS / 직접 설치 중 택1
-  - DB 생성 후 `alembic upgrade head` 실행
-
-- [ ] **B-2.** 도메인 DNS 설정
-  - `pillright.com` → Vercel (웹)
-  - `api.pillright.com` → 서버 IP (API)
-  - A/CNAME 레코드 설정
-
-- [ ] **B-3.** SSL 인증서 발급
-  - API 서버: Let's Encrypt + certbot 자동갱신
-  - 웹: Vercel 자동 SSL
-
-- [ ] **B-4.** Docker 컨테이너 서버 배포
-  - `docker-compose up -d`
-  - nginx + FastAPI + PostgreSQL + Redis
+## B. 웹 배포 (Vercel)
 
 - [ ] **B-5.** Vercel 프로젝트 연결 + 웹 배포
   - GitHub 저장소 연동
-  - 환경변수 설정 (NEXT_PUBLIC_API_URL 등)
+  - Root Directory: `src/web`
+  - 환경변수 설정:
+    - `NEXT_PUBLIC_API_URL=https://api.pillright.com`
+    - `NEXT_PUBLIC_SITE_URL=https://pillright.com`
   - 리전: ICN1 (서울)
-
-- [ ] **B-6.** DB 마이그레이션 실행
-  - `alembic upgrade head` (001~004)
-  - 데이터 수집 스크립트 순차 실행
+  - `pillright.com` 도메인 연결
 
 ---
 
@@ -97,10 +95,6 @@
 
 ## D. 앱 스토어 출시
 
-- [ ] **D-1.** Android 서명 키스토어 생성
-  - `keytool -genkey -v -keystore release.keystore ...`
-  - `android/key.properties` 설정
-
 - [ ] **D-2.** Google Play Console 등록
   - 개발자 계정 등록 ($25 일회성)
   - AAB 빌드 업로드: `flutter build appbundle --release`
@@ -113,15 +107,7 @@
 
 ---
 
-## E. 법적 / 정책 페이지
-
-- [ ] **E-1.** 개인정보처리방침 페이지 (`/privacy`)
-  - 필수: 개인정보보호법 준수
-  - 내용: 수집 항목, 이용 목적, 보유 기간, 제3자 제공 등
-
-- [ ] **E-2.** 이용약관 페이지 (`/terms`)
-  - 필수: 서비스 이용 조건, 면책조항
-  - "의사/약사의 전문적 판단을 대체하지 않습니다" 포함
+## E. 기타 설정
 
 - [ ] **E-3.** 카카오톡 공유 설정
   - https://developers.kakao.com 에서 앱 등록
@@ -134,31 +120,26 @@
 - [ ] **F-1.** Slack 또는 Discord 웹훅 설정
   - 알림 채널 생성 → 웹훅 URL 발급
   - `.env.ops` → `WEBHOOK_URL` 설정
-
-- [ ] **F-2.** 크론탭 등록
-  - health-check: 30분 간격
-  - qa-monitor: 6시간 간격
-  - daily-report: 매일 09:00
-  - 실행: `scripts/ops/setup-ops.sh`
+  - 웹훅 연결 후 health-check/qa-monitor 알림 활성화
 
 ---
 
 ## 우선순위 추천
 
-### Phase 1: 배포 (1~2일)
-B-1 → B-6 → B-4 → B-2 → B-3 → B-5
+### Phase 1: 웹 배포 (당일)
+B-5 (Vercel 배포) → pillright.com DNS 연결
 
-### Phase 2: 법적 + SEO (1일)
-E-1 → E-2 → C-2 → C-4 → C-5
+### Phase 2: SEO 등록 (당일)
+C-2 (GA4) → C-4 (네이버) → C-5 (Google Search Console)
 
-### Phase 3: 수익화 (승인 대기)
-C-1 → C-3
+### Phase 3: 수익화 (승인 대기 1~2주)
+C-1 (AdSense) → C-3 (AdMob)
 
 ### Phase 4: 앱 출시 (2~3일)
-D-1 → D-2 → D-3
+D-2 (Google Play) → D-3 (App Store)
 
-### Phase 5: 운영 안정화
-F-1 → F-2
+### Phase 5: 운영
+F-1 (알림 웹훅) → A-3 (서버 데이터 동기화)
 
 ### 백그라운드: 데이터 보강
 A-1 (API 복구 대기) → A-2 (API 키 신청 후)

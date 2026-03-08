@@ -41,10 +41,6 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    environment:
-      DATABASE_URL: postgresql+asyncpg://yakmeogeo:yakmeogeo@postgres:5432/yakmeogeo
-      DATABASE_URL_SYNC: postgresql://yakmeogeo:yakmeogeo@postgres:5432/yakmeogeo
-      REDIS_URL: redis://redis:6379/0
     restart: unless-stopped
 
 volumes:
