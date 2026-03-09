@@ -40,6 +40,8 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: [
+          { key: "X-DNS-Prefetch-Control", value: "off" },
+          { key: "X-Download-Options", value: "noopen" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
@@ -55,8 +57,9 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://www.googletagmanager.com https://t1.kakaocdn.net https://*.sentry.io",
+              "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com https://t1.kakaocdn.net https://*.sentry.io",
               "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+              /* data: is needed for inline SVG icons and base64-encoded thumbnails */
               "img-src 'self' data: blob: https: http://nedrug.mfds.go.kr https://nedrug.mfds.go.kr",
               "font-src 'self' https://cdn.jsdelivr.net",
               "connect-src 'self' https://api.pillright.com https://www.google-analytics.com https://*.sentry.io https://pagead2.googlesyndication.com",

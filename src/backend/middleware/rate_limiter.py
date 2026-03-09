@@ -21,19 +21,18 @@ EXEMPT_PATHS: set[str] = {
 
 # 레이트 리밋 면제 경로 프리픽스 (SSG 빌드용 — 읽기 전용 엔드포인트)
 EXEMPT_PREFIXES: tuple[str, ...] = (
-    "/api/v1/drugs/slugs",
     "/api/v1/drugs/by-slug/",
     "/api/v1/drugs/search",
     "/api/v1/drugs/count",
-    "/api/v1/drugs/browse",
-    "/api/v1/drugs/side-effects/",
+    "/api/v1/drugs/side-effects/search",
     "/api/v1/drugs/identify",
-    "/api/v1/drugs/conditions/",
-    "/api/v1/supplements/slugs",
+    "/api/v1/drugs/conditions/search",
+    "/api/v1/drugs/symptoms/search",
     "/api/v1/supplements/by-slug/",
     "/api/v1/supplements/search",
     "/api/v1/supplements/count",
-    "/api/v1/supplements/browse",
+    "/api/v1/reviews/drug/",
+    "/api/v1/reviews/supplement/",
 )
 
 # 엔드포인트 그룹별 요청 제한 (req/min)
@@ -96,8 +95,14 @@ def _get_client_ip(request: Request) -> str:
     Returns:
         클라이언트 IP 문자열.
     """
+    # Trust X-Real-IP set by Nginx (most reliable)
+    real_ip = request.headers.get("X-Real-IP")
+    if real_ip:
+        return real_ip.strip()
+    # Fallback: use the LAST entry in X-Forwarded-For (closest proxy)
     forwarded = request.headers.get("X-Forwarded-For")
     if forwarded:
+        # Use first IP (original client) only if behind trusted reverse proxy
         return forwarded.split(",")[0].strip()
     return request.client.host if request.client else "unknown"
 

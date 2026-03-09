@@ -74,7 +74,7 @@ app = FastAPI(
 
 # CORS 미들웨어 (가장 안쪽)
 _cors_origins = (
-    ["*"]
+    ["http://localhost:3000", "http://localhost:5173", "http://localhost:8000"]
     if settings.is_development
     else [
         "https://pillright.com",
@@ -87,7 +87,7 @@ app.add_middleware(
     allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=["*"],
+    allow_headers=["Content-Type", "X-Device-ID", "X-Requested-With", "Accept"],
 )
 
 # 디바이스 인증 미들웨어
