@@ -23,6 +23,7 @@ from src.backend.routers import (
     interactions,
     metrics,
     reminders,
+    reviews,
     supplements,
 )
 
@@ -117,4 +118,5 @@ app.include_router(interactions.router, prefix=api_prefix)
 app.include_router(cabinet.router, prefix=api_prefix)
 app.include_router(reminders.router, prefix=api_prefix)
 app.include_router(feedback.router, prefix=api_prefix)
+app.include_router(reviews.router, prefix=api_prefix)
 app.include_router(metrics.router, prefix=api_prefix)

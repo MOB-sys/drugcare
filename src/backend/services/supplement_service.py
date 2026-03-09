@@ -205,3 +205,97 @@ async def count_supplements(
 
     await cache_set(redis, cache_key, count, CACHE_TTL_SUPPLEMENT_COUNT)
     return count
+
+
+# drug_service와 동일한 초성 매핑 재사용
+from src.backend.services.drug_service import (  # noqa: E402
+    _build_letter_condition,
+    _CHOSUNG_INDEX_MAP,
+)
+
+
+async def browse_supplements_by_letter(
+    db: AsyncSession,
+    redis: Redis,
+    letter: str,
+    page: int,
+    page_size: int,
+) -> dict:
+    """초성/알파벳 글자로 영양제를 조회한다.
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+        letter: 초성(ㄱ~ㅎ) 또는 알파벳(A~Z).
+        page: 페이지 번호 (1-based).
+        page_size: 페이지당 결과 수.
+
+    Returns:
+        PaginatedData 구조의 dict.
+    """
+    cache_key = make_cache_key("supplement", "browse", letter, str(page), str(page_size))
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    condition = _build_letter_condition(letter, Supplement.product_name)
+    if condition is None:
+        return {"items": [], "total": 0, "page": page, "page_size": page_size, "total_pages": 0}
+
+    count_stmt = select(func.count()).select_from(Supplement).where(condition)
+    total: int = (await db.execute(count_stmt)).scalar_one()
+
+    offset = (page - 1) * page_size
+    query_stmt = (
+        select(Supplement)
+        .where(condition)
+        .order_by(Supplement.product_name)
+        .offset(offset)
+        .limit(page_size)
+    )
+    rows = await db.execute(query_stmt)
+    supplements = rows.scalars().all()
+
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+    items = [SupplementSearchItem.model_validate(s).model_dump() for s in supplements]
+
+    result = {
+        "items": items,
+        "total": total,
+        "page": page,
+        "page_size": page_size,
+        "total_pages": total_pages,
+    }
+    await cache_set(redis, cache_key, result, CACHE_TTL_SUPPLEMENT_SEARCH)
+    return result
+
+
+async def get_supplement_counts_by_letter(
+    db: AsyncSession,
+    redis: Redis,
+) -> dict[str, int]:
+    """초성/알파벳별 영양제 건수를 반환한다.
+
+    Returns:
+        {"ㄱ": 34, "ㄴ": 6, "A": 2, ...} 형태의 dict.
+    """
+    cache_key = make_cache_key("supplement", "browse", "counts")
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    chosung_keys = list(_CHOSUNG_INDEX_MAP.keys())
+    alpha_keys = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    counts: dict[str, int] = {}
+
+    for letter in chosung_keys + alpha_keys:
+        condition = _build_letter_condition(letter, Supplement.product_name)
+        if condition is None:
+            counts[letter] = 0
+            continue
+        stmt = select(func.count()).select_from(Supplement).where(condition)
+        result = await db.execute(stmt)
+        counts[letter] = result.scalar_one()
+
+    await cache_set(redis, cache_key, counts, CACHE_TTL_SUPPLEMENT_COUNT)
+    return counts

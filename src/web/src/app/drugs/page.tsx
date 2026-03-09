@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { searchDrugs } from "@/lib/api/drugs";
+import { getDrugBrowseCounts } from "@/lib/api/drugs";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { AdBanner } from "@/components/ads/AdBanner";
+import { CHOSUNG, ALPHA } from "@/lib/utils/korean";
 
 export const metadata: Metadata = {
   title: "의약품 목록 — A-Z 인덱스",
@@ -15,66 +16,18 @@ export const metadata: Metadata = {
   },
 };
 
-const CHOSUNG = [
-  "ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ",
-  "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ",
-] as const;
-
-const ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
-/** 한글 문자의 초성 인덱스 (0~13). */
-function getChosungIndex(char: string): number {
-  const code = char.charCodeAt(0);
-  if (code < 0xAC00 || code > 0xD7A3) return -1;
-  const chosungMap = [0, 1, 2, 3, 4, 5, 6, 6, 7, 7, 7, 8, 9, 9, 10, 11, 12, 13, 13];
-  return chosungMap[Math.floor((code - 0xAC00) / 588)] ?? -1;
-}
-
-interface DrugIndexItem {
-  id: number;
-  item_name: string;
-  slug: string;
-  entp_name: string | null;
-}
+const ALL_KEYS = [...CHOSUNG, ...ALPHA];
 
 export default async function DrugsIndexPage() {
-  let allDrugs: DrugIndexItem[] = [];
+  let counts: Record<string, number> = {};
 
-  /* 인덱스 페이지용으로 첫 100개 로드 — 전체 목록은 검색·browse로 유도 */
   try {
-    const res = await searchDrugs("", 1, 100);
-    allDrugs = res.items.map((d) => ({
-      id: d.id,
-      item_name: d.item_name,
-      slug: d.slug,
-      entp_name: d.entp_name,
-    }));
+    counts = await getDrugBrowseCounts();
   } catch (err) {
-    console.error("[drugs/page] searchDrugs failed:", err);
+    console.error("[drugs/page] getDrugBrowseCounts failed:", err);
   }
 
-  /* 초성/알파벳 그룹핑 */
-  const groups = new Map<string, DrugIndexItem[]>();
-
-  for (const drug of allDrugs) {
-    const firstChar = drug.item_name.charAt(0).toUpperCase();
-    let key: string;
-
-    const ci = getChosungIndex(firstChar);
-    if (ci >= 0) {
-      key = CHOSUNG[ci];
-    } else if (/[A-Z]/.test(firstChar)) {
-      key = firstChar;
-    } else {
-      key = "#";
-    }
-
-    if (!groups.has(key)) groups.set(key, []);
-    groups.get(key)!.push(drug);
-  }
-
-  const allKeys = [...CHOSUNG, ...ALPHA, "#"];
-  const activeKeys = allKeys.filter((k) => groups.has(k));
+  const totalCount = Object.values(counts).reduce((a, b) => a + b, 0);
 
   return (
     <>
@@ -88,7 +41,8 @@ export default async function DrugsIndexPage() {
       <section className="max-w-3xl mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2">의약품 목록</h1>
         <p className="text-gray-500 mb-6">
-          가나다순·알파벳순으로 의약품을 찾아보세요. 상세 페이지에서 효능, 용법, 상호작용을 확인할 수 있습니다.
+          총 {totalCount.toLocaleString()}개의 의약품을 가나다순·알파벳순으로 찾아보세요.
+          상세 페이지에서 효능, 용법, 상호작용을 확인할 수 있습니다.
         </p>
 
         {/* 검색 유도 */}
@@ -102,56 +56,68 @@ export default async function DrugsIndexPage() {
           </p>
         </Link>
 
-        {/* 인덱스 바 */}
-        <nav className="flex flex-wrap gap-1 mb-8 sticky top-16 bg-[var(--color-bg)] py-2 z-10 scroll-smooth" aria-label="가나다 인덱스">
-          {allKeys.map((key) => {
-            const isActive = activeKeys.includes(key);
-            return isActive ? (
-              <a
-                key={key}
-                href={`#index-${key}`}
-                className="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium transition-colors bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
-              >
-                {key}
-              </a>
-            ) : (
-              <span
-                key={key}
-                className="w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium bg-gray-100 text-gray-300 cursor-default"
-              >
-                {key}
-              </span>
-            );
-          })}
-        </nav>
-
-        {/* 그룹별 목록 */}
-        <div className="space-y-8">
-          {activeKeys.map((key) => (
-            <div key={key} id={`index-${key}`} className="scroll-mt-28">
-              <h2 className="text-lg font-bold text-[var(--color-primary)] border-b border-[var(--color-primary-100)] pb-1 mb-3">
-                {key}
-              </h2>
-              <ul className="grid gap-1 sm:grid-cols-2">
-                {groups.get(key)!.map((drug) => (
-                  <li key={drug.id}>
-                    <Link
-                      href={`/drugs/${drug.slug}`}
-                      className="block px-3 py-2 rounded-lg hover:bg-[var(--color-primary-50)] transition-colors"
-                    >
-                      <span className="text-sm font-medium text-gray-900">{drug.item_name}</span>
-                      {drug.entp_name && (
-                        <span className="ml-2 text-xs text-gray-400">{drug.entp_name}</span>
-                      )}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+        {/* 초성/알파벳 인덱스 그리드 */}
+        <div className="space-y-6">
+          {/* 한글 초성 */}
+          <div>
+            <h2 className="text-sm font-semibold text-gray-500 mb-3">한글 (가나다)</h2>
+            <div className="grid grid-cols-7 gap-2">
+              {CHOSUNG.map((key) => {
+                const count = counts[key] ?? 0;
+                const hasItems = count > 0;
+                return hasItems ? (
+                  <Link
+                    key={key}
+                    href={`/drugs/browse/${encodeURIComponent(key)}`}
+                    className="flex flex-col items-center justify-center rounded-xl p-3 bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]/40 transition-colors border border-[var(--color-primary-100)]"
+                  >
+                    <span className="text-lg font-bold text-[var(--color-primary)]">{key}</span>
+                    <span className="text-xs text-gray-500 mt-1">{count.toLocaleString()}</span>
+                  </Link>
+                ) : (
+                  <div
+                    key={key}
+                    className="flex flex-col items-center justify-center rounded-xl p-3 bg-gray-50 border border-gray-100"
+                  >
+                    <span className="text-lg font-bold text-gray-300">{key}</span>
+                    <span className="text-xs text-gray-300 mt-1">0</span>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          </div>
+
+          {/* 알파벳 */}
+          <div>
+            <h2 className="text-sm font-semibold text-gray-500 mb-3">알파벳 (A-Z)</h2>
+            <div className="grid grid-cols-7 sm:grid-cols-9 gap-2">
+              {ALPHA.map((key) => {
+                const count = counts[key] ?? 0;
+                const hasItems = count > 0;
+                return hasItems ? (
+                  <Link
+                    key={key}
+                    href={`/drugs/browse/${encodeURIComponent(key)}`}
+                    className="flex flex-col items-center justify-center rounded-xl p-3 bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]/40 transition-colors border border-[var(--color-primary-100)]"
+                  >
+                    <span className="text-lg font-bold text-[var(--color-primary)]">{key}</span>
+                    <span className="text-xs text-gray-500 mt-1">{count.toLocaleString()}</span>
+                  </Link>
+                ) : (
+                  <div
+                    key={key}
+                    className="flex flex-col items-center justify-center rounded-xl p-3 bg-gray-50 border border-gray-100"
+                  >
+                    <span className="text-lg font-bold text-gray-300">{key}</span>
+                    <span className="text-xs text-gray-300 mt-1">0</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
 
-        {allDrugs.length === 0 && (
+        {totalCount === 0 && (
           <div className="text-center py-16 text-gray-400">
             의약품 데이터를 불러올 수 없습니다. 나중에 다시 시도해주세요.
           </div>

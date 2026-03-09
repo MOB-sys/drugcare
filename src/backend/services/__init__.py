@@ -6,6 +6,7 @@ from src.backend.services import (
     drug_service,
     interaction_service,
     reminder_service,
+    review_service,
     supplement_service,
 )
 
@@ -15,5 +16,6 @@ __all__ = [
     "drug_service",
     "interaction_service",
     "reminder_service",
+    "review_service",
     "supplement_service",
 ]

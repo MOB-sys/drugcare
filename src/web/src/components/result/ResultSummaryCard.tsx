@@ -1,12 +1,25 @@
+import { SEVERITY_CONFIG, SEVERITY_ORDER, type Severity } from "@/lib/constants/severity";
 import type { InteractionCheckResponse } from "@/types/interaction";
 
 interface ResultSummaryCardProps {
   data: InteractionCheckResponse;
 }
 
+/** Count interactions per severity level. */
+function countBySeverity(data: InteractionCheckResponse): Record<Severity, number> {
+  const counts: Record<Severity, number> = { danger: 0, warning: 0, caution: 0, info: 0 };
+  for (const r of data.results) {
+    const sev = r.severity as Severity;
+    if (sev in counts) counts[sev]++;
+  }
+  return counts;
+}
+
 export function ResultSummaryCard({ data }: ResultSummaryCardProps) {
   const isDanger = data.has_danger;
   const hasInteractions = data.interactions_found > 0;
+  const counts = countBySeverity(data);
+  const total = data.interactions_found || 1;
 
   return (
     <div
@@ -22,7 +35,7 @@ export function ResultSummaryCard({ data }: ResultSummaryCardProps) {
         <div
           className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
             isDanger
-              ? "bg-red-100"
+              ? "bg-red-100 animate-pulse-danger"
               : hasInteractions
                 ? "bg-orange-100"
                 : "bg-emerald-100"
@@ -55,6 +68,41 @@ export function ResultSummaryCard({ data }: ResultSummaryCardProps) {
           </p>
         </div>
       </div>
+
+      {/* Severity Breakdown Bar */}
+      {hasInteractions && (
+        <div className="mt-4">
+          <div className="flex h-2.5 w-full rounded-full overflow-hidden bg-gray-200">
+            {SEVERITY_ORDER.map((sev) => {
+              const count = counts[sev];
+              if (count === 0) return null;
+              const config = SEVERITY_CONFIG[sev];
+              const widthPercent = (count / total) * 100;
+              return (
+                <div
+                  key={sev}
+                  className={`${config.barColor} transition-all`}
+                  style={{ width: `${widthPercent}%` }}
+                  title={`${config.label}(${config.labelEn}) ${count}건`}
+                />
+              );
+            })}
+          </div>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2">
+            {SEVERITY_ORDER.map((sev) => {
+              const count = counts[sev];
+              if (count === 0) return null;
+              const config = SEVERITY_CONFIG[sev];
+              return (
+                <span key={sev} className="inline-flex items-center gap-1.5 text-xs text-gray-600">
+                  <span className={`w-2 h-2 rounded-full ${config.dotColor}`} />
+                  {config.label} {count}건
+                </span>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

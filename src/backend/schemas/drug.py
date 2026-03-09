@@ -38,6 +38,49 @@ class DrugSearchItem(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class DrugSideEffectItem(BaseModel):
+    """부작용 검색 결과 아이템 (부작용 텍스트 포함)."""
+
+    id: int
+    item_seq: str
+    item_name: str
+    slug: str
+    entp_name: str | None = None
+    item_image: str | None = None
+    se_qesitm: str | None = None
+
+    model_config = {"from_attributes": True}
+
+
+class DrugIdentifyItem(BaseModel):
+    """약 식별 결과 아이템 (성상·이미지 포함)."""
+
+    id: int
+    item_seq: str
+    item_name: str
+    slug: str
+    entp_name: str | None = None
+    chart: str | None = None
+    item_image: str | None = None
+
+    model_config = {"from_attributes": True}
+
+
+class DrugConditionItem(BaseModel):
+    """질환별 주의사항 검색 결과 아이템."""
+
+    id: int
+    item_seq: str
+    item_name: str
+    slug: str
+    entp_name: str | None = None
+    item_image: str | None = None
+    atpn_qesitm: str | None = None
+    atpn_warn_qesitm: str | None = None
+
+    model_config = {"from_attributes": True}
+
+
 class DrugDetail(BaseModel):
     """약물 상세 정보."""
 

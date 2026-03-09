@@ -74,6 +74,41 @@ async def get_supplement_count(
 
 
 @router.get(
+    "/browse/counts",
+    response_model=ApiResponse[dict[str, int]],
+    summary="초성/알파벳별 영양제 건수",
+    description="초성(ㄱ~ㅎ) 및 알파벳(A~Z)별 영양제 건수를 반환합니다.",
+)
+async def get_supplement_browse_counts(
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+) -> dict:
+    """초성/알파벳별 영양제 건수 엔드포인트."""
+    counts = await supplement_service.get_supplement_counts_by_letter(db, redis)
+    return success_response(counts)
+
+
+@router.get(
+    "/browse",
+    response_model=ApiResponse[PaginatedData[SupplementSearchItem]],
+    summary="초성/알파벳별 영양제 조회",
+    description="초성(ㄱ~ㅎ) 또는 알파벳(A~Z)으로 영양제를 조회합니다.",
+)
+async def browse_supplements(
+    letter: str = Query(..., description="초성(ㄱ~ㅎ) 또는 알파벳(A~Z)"),
+    page: int = Query(1, ge=1, description="페이지 번호"),
+    page_size: int = Query(50, ge=1, le=100, description="페이지 크기"),
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+) -> dict:
+    """초성/알파벳별 영양제 조회 엔드포인트."""
+    result = await supplement_service.browse_supplements_by_letter(
+        db, redis, letter, page, page_size,
+    )
+    return success_response(result)
+
+
+@router.get(
     "/by-slug/{slug}",
     response_model=ApiResponse[SupplementDetail],
     summary="영양제 slug 조회",

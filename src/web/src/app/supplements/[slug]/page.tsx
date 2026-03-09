@@ -7,6 +7,7 @@ import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { CheckCTA } from "@/components/detail/CheckCTA";
 import { AddToCabinetButton } from "@/components/detail/AddToCabinetButton";
 import { AdBanner } from "@/components/ads/AdBanner";
+import { ReviewSection } from "@/components/review/ReviewSection";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
 import { TableOfContents } from "@/components/common/TableOfContents";
@@ -211,6 +212,9 @@ export default async function SupplementDetailPage({ params }: PageProps) {
                 </div>
               </section>
             )}
+
+            {/* 리뷰 */}
+            <ReviewSection itemType="supplement" itemId={supp.id} />
 
             {/* 광고 */}
             <AdBanner slot="supplement-detail-bottom" format="horizontal" />

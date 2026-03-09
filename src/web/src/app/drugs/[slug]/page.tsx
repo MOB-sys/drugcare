@@ -6,9 +6,12 @@ import { getDrugBySlug, getAllDrugSlugs, getRelatedDrugs } from "@/lib/api/drugs
 import { InfoSection } from "@/components/detail/InfoSection";
 import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { DURSafetySection } from "@/components/detail/DURSafetySection";
+import { DosageGuide } from "@/components/detail/DosageGuide";
+import { FoodInteractionSection } from "@/components/detail/FoodInteractionSection";
 import { CheckCTA } from "@/components/detail/CheckCTA";
 import { AddToCabinetButton } from "@/components/detail/AddToCabinetButton";
 import { AdBanner } from "@/components/ads/AdBanner";
+import { ReviewSection } from "@/components/review/ReviewSection";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
 import { TableOfContents } from "@/components/common/TableOfContents";
@@ -121,6 +124,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
     drug.atpn_warn_qesitm && { id: "warnings", label: "주의사항 (경고)" },
     drug.atpn_qesitm && { id: "precautions", label: "주의사항" },
     drug.intrc_qesitm && { id: "interactions", label: "상호작용" },
+    drug.intrc_qesitm && { id: "food-interactions", label: "음식 상호작용" },
     drug.se_qesitm && { id: "side-effects", label: "부작용" },
     drug.dur_safety?.length && { id: "dur-safety", label: "DUR 안전성" },
     drug.deposit_method_qesitm && { id: "storage", label: "보관방법" },
@@ -184,7 +188,9 @@ export default async function DrugDetailPage({ params }: PageProps) {
             {/* 정보 섹션 */}
             <div className="bg-white rounded-xl border border-gray-200 px-6 divide-y divide-gray-100 shadow-sm">
               <InfoSection id="efficacy" title="효능·효과" content={drug.efcy_qesitm} />
-              <InfoSection id="usage" title="용법·용량" content={drug.use_method_qesitm} />
+              {drug.use_method_qesitm ? (
+                <DosageGuide id="usage" content={drug.use_method_qesitm} />
+              ) : null}
 
               {drug.ingredients && drug.ingredients.length > 0 && (
                 <div id="ingredients" className="scroll-mt-24">
@@ -195,6 +201,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
               <InfoSection id="warnings" title="주의사항 (경고)" content={drug.atpn_warn_qesitm} />
               <InfoSection id="precautions" title="주의사항" content={drug.atpn_qesitm} />
               <InfoSection id="interactions" title="상호작용" content={drug.intrc_qesitm} />
+              <FoodInteractionSection intrcText={drug.intrc_qesitm} />
               <InfoSection id="side-effects" title="부작용" content={drug.se_qesitm} />
 
               {drug.dur_safety && drug.dur_safety.length > 0 && (
@@ -246,11 +253,24 @@ export default async function DrugDetailPage({ params }: PageProps) {
               </section>
             )}
 
+            {/* 리뷰 */}
+            <ReviewSection itemType="drug" itemId={drug.id} />
+
             {/* 광고 */}
             <AdBanner slot="drug-detail-bottom" format="horizontal" />
 
+            {/* 전문가용 링크 */}
+            <div className="text-center mt-4">
+              <Link
+                href={`/professional/drugs/${slug}`}
+                className="text-xs text-gray-500 hover:text-[var(--color-primary)] underline underline-offset-2 transition-colors"
+              >
+                전문가용 상세 정보 보기
+              </Link>
+            </div>
+
             {/* 면책조항 */}
-            <p className="text-xs text-gray-400 text-center mt-4">
+            <p className="text-xs text-gray-400 text-center mt-2">
               이 정보는 식약처 공공데이터를 기반으로 하며, 의사/약사의 전문적 판단을 대체하지 않습니다.
             </p>
           </article>

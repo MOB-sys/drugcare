@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { searchDrugs } from "@/lib/api/drugs";
+import { browseDrugsByLetter } from "@/lib/api/drugs";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { Pagination } from "@/components/common/Pagination";
 import { AdBanner } from "@/components/ads/AdBanner";
-import { ALL_LETTERS, CHOSUNG, matchesLetterKey } from "@/lib/utils/korean";
+import { ALL_LETTERS, CHOSUNG } from "@/lib/utils/korean";
 
 export const revalidate = 86400; // 24시간 ISR
 
+const PAGE_SIZE = 50;
+
 interface PageProps {
   params: Promise<{ letter: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 export function generateStaticParams() {
@@ -25,27 +29,36 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function DrugBrowsePage({ params }: PageProps) {
+export default async function DrugBrowsePage({ params, searchParams }: PageProps) {
   const { letter } = await params;
+  const { page: pageStr } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageStr ?? "1", 10) || 1);
   const particle = (CHOSUNG as readonly string[]).includes(letter) ? "으로" : "로";
 
-  interface DrugItem {
+  let items: Array<{
     id: number;
     item_name: string;
     slug: string;
     entp_name: string | null;
-  }
-
-  let drugs: DrugItem[] = [];
+  }> = [];
+  let total = 0;
+  let totalPages = 0;
 
   try {
-    const res = await searchDrugs("", 1, 5000);
-    drugs = res.items
-      .filter((d) => matchesLetterKey(d.item_name, letter))
-      .map((d) => ({ id: d.id, item_name: d.item_name, slug: d.slug, entp_name: d.entp_name }));
+    const res = await browseDrugsByLetter(letter, currentPage, PAGE_SIZE);
+    items = res.items.map((d) => ({
+      id: d.id,
+      item_name: d.item_name,
+      slug: d.slug,
+      entp_name: d.entp_name,
+    }));
+    total = res.total;
+    totalPages = Math.ceil(res.total / PAGE_SIZE);
   } catch {
     /* API 미연결 시 빈 목록 */
   }
+
+  const encodedLetter = encodeURIComponent(letter);
 
   return (
     <>
@@ -62,7 +75,8 @@ export default async function DrugBrowsePage({ params }: PageProps) {
           {letter}{particle} 시작하는 의약품
         </h1>
         <p className="text-[var(--color-text-secondary)] mb-6">
-          총 {drugs.length}개의 의약품이 있습니다.
+          총 {total.toLocaleString()}개의 의약품이 있습니다.
+          {totalPages > 1 && ` (${currentPage}/${totalPages} 페이지)`}
         </p>
 
         {/* 인덱스 네비게이션 */}
@@ -83,9 +97,9 @@ export default async function DrugBrowsePage({ params }: PageProps) {
         </nav>
 
         {/* 의약품 목록 */}
-        {drugs.length > 0 ? (
+        {items.length > 0 ? (
           <ul className="grid gap-1 sm:grid-cols-2">
-            {drugs.map((drug) => (
+            {items.map((drug) => (
               <li key={drug.id}>
                 <Link
                   href={`/drugs/${drug.slug}`}
@@ -104,6 +118,13 @@ export default async function DrugBrowsePage({ params }: PageProps) {
             해당 글자로 시작하는 의약품이 없습니다.
           </div>
         )}
+
+        {/* 페이지네이션 */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          basePath={`/drugs/browse/${encodedLetter}?page={page}`}
+        />
 
         <AdBanner slot="drugs-browse-bottom" format="auto" className="mt-8" />
       </section>

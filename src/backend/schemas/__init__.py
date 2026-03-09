@@ -26,6 +26,11 @@ from src.backend.schemas.reminder import (
     ReminderResponse,
     ReminderUpdate,
 )
+from src.backend.schemas.review import (
+    ReviewCreate,
+    ReviewResponse,
+    ReviewSummary,
+)
 from src.backend.schemas.supplement import (
     SupplementDetail,
     SupplementSearchItem,
@@ -48,6 +53,9 @@ __all__ = [
     "ReminderCreate",
     "ReminderResponse",
     "ReminderUpdate",
+    "ReviewCreate",
+    "ReviewResponse",
+    "ReviewSummary",
     "SupplementDetail",
     "SupplementSearchItem",
 ]

@@ -12,9 +12,13 @@ interface InteractionCardProps {
 export function InteractionCard({ interaction }: InteractionCardProps) {
   const [expanded, setExpanded] = useState(false);
   const config = SEVERITY_CONFIG[interaction.severity as Severity] ?? SEVERITY_CONFIG.info;
+  const isDanger = interaction.severity === "danger";
 
   return (
-    <div data-interaction-card className={`rounded-xl border p-4 shadow-sm ${config.cardClassName}`}>
+    <div
+      data-interaction-card
+      className={`rounded-xl border border-l-4 ${config.borderColor} p-4 shadow-sm ${config.cardClassName} ${isDanger ? "ring-1 ring-red-300" : ""}`}
+    >
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full text-left flex items-start justify-between gap-3"

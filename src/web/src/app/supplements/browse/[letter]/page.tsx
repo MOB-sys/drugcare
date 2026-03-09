@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { searchSupplements } from "@/lib/api/supplements";
+import { browseSupplementsByLetter } from "@/lib/api/supplements";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { Pagination } from "@/components/common/Pagination";
 import { AdBanner } from "@/components/ads/AdBanner";
-import { ALL_LETTERS, CHOSUNG, matchesLetterKey } from "@/lib/utils/korean";
+import { ALL_LETTERS, CHOSUNG } from "@/lib/utils/korean";
 
 export const revalidate = 86400; // 24시간 ISR
 
+const PAGE_SIZE = 50;
+
 interface PageProps {
   params: Promise<{ letter: string }>;
+  searchParams: Promise<{ page?: string }>;
 }
 
 export function generateStaticParams() {
@@ -25,27 +29,36 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function SupplementBrowsePage({ params }: PageProps) {
+export default async function SupplementBrowsePage({ params, searchParams }: PageProps) {
   const { letter } = await params;
+  const { page: pageStr } = await searchParams;
+  const currentPage = Math.max(1, parseInt(pageStr ?? "1", 10) || 1);
   const particle = (CHOSUNG as readonly string[]).includes(letter) ? "으로" : "로";
 
-  interface SuppItem {
+  let items: Array<{
     id: number;
     product_name: string;
     slug: string;
     company: string | null;
-  }
-
-  let supplements: SuppItem[] = [];
+  }> = [];
+  let total = 0;
+  let totalPages = 0;
 
   try {
-    const res = await searchSupplements("", 1, 5000);
-    supplements = res.items
-      .filter((s) => matchesLetterKey(s.product_name, letter))
-      .map((s) => ({ id: s.id, product_name: s.product_name, slug: s.slug, company: s.company }));
+    const res = await browseSupplementsByLetter(letter, currentPage, PAGE_SIZE);
+    items = res.items.map((s) => ({
+      id: s.id,
+      product_name: s.product_name,
+      slug: s.slug,
+      company: s.company,
+    }));
+    total = res.total;
+    totalPages = Math.ceil(res.total / PAGE_SIZE);
   } catch {
     /* API 미연결 시 빈 목록 */
   }
+
+  const encodedLetter = encodeURIComponent(letter);
 
   return (
     <>
@@ -62,7 +75,8 @@ export default async function SupplementBrowsePage({ params }: PageProps) {
           {letter}{particle} 시작하는 건강기능식품
         </h1>
         <p className="text-[var(--color-text-secondary)] mb-6">
-          총 {supplements.length}개의 건강기능식품이 있습니다.
+          총 {total.toLocaleString()}개의 건강기능식품이 있습니다.
+          {totalPages > 1 && ` (${currentPage}/${totalPages} 페이지)`}
         </p>
 
         {/* 인덱스 네비게이션 */}
@@ -83,9 +97,9 @@ export default async function SupplementBrowsePage({ params }: PageProps) {
         </nav>
 
         {/* 건강기능식품 목록 */}
-        {supplements.length > 0 ? (
+        {items.length > 0 ? (
           <ul className="grid gap-1 sm:grid-cols-2">
-            {supplements.map((supp) => (
+            {items.map((supp) => (
               <li key={supp.id}>
                 <Link
                   href={`/supplements/${supp.slug}`}
@@ -104,6 +118,13 @@ export default async function SupplementBrowsePage({ params }: PageProps) {
             해당 글자로 시작하는 건강기능식품이 없습니다.
           </div>
         )}
+
+        {/* 페이지네이션 */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          basePath={`/supplements/browse/${encodedLetter}?page={page}`}
+        />
 
         <AdBanner slot="supplements-browse-bottom" format="auto" className="mt-8" />
       </section>

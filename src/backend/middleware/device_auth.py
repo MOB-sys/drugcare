@@ -24,9 +24,13 @@ EXEMPT_PREFIXES: tuple[str, ...] = (
     "/api/v1/drugs/slugs",
     "/api/v1/drugs/count",
     "/api/v1/drugs/by-slug/",
+    "/api/v1/drugs/recent",
+    "/api/v1/drugs/symptoms/search",
     "/api/v1/supplements/slugs",
     "/api/v1/supplements/count",
     "/api/v1/supplements/by-slug/",
+    "/api/v1/reviews/drug/",
+    "/api/v1/reviews/supplement/",
 )
 
 

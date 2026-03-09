@@ -8,6 +8,7 @@ from src.backend.models.feedback import Feedback
 from src.backend.models.interaction import Interaction, ItemType, Severity
 from src.backend.models.reminder import Reminder
 from src.backend.models.supplement import Supplement
+from src.backend.models.drug_review import DrugReview
 from src.backend.models.user_cabinet import CabinetItemType, UserCabinet
 
 __all__ = [
@@ -24,4 +25,5 @@ __all__ = [
     "Reminder",
     "Feedback",
     "AppMetric",
+    "DrugReview",
 ]

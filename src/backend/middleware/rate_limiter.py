@@ -25,10 +25,15 @@ EXEMPT_PREFIXES: tuple[str, ...] = (
     "/api/v1/drugs/by-slug/",
     "/api/v1/drugs/search",
     "/api/v1/drugs/count",
+    "/api/v1/drugs/browse",
+    "/api/v1/drugs/side-effects/",
+    "/api/v1/drugs/identify",
+    "/api/v1/drugs/conditions/",
     "/api/v1/supplements/slugs",
     "/api/v1/supplements/by-slug/",
     "/api/v1/supplements/search",
     "/api/v1/supplements/count",
+    "/api/v1/supplements/browse",
 )
 
 # 엔드포인트 그룹별 요청 제한 (req/min)

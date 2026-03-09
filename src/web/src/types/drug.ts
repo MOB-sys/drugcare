@@ -17,6 +17,37 @@ export interface DrugSearchItem {
   item_image: string | null;
 }
 
+export interface DrugSideEffectItem {
+  id: number;
+  item_seq: string;
+  item_name: string;
+  slug: string;
+  entp_name: string | null;
+  item_image: string | null;
+  se_qesitm: string | null;
+}
+
+export interface DrugIdentifyItem {
+  id: number;
+  item_seq: string;
+  item_name: string;
+  slug: string;
+  entp_name: string | null;
+  chart: string | null;
+  item_image: string | null;
+}
+
+export interface DrugConditionItem {
+  id: number;
+  item_seq: string;
+  item_name: string;
+  slug: string;
+  entp_name: string | null;
+  item_image: string | null;
+  atpn_qesitm: string | null;
+  atpn_warn_qesitm: string | null;
+}
+
 export interface DURSafetyItem {
   dur_type: string;
   type_name: string | null;
