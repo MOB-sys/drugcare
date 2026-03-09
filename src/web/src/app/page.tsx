@@ -120,7 +120,7 @@ export default function HomePage() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 mb-1">건강기능식품</h3>
-              <p className="text-sm text-gray-500">영양제 성분, 기능성, 섭취방법을 확인하세요.</p>
+              <p className="text-sm text-gray-500">44,000여 건강기능식품의 성분, 기능성, 섭취방법을 확인하세요.</p>
             </Link>
             <Link href="/tips" className="group block bg-white rounded-xl border border-gray-200 p-4 sm:p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
               <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-emerald-100 transition-colors">

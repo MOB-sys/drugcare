@@ -65,6 +65,7 @@ export function Pagination({ currentPage, totalPages, basePath }: PaginationProp
           <span
             key={`ellipsis-${idx}`}
             className="w-10 h-10 flex items-center justify-center text-sm text-gray-400"
+            aria-hidden="true"
           >
             ...
           </span>

@@ -43,7 +43,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-gray-900 font-medium truncate max-w-[200px]">{item.label}</span>
+                <span className="text-gray-900 font-medium truncate max-w-[200px]" aria-current="page">{item.label}</span>
               )}
             </li>
           ))}

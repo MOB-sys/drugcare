@@ -4,7 +4,7 @@ import math
 from datetime import datetime, timedelta, timezone
 
 from redis.asyncio import Redis
-from sqlalchemy import and_, func, or_, select
+from sqlalchemy import and_, case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
@@ -73,6 +73,9 @@ async def search_drugs(
     total_result = await db.execute(count_stmt)
     total: int = total_result.scalar_one()
 
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+    page = min(page, max(1, total_pages))
+
     # 페이지네이션 조회
     offset = (page - 1) * page_size
     search_stmt = select(Drug)
@@ -82,7 +85,6 @@ async def search_drugs(
     rows = await db.execute(search_stmt)
     drugs = rows.scalars().all()
 
-    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     items = [DrugSearchItem.model_validate(drug).model_dump() for drug in drugs]
 
     result = {
@@ -266,6 +268,9 @@ async def search_by_symptom(
     count_stmt = select(func.count()).select_from(Drug).where(condition)
     total: int = (await db.execute(count_stmt)).scalar_one()
 
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+    page = min(page, max(1, total_pages))
+
     offset = (page - 1) * page_size
     query_stmt = (
         select(Drug)
@@ -277,7 +282,6 @@ async def search_by_symptom(
     rows = await db.execute(query_stmt)
     drugs = rows.scalars().all()
 
-    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     items = [DrugSearchItem.model_validate(d).model_dump() for d in drugs]
 
     result = {
@@ -414,6 +418,9 @@ async def browse_drugs_by_letter(
     count_stmt = select(func.count()).select_from(Drug).where(condition)
     total: int = (await db.execute(count_stmt)).scalar_one()
 
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+    page = min(page, max(1, total_pages))
+
     offset = (page - 1) * page_size
     query_stmt = (
         select(Drug)
@@ -425,7 +432,6 @@ async def browse_drugs_by_letter(
     rows = await db.execute(query_stmt)
     drugs = rows.scalars().all()
 
-    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     items = [DrugSearchItem.model_validate(d).model_dump() for d in drugs]
 
     result = {
@@ -445,6 +451,8 @@ async def get_drug_counts_by_letter(
 ) -> dict[str, int]:
     """초성/알파벳별 의약품 건수를 반환한다.
 
+    단일 SQL 쿼리로 CASE/WHEN을 사용해 모든 글자 버킷을 한 번에 집계한다.
+
     Returns:
         {"ㄱ": 234, "ㄴ": 56, "A": 12, ...} 형태의 dict.
     """
@@ -455,16 +463,33 @@ async def get_drug_counts_by_letter(
 
     chosung_keys = list(_CHOSUNG_INDEX_MAP.keys())
     alpha_keys = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-    counts: dict[str, int] = {}
+    all_keys = chosung_keys + alpha_keys
 
-    for letter in chosung_keys + alpha_keys:
-        condition = _build_letter_condition(letter, Drug.item_name)
-        if condition is None:
+    # Build CASE/WHEN expressions for each letter bucket
+    case_whens = []
+    for letter in all_keys:
+        cond = _build_letter_condition(letter, Drug.item_name)
+        if cond is not None:
+            case_whens.append(
+                func.count(case((cond, 1))).label(letter)
+            )
+
+    if not case_whens:
+        counts = {letter: 0 for letter in all_keys}
+        await cache_set(redis, cache_key, counts, CACHE_TTL_DRUG_COUNT)
+        return counts
+
+    stmt = select(*case_whens).select_from(Drug)
+    result = await db.execute(stmt)
+    row = result.one()
+
+    counts: dict[str, int] = {}
+    for letter in all_keys:
+        cond = _build_letter_condition(letter, Drug.item_name)
+        if cond is None:
             counts[letter] = 0
-            continue
-        stmt = select(func.count()).select_from(Drug).where(condition)
-        result = await db.execute(stmt)
-        counts[letter] = result.scalar_one()
+        else:
+            counts[letter] = getattr(row, letter, 0) or 0
 
     await cache_set(redis, cache_key, counts, CACHE_TTL_DRUG_COUNT)
     return counts
@@ -503,12 +528,14 @@ async def search_by_side_effect(
     count_stmt = select(func.count()).select_from(Drug).where(condition)
     total: int = (await db.execute(count_stmt)).scalar_one()
 
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+    page = min(page, max(1, total_pages))
+
     offset = (page - 1) * page_size
     query_stmt = select(Drug).where(condition).offset(offset).limit(page_size)
     rows = await db.execute(query_stmt)
     drugs = rows.scalars().all()
 
-    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     items = [DrugSideEffectItem.model_validate(d).model_dump() for d in drugs]
 
     result = {
@@ -569,12 +596,14 @@ async def identify_drug(
     count_stmt = select(func.count()).select_from(Drug).where(condition)
     total: int = (await db.execute(count_stmt)).scalar_one()
 
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+    page = min(page, max(1, total_pages))
+
     offset = (page - 1) * page_size
     query_stmt = select(Drug).where(condition).offset(offset).limit(page_size)
     rows = await db.execute(query_stmt)
     drugs = rows.scalars().all()
 
-    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     items = [DrugIdentifyItem.model_validate(d).model_dump() for d in drugs]
 
     result = {
@@ -627,12 +656,14 @@ async def search_by_condition(
     count_stmt = select(func.count()).select_from(Drug).where(condition)
     total: int = (await db.execute(count_stmt)).scalar_one()
 
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+    page = min(page, max(1, total_pages))
+
     offset = (page - 1) * page_size
     query_stmt = select(Drug).where(condition).offset(offset).limit(page_size)
     rows = await db.execute(query_stmt)
     drugs = rows.scalars().all()
 
-    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     items = [DrugConditionItem.model_validate(d).model_dump() for d in drugs]
 
     result = {

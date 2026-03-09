@@ -18,7 +18,7 @@ class InteractionCheckRequest(BaseModel):
     최소 2개 아이템을 받아 상호작용을 확인한다.
     """
 
-    items: list[InteractionItem] = Field(..., min_length=2, max_length=20)
+    items: list[InteractionItem] = Field(..., min_length=2, max_length=10)
 
 
 class InteractionResult(BaseModel):

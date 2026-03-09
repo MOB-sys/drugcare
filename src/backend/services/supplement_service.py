@@ -3,7 +3,7 @@
 import math
 
 from redis.asyncio import Redis
-from sqlalchemy import func, or_, select
+from sqlalchemy import case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.redis import CACHE_TTL_SUPPLEMENT_DETAIL, CACHE_TTL_SUPPLEMENT_SEARCH
@@ -65,6 +65,9 @@ async def search_supplements(
     total_result = await db.execute(count_stmt)
     total: int = total_result.scalar_one()
 
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+    page = min(page, max(1, total_pages))
+
     # 페이지네이션 조회
     offset = (page - 1) * page_size
     search_stmt = select(Supplement)
@@ -74,7 +77,6 @@ async def search_supplements(
     rows = await db.execute(search_stmt)
     supplements = rows.scalars().all()
 
-    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     items = [SupplementSearchItem.model_validate(s).model_dump() for s in supplements]
 
     result = {
@@ -245,6 +247,9 @@ async def browse_supplements_by_letter(
     count_stmt = select(func.count()).select_from(Supplement).where(condition)
     total: int = (await db.execute(count_stmt)).scalar_one()
 
+    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
+    page = min(page, max(1, total_pages))
+
     offset = (page - 1) * page_size
     query_stmt = (
         select(Supplement)
@@ -256,7 +261,6 @@ async def browse_supplements_by_letter(
     rows = await db.execute(query_stmt)
     supplements = rows.scalars().all()
 
-    total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     items = [SupplementSearchItem.model_validate(s).model_dump() for s in supplements]
 
     result = {
@@ -276,6 +280,8 @@ async def get_supplement_counts_by_letter(
 ) -> dict[str, int]:
     """초성/알파벳별 영양제 건수를 반환한다.
 
+    단일 SQL 쿼리로 CASE/WHEN을 사용해 모든 글자 버킷을 한 번에 집계한다.
+
     Returns:
         {"ㄱ": 34, "ㄴ": 6, "A": 2, ...} 형태의 dict.
     """
@@ -286,16 +292,33 @@ async def get_supplement_counts_by_letter(
 
     chosung_keys = list(_CHOSUNG_INDEX_MAP.keys())
     alpha_keys = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-    counts: dict[str, int] = {}
+    all_keys = chosung_keys + alpha_keys
 
-    for letter in chosung_keys + alpha_keys:
-        condition = _build_letter_condition(letter, Supplement.product_name)
-        if condition is None:
+    # Build CASE/WHEN expressions for each letter bucket
+    case_whens = []
+    for letter in all_keys:
+        cond = _build_letter_condition(letter, Supplement.product_name)
+        if cond is not None:
+            case_whens.append(
+                func.count(case((cond, 1))).label(letter)
+            )
+
+    if not case_whens:
+        counts = {letter: 0 for letter in all_keys}
+        await cache_set(redis, cache_key, counts, CACHE_TTL_SUPPLEMENT_COUNT)
+        return counts
+
+    stmt = select(*case_whens).select_from(Supplement)
+    result = await db.execute(stmt)
+    row = result.one()
+
+    counts: dict[str, int] = {}
+    for letter in all_keys:
+        cond = _build_letter_condition(letter, Supplement.product_name)
+        if cond is None:
             counts[letter] = 0
-            continue
-        stmt = select(func.count()).select_from(Supplement).where(condition)
-        result = await db.execute(stmt)
-        counts[letter] = result.scalar_one()
+        else:
+            counts[letter] = getattr(row, letter, 0) or 0
 
     await cache_set(redis, cache_key, counts, CACHE_TTL_SUPPLEMENT_COUNT)
     return counts

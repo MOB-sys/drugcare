@@ -16,8 +16,6 @@ export const metadata: Metadata = {
   },
 };
 
-const ALL_KEYS = [...CHOSUNG, ...ALPHA];
-
 export default async function DrugsIndexPage() {
   let counts: Record<string, number> = {};
 

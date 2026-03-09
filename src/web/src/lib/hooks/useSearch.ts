@@ -46,12 +46,12 @@ function parsePreselect(param: string | null): SelectedItem[] {
   if (!param) return [];
   try {
     return param.split(",").reduce<SelectedItem[]>((acc, part) => {
-      const [type, id, ...nameParts] = part.split(":");
+      const [type, id, ...nameParts] = part.split("|");
       if ((type === "drug" || type === "supplement") && id && nameParts.length) {
         acc.push({
           item_type: type,
           item_id: Number(id),
-          name: decodeURIComponent(nameParts.join(":")),
+          name: decodeURIComponent(nameParts.join("|")),
         });
       }
       return acc;

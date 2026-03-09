@@ -30,9 +30,15 @@ REQUEST_TIMEOUT_SEC = 30
 
 def _slugify(name: str, report_no: str) -> str:
     """제품명 + 신고번호로 URL-safe slug를 생성한다."""
+    import hashlib
+
     # 신고번호 기반 slug (고유성 보장)
     cleaned = re.sub(r"[^0-9]", "", report_no)
-    return f"supp-{cleaned}" if cleaned else f"supp-{abs(hash(name)) % 10**8}"
+    if cleaned:
+        return f"supp-{cleaned}"
+    # Use hash of full name + report_no to reduce collision
+    hash_val = hashlib.md5(f"{name}:{report_no}".encode()).hexdigest()[:12]
+    return f"supp-{hash_val}"
 
 
 def _parse_raw_materials(raw: str | None) -> list[dict[str, str | None]]:
@@ -235,7 +241,7 @@ class SupplementCollector:
             return "updated" if report_no in existing_report_nos else "inserted"
         except Exception as e:
             # slug 또는 기타 충돌 시 건너뛰기
-            logger.debug("upsert 건너뜀 (%s): %s", product_name, e)
+            logger.warning("upsert 건너뜀 (%s): %s", product_name, e)
             await session.rollback()
             return "skipped"
 

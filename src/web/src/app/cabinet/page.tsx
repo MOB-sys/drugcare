@@ -12,7 +12,7 @@ export default function CabinetPage() {
   const { items, isLoading, error, deletingIds, removeItem } = useCabinet();
 
   const checkParams = items
-    .map((it) => `${it.item_type}:${it.item_id}:${encodeURIComponent(it.nickname || it.item_name)}`)
+    .map((it) => `${it.item_type}|${it.item_id}|${encodeURIComponent(it.nickname || it.item_name)}`)
     .join(",");
 
   const storeUrl = getStoreUrlForPlatform("cabinet-cta");
