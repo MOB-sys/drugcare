@@ -229,6 +229,17 @@ export default function IdentifyPage() {
                         src={drug.item_image}
                         alt={drug.item_name}
                         className="w-full h-24 object-contain rounded-lg bg-gray-50 mb-2"
+                        onError={(e) => {
+                          const el = e.currentTarget;
+                          el.style.display = "none";
+                          const fallback = el.nextElementSibling;
+                          if (!fallback) {
+                            const div = document.createElement("div");
+                            div.className = "w-full h-24 bg-gray-100 rounded-lg mb-2 flex items-center justify-center";
+                            div.innerHTML = '<span class="text-gray-300 text-xs">이미지 없음</span>';
+                            el.parentElement?.insertBefore(div, el.nextSibling);
+                          }
+                        }}
                       />
                     ) : (
                       <div className="w-full h-24 bg-gray-100 rounded-lg mb-2 flex items-center justify-center">

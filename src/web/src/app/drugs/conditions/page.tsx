@@ -208,6 +208,7 @@ export default function ConditionsPage() {
                                   src={drug.item_image}
                                   alt={drug.item_name}
                                   className="w-12 h-12 object-contain rounded-lg bg-gray-50 shrink-0"
+                                  onError={(e) => { e.currentTarget.style.display = "none"; }}
                                 />
                               )}
                               <div className="min-w-0 flex-1">

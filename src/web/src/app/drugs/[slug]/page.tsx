@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { SafeImage } from "@/components/common/SafeImage";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDrugBySlug, getAllDrugSlugs, getRelatedDrugs } from "@/lib/api/drugs";
@@ -159,7 +159,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
             {/* 헤더 */}
             <div className="flex gap-6 mb-6">
               {drug.item_image && (
-                <Image
+                <SafeImage
                   src={drug.item_image}
                   alt={drug.item_name}
                   width={128}
@@ -230,7 +230,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
                       className="flex items-center gap-3 p-3 bg-white rounded-xl border border-gray-200 hover:border-[var(--color-primary-100)] hover:shadow-sm transition-all"
                     >
                       {rd.item_image ? (
-                        <Image
+                        <SafeImage
                           src={rd.item_image}
                           alt={rd.item_name}
                           width={40}
