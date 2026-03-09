@@ -124,6 +124,44 @@
 .dark .hover\:text-red-500:hover { color: #FCA5A5; }
 .dark .hover\:bg-red-50:hover { background-color: #450A0A; }
 
+/* Orange (DUR elderly, conditions) */
+.dark .bg-orange-50 { background-color: #431407; }
+.dark .text-orange-600 { color: #FDBA74; }
+.dark .text-orange-700 { color: #FDBA74; }
+.dark .border-orange-200 { border-color: #431407; }
+
+/* Yellow (DUR duration) */
+.dark .bg-yellow-50 { background-color: #422006; }
+.dark .text-yellow-600 { color: #FDE047; }
+.dark .text-yellow-700 { color: #FDE047; }
+.dark .border-yellow-200 { border-color: #422006; }
+
+/* Purple (symptoms, efficacy dup) */
+.dark .bg-purple-50 { background-color: #3B0764; }
+.dark .text-purple-600 { color: #C084FC; }
+.dark .text-purple-700 { color: #C084FC; }
+.dark .border-purple-200 { border-color: #3B0764; }
+
+/* Rose (drug list) */
+.dark .bg-rose-50 { background-color: #4C0519; }
+.dark .text-rose-600 { color: #FDA4AF; }
+
+/* Green (supplements) */
+.dark .bg-green-50 { background-color: #052E16; }
+.dark .text-green-600 { color: #86EFAC; }
+
+/* Cyan (identify) */
+.dark .bg-cyan-50 { background-color: #083344; }
+.dark .text-cyan-600 { color: #67E8F9; }
+
+/* Indigo (news) */
+.dark .bg-indigo-50 { background-color: #1E1B4B; }
+.dark .text-indigo-600 { color: #A5B4FC; }
+
+/* Slate (professional) */
+.dark .bg-slate-100 { background-color: #334155; }
+.dark .text-slate-600 { color: #94A3B8; }
+
 body {
   font-family:
     "Pretendard Variable",

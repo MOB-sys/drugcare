@@ -1,3 +1,4 @@
+import React from "react";
 import { parseFoodInteractions, type FoodInteraction } from "@/lib/utils/foodInteractionParser";
 
 interface FoodInteractionSectionProps {
@@ -13,15 +14,25 @@ const CATEGORY_COLORS: Record<string, string> = {
   other: "bg-gray-50 border-gray-200",
 };
 
+const CATEGORY_ICONS: Record<string, React.ReactNode> = {
+  fruit: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2C9 2 7 4 7 7c0 4 5 7 5 7s5-3 5-7c0-3-2-5-5-5z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2c1-1 3-1 4 0" /></svg>,
+  dairy: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 2h8l1 5v13a2 2 0 01-2 2H9a2 2 0 01-2-2V7l1-5z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h8" /></svg>,
+  beverage: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 8h1a4 4 0 010 8h-1M5 8h12v9a4 4 0 01-4 4H9a4 4 0 01-4-4V8zM7 2v3M12 2v3M17 2v3" /></svg>,
+  alcohol: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 2l3 7m0 0l3-7m-3 7v13m-4 0h8" /></svg>,
+  meal: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 13h18M5 17h14a2 2 0 002-2v-1H3v1a2 2 0 002 2zM12 3C7 3 3 7 3 12h18c0-5-4-9-9-9z" /></svg>,
+  other: <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
+};
+
 /** Single food interaction card. */
 function FoodCard({ item }: { item: FoodInteraction }) {
   const colorClass = CATEGORY_COLORS[item.food.category] ?? CATEGORY_COLORS.other;
+  const icon = CATEGORY_ICONS[item.food.category] ?? CATEGORY_ICONS.other;
 
   return (
     <div className={`rounded-lg border p-3 ${colorClass}`}>
       <div className="flex items-center gap-2 mb-1.5">
-        <span className="text-lg" role="img" aria-label={item.food.name}>
-          {item.food.icon}
+        <span className="text-gray-600 shrink-0" aria-label={item.food.name}>
+          {icon}
         </span>
         <div>
           <span className="font-semibold text-sm text-gray-900">{item.food.name}</span>
