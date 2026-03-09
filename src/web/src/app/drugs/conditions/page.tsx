@@ -154,7 +154,7 @@ export default function ConditionsPage() {
                 className="text-left p-4 border border-gray-200 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 transition-colors"
               >
                 <h3 className="text-sm font-semibold text-gray-900 mb-1">{cond.label}</h3>
-                <p className="text-[11px] text-gray-400 leading-snug">{cond.description}</p>
+                <p className="text-xs text-gray-400 leading-snug">{cond.description}</p>
               </button>
             ))}
           </div>

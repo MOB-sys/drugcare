@@ -61,7 +61,7 @@ export default async function SupplementsIndexPage() {
           {/* 한글 초성 */}
           <div>
             <h2 className="text-sm font-semibold text-gray-500 mb-3">한글 (가나다)</h2>
-            <div className="grid grid-cols-7 gap-2">
+            <div className="grid grid-cols-5 sm:grid-cols-7 gap-1.5 sm:gap-2">
               {CHOSUNG.map((key) => {
                 const count = counts[key] ?? 0;
                 const hasItems = count > 0;
@@ -69,18 +69,18 @@ export default async function SupplementsIndexPage() {
                   <Link
                     key={key}
                     href={`/supplements/browse/${encodeURIComponent(key)}`}
-                    className="flex flex-col items-center justify-center rounded-xl p-3 bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]/40 transition-colors border border-[var(--color-primary-100)]"
+                    className="flex flex-col items-center justify-center rounded-xl p-2 sm:p-3 bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]/40 transition-colors border border-[var(--color-primary-100)]"
                   >
-                    <span className="text-lg font-bold text-[var(--color-primary)]">{key}</span>
-                    <span className="text-xs text-gray-500 mt-1">{count.toLocaleString()}</span>
+                    <span className="text-base sm:text-lg font-bold text-[var(--color-primary)]">{key}</span>
+                    <span className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">{count.toLocaleString()}</span>
                   </Link>
                 ) : (
                   <div
                     key={key}
-                    className="flex flex-col items-center justify-center rounded-xl p-3 bg-gray-50 border border-gray-100"
+                    className="flex flex-col items-center justify-center rounded-xl p-2 sm:p-3 bg-gray-50 border border-gray-100"
                   >
-                    <span className="text-lg font-bold text-gray-300">{key}</span>
-                    <span className="text-xs text-gray-300 mt-1">0</span>
+                    <span className="text-base sm:text-lg font-bold text-gray-300">{key}</span>
+                    <span className="text-[10px] sm:text-xs text-gray-300 mt-0.5 sm:mt-1">0</span>
                   </div>
                 );
               })}
@@ -90,7 +90,7 @@ export default async function SupplementsIndexPage() {
           {/* 알파벳 */}
           <div>
             <h2 className="text-sm font-semibold text-gray-500 mb-3">알파벳 (A-Z)</h2>
-            <div className="grid grid-cols-7 sm:grid-cols-9 gap-2">
+            <div className="grid grid-cols-5 sm:grid-cols-7 md:grid-cols-9 gap-1.5 sm:gap-2">
               {ALPHA.map((key) => {
                 const count = counts[key] ?? 0;
                 const hasItems = count > 0;
@@ -98,18 +98,18 @@ export default async function SupplementsIndexPage() {
                   <Link
                     key={key}
                     href={`/supplements/browse/${encodeURIComponent(key)}`}
-                    className="flex flex-col items-center justify-center rounded-xl p-3 bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]/40 transition-colors border border-[var(--color-primary-100)]"
+                    className="flex flex-col items-center justify-center rounded-xl p-2 sm:p-3 bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]/40 transition-colors border border-[var(--color-primary-100)]"
                   >
-                    <span className="text-lg font-bold text-[var(--color-primary)]">{key}</span>
-                    <span className="text-xs text-gray-500 mt-1">{count.toLocaleString()}</span>
+                    <span className="text-base sm:text-lg font-bold text-[var(--color-primary)]">{key}</span>
+                    <span className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">{count.toLocaleString()}</span>
                   </Link>
                 ) : (
                   <div
                     key={key}
-                    className="flex flex-col items-center justify-center rounded-xl p-3 bg-gray-50 border border-gray-100"
+                    className="flex flex-col items-center justify-center rounded-xl p-2 sm:p-3 bg-gray-50 border border-gray-100"
                   >
-                    <span className="text-lg font-bold text-gray-300">{key}</span>
-                    <span className="text-xs text-gray-300 mt-1">0</span>
+                    <span className="text-base sm:text-lg font-bold text-gray-300">{key}</span>
+                    <span className="text-[10px] sm:text-xs text-gray-300 mt-0.5 sm:mt-1">0</span>
                   </div>
                 );
               })}

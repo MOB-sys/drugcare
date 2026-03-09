@@ -239,7 +239,7 @@ export default function IdentifyPage() {
                       {drug.item_name}
                     </h3>
                     {drug.chart && (
-                      <p className="text-[10px] text-gray-400 mt-0.5 truncate">
+                      <p className="text-xs text-gray-400 mt-0.5 truncate">
                         {drug.chart}
                       </p>
                     )}
