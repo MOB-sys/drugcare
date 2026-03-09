@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     # 공공데이터포털 API
     DATA_GO_KR_SERVICE_KEY: str = ""
 
+    # 식품안전나라 API (건강기능식품 C003)
+    FOOD_SAFETY_API_KEY: str = ""
+
     # OpenAI (Phase 2)
     OPENAI_API_KEY: str = ""
 

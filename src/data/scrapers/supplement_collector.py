@@ -91,7 +91,7 @@ class SupplementCollector:
 
     def __init__(self, client: httpx.AsyncClient | None = None) -> None:
         settings = get_settings()
-        self.service_key = settings.DATA_GO_KR_SERVICE_KEY
+        self.service_key = settings.FOOD_SAFETY_API_KEY or settings.DATA_GO_KR_SERVICE_KEY
         self._external_client = client is not None
         self.client = client or httpx.AsyncClient(timeout=REQUEST_TIMEOUT_SEC)
         self.stats: dict[str, int] = {
