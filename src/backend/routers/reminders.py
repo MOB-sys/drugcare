@@ -1,6 +1,6 @@
 """리마인더 라우터 — 복약 알림 스케줄 관리."""
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.database import get_db
@@ -16,7 +16,7 @@ def _get_device_id(request: Request) -> str:
     """요청에서 device_id를 안전하게 추출한다."""
     device_id = getattr(request.state, "device_id", None)
     if not device_id:
-        raise ValueError("device_id")
+        raise HTTPException(status_code=401, detail="Device ID is required")
     return device_id
 
 

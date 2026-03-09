@@ -4,7 +4,6 @@ import "./globals.css";
 import { Header } from "@/components/common/Header";
 import { Footer } from "@/components/common/Footer";
 import { DisclaimerBanner } from "@/components/common/DisclaimerBanner";
-import { SmartAppBanner } from "@/components/common/SmartAppBanner";
 import { WebVitals } from "@/components/common/WebVitals";
 import { ServiceWorkerRegister } from "@/components/common/ServiceWorkerRegister";
 import { ToastProvider } from "@/components/common/ToastProvider";
@@ -112,7 +111,6 @@ export default function RootLayout({
         </a>
         <Header />
         <DisclaimerBanner />
-        <SmartAppBanner />
         <ToastProvider>
           <main id="main-content" className="flex-1" role="main">{children}</main>
         </ToastProvider>

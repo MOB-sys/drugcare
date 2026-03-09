@@ -70,6 +70,7 @@ export function useSearch(): UseSearchReturn {
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const abortRef = useRef<AbortController | null>(null);
   const preselectApplied = useRef(false);
+  const requestIdRef = useRef(0);
 
   /* URL ?preselect= 파라미터에서 초기 선택 아이템 복원 */
   useEffect(() => {
@@ -124,6 +125,7 @@ export function useSearch(): UseSearchReturn {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
+    const currentRequestId = ++requestIdRef.current;
 
     async function doSearch() {
       setIsLoading(true);
@@ -140,11 +142,11 @@ export function useSearch(): UseSearchReturn {
           merged.push(...supps.items.map(toSupplementResult));
         }
 
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted && currentRequestId === requestIdRef.current) {
           setResults(merged);
         }
       } catch (error) {
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted && currentRequestId === requestIdRef.current) {
           setResults([]);
           const message =
             error instanceof Error && error.message.includes("시간이 초과")
@@ -153,7 +155,7 @@ export function useSearch(): UseSearchReturn {
           setSearchError(message);
         }
       } finally {
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted && currentRequestId === requestIdRef.current) {
           setIsLoading(false);
         }
       }

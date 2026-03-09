@@ -21,11 +21,13 @@ export async function withRetry<T>(
       lastError = error;
 
       // 4xx 클라이언트 에러 또는 비즈니스 로직 에러는 재시도하지 않음
-      if (error instanceof Error && "status" in error) {
-        const status = (error as { status: number }).status;
-        if (typeof status === "number" && (status < 500 || status === 0)) {
-          throw error;
-        }
+      if (
+        error instanceof Error &&
+        "status" in error &&
+        typeof (error as Record<string, unknown>).status === "number"
+      ) {
+        const status = (error as Record<string, unknown>).status as number;
+        if (status < 500 && status !== 0) throw error;
       }
 
       if (attempt < maxRetries) {

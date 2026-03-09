@@ -73,15 +73,16 @@ app = FastAPI(
 # 실행 순서: ErrorHandler → RequestLogger → SecurityHeaders → RateLimiter → DeviceAuth → CORS
 
 # CORS 미들웨어 (가장 안쪽)
-_cors_origins = (
-    ["http://localhost:3000", "http://localhost:5173", "http://localhost:8000"]
-    if settings.is_development
-    else [
+if settings.cors_origin_list:
+    _cors_origins = settings.cors_origin_list
+elif settings.is_development:
+    _cors_origins = ["http://localhost:3000", "http://localhost:5173", "http://localhost:8000"]
+else:
+    _cors_origins = [
         "https://pillright.com",
         "https://www.pillright.com",
         "https://api.pillright.com",
     ]
-)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,

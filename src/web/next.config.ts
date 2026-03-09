@@ -9,10 +9,6 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "nedrug.mfds.go.kr",
       },
-      {
-        protocol: "http",
-        hostname: "nedrug.mfds.go.kr",
-      },
     ],
     formats: ["image/avif", "image/webp"],
   },
@@ -60,7 +56,7 @@ const nextConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com https://t1.kakaocdn.net https://*.sentry.io",
               "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
               /* data: is needed for inline SVG icons and base64-encoded thumbnails */
-              "img-src 'self' data: blob: https: http://nedrug.mfds.go.kr https://nedrug.mfds.go.kr",
+              "img-src 'self' data: blob: https: https://nedrug.mfds.go.kr",
               "font-src 'self' https://cdn.jsdelivr.net",
               "connect-src 'self' https://api.pillright.com https://www.google-analytics.com https://*.sentry.io https://pagead2.googlesyndication.com",
               "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",

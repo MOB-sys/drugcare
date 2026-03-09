@@ -1,6 +1,6 @@
 """메트릭스 라우터 — 앱 사용 이벤트 기록 및 Kill Criteria 대시보드."""
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.database import get_db
@@ -20,7 +20,7 @@ def _get_device_id(request: Request) -> str:
     """요청에서 device_id를 안전하게 추출한다."""
     device_id = getattr(request.state, "device_id", None)
     if not device_id:
-        raise ValueError("device_id")
+        raise HTTPException(status_code=401, detail="Device ID is required")
     return device_id
 
 

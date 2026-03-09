@@ -21,6 +21,7 @@ export function InteractionCard({ interaction }: InteractionCardProps) {
     >
       <button
         onClick={() => setExpanded(!expanded)}
+        aria-expanded={expanded}
         className="w-full text-left flex items-start justify-between gap-3"
       >
         <div className="flex-1 min-w-0">

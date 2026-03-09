@@ -148,7 +148,8 @@ export async function getRelatedDrugs(
     return res.items
       .filter((d) => d.slug !== excludeSlug)
       .slice(0, limit);
-  } catch {
+  } catch (error) {
+    console.error("[getRelatedDrugs] Failed to fetch related drugs:", error);
     return [];
   }
 }

@@ -27,7 +27,8 @@ export async function generateStaticParams() {
   try {
     const slugs = await getAllDrugSlugs();
     return slugs.map((slug) => ({ slug }));
-  } catch {
+  } catch (error) {
+    console.error("[generateStaticParams:drugs] Failed to fetch drug slugs:", error);
     return [];
   }
 }

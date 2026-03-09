@@ -24,7 +24,8 @@ export async function generateStaticParams() {
   try {
     const slugs = await getAllSupplementSlugs();
     return slugs.map((slug) => ({ slug }));
-  } catch {
+  } catch (error) {
+    console.error("[generateStaticParams:supplements] Failed to fetch supplement slugs:", error);
     return [];
   }
 }

@@ -1,6 +1,6 @@
 """리뷰 라우터 — 약물/영양제 리뷰 CRUD."""
 
-from fastapi import APIRouter, Depends, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -42,9 +42,11 @@ async def create_review(
         ApiResponse[ReviewResponse] 포맷의 dict.
     """
     if item_type not in ("drug", "supplement"):
-        return error_response("item_type은 'drug' 또는 'supplement'이어야 합니다.")
+        return error_response("item_type은 'drug' 또는 'supplement'이어야 합니다.", status_code=422)
 
-    device_id = request.state.device_id
+    device_id = getattr(request.state, "device_id", None)
+    if not device_id:
+        raise HTTPException(status_code=401, detail="Device ID is required")
     result = await review_service.create_review(
         db, redis, device_id, item_type, item_id, body
     )
@@ -67,7 +69,7 @@ async def get_reviews(
 ) -> dict:
     """리뷰 목록 엔드포인트."""
     if item_type not in ("drug", "supplement"):
-        return error_response("item_type은 'drug' 또는 'supplement'이어야 합니다.")
+        return error_response("item_type은 'drug' 또는 'supplement'이어야 합니다.", status_code=422)
 
     result = await review_service.get_reviews(db, redis, item_type, item_id, page, page_size)
     return success_response(result)
@@ -87,7 +89,7 @@ async def get_review_summary(
 ) -> dict:
     """리뷰 요약 엔드포인트."""
     if item_type not in ("drug", "supplement"):
-        return error_response("item_type은 'drug' 또는 'supplement'이어야 합니다.")
+        return error_response("item_type은 'drug' 또는 'supplement'이어야 합니다.", status_code=422)
 
     result = await review_service.get_review_summary(db, redis, item_type, item_id)
     return success_response(result)
@@ -101,10 +103,14 @@ async def get_review_summary(
 )
 async def mark_helpful(
     review_id: int,
+    request: Request,
     db: AsyncSession = Depends(get_db),
     redis: Redis = Depends(get_redis),
 ) -> dict:
     """도움됨 표시 엔드포인트."""
+    device_id = getattr(request.state, "device_id", None)
+    if not device_id:
+        raise HTTPException(status_code=401, detail="Device ID is required")
     result = await review_service.mark_helpful(db, redis, review_id)
     if result is None:
         return error_response("리뷰를 찾을 수 없습니다.", 404)
@@ -124,7 +130,9 @@ async def delete_review(
     redis: Redis = Depends(get_redis),
 ) -> dict:
     """리뷰 삭제 엔드포인트."""
-    device_id = request.state.device_id
+    device_id = getattr(request.state, "device_id", None)
+    if not device_id:
+        raise HTTPException(status_code=401, detail="Device ID is required")
     deleted = await review_service.delete_review(db, redis, device_id, review_id)
     if not deleted:
         return error_response("리뷰를 찾을 수 없거나 삭제 권한이 없습니다.", 404)

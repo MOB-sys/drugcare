@@ -28,6 +28,16 @@ class Settings(BaseSettings):
     # OpenAI (Phase 2)
     OPENAI_API_KEY: str = ""
 
+    # CORS
+    CORS_ORIGINS: str = ""
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        """CORS_ORIGINS 환경변수를 파싱하여 origin 리스트로 반환한다."""
+        if self.CORS_ORIGINS:
+            return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
+        return []
+
     @property
     def is_development(self) -> bool:
         """개발 환경 여부."""

@@ -20,7 +20,7 @@ function parseItems(raw: string): { checkItems: InteractionCheckItem[]; names: M
   for (const segment of raw.split(",")) {
     const [type, id, name] = segment.split(":");
     const numId = Number(id);
-    if ((type === "drug" || type === "supplement") && id && name && !Number.isNaN(numId)) {
+    if ((type === "drug" || type === "supplement") && id && name && !Number.isNaN(numId) && Number.isInteger(numId) && numId > 0) {
       checkItems.push({ item_type: type, item_id: numId });
       names.set(`${type}:${id}`, decodeURIComponent(name));
     }
@@ -108,7 +108,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
             <div className="space-y-3">
               <h2 className="text-lg font-semibold text-gray-900">상세 결과</h2>
               {data.results.map((r, i) => (
-                <InteractionCard key={i} interaction={r} />
+                <InteractionCard key={`${r.item_a_name}-${r.item_b_name}-${i}`} interaction={r} />
               ))}
             </div>
           )}

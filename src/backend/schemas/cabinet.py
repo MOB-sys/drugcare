@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from src.backend.models.user_cabinet import CabinetItemType
 
@@ -11,7 +11,7 @@ class CabinetItemCreate(BaseModel):
     """복약함 아이템 추가 요청."""
 
     item_type: CabinetItemType
-    item_id: int
+    item_id: int = Field(..., gt=0)
     nickname: str | None = None
 
 
@@ -19,7 +19,6 @@ class CabinetItemResponse(BaseModel):
     """복약함 아이템 응답."""
 
     id: int
-    device_id: str
     item_type: CabinetItemType
     item_id: int
     item_name: str

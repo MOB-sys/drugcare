@@ -62,7 +62,8 @@ export async function getRelatedSupplements(
     return res.items
       .filter((s) => s.slug !== excludeSlug)
       .slice(0, limit);
-  } catch {
+  } catch (error) {
+    console.error("[getRelatedSupplements] Failed to fetch related supplements:", error);
     return [];
   }
 }

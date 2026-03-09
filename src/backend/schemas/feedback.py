@@ -1,6 +1,7 @@
 """피드백 스키마."""
 
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, Field
 
@@ -8,9 +9,8 @@ from pydantic import BaseModel, Field
 class FeedbackCreate(BaseModel):
     """피드백 생성 요청."""
 
-    category: str = Field(
+    category: Literal["bug", "feature", "data_error", "other"] = Field(
         ...,
-        max_length=32,
         description="피드백 카테고리 (bug, feature, data_error, other)",
     )
     content: str = Field(

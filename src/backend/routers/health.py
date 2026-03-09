@@ -47,7 +47,7 @@ async def health_check(
     try:
         await db.execute(text("SELECT 1"))
     except Exception as exc:
-        logger.error("헬스체크: DB 연결 실패 — %s", str(exc))
+        logger.error("헬스체크: DB 연결 실패 — %s: %s", type(exc).__name__, str(exc))
         db_status = "error"
         overall_status = "degraded"
 
@@ -55,7 +55,7 @@ async def health_check(
     try:
         await redis_client.ping()
     except Exception as exc:
-        logger.error("헬스체크: Redis 연결 실패 — %s", str(exc))
+        logger.error("헬스체크: Redis 연결 실패 — %s: %s", type(exc).__name__, str(exc))
         redis_status = "error"
         overall_status = "degraded"
 

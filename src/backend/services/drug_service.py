@@ -1,9 +1,10 @@
 """의약품(Drug) 서비스 — 검색 및 상세 조회 비즈니스 로직."""
 
 import math
+from datetime import datetime, timedelta, timezone
 
 from redis.asyncio import Redis
-from sqlalchemy import and_, func, or_, select, text as sa_text
+from sqlalchemy import and_, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
@@ -312,9 +313,10 @@ async def get_recent_drugs(
     if cached is not None:
         return cached
 
+    days_ago = datetime.now(timezone.utc) - timedelta(days=days)
     stmt = (
         select(Drug)
-        .where(Drug.created_at >= func.now() - sa_text(f"INTERVAL '{int(days)} days'"))
+        .where(Drug.created_at >= days_ago)
         .order_by(Drug.created_at.desc())
         .limit(limit)
     )

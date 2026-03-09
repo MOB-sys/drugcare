@@ -6,6 +6,13 @@ services:
       POSTGRES_USER: ${DB_USER:-yakmeogeo}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME:-yakmeogeo}
+      POSTGRES_INITDB_ARGS: "--auth=scram-sha-256"
+      POSTGRES_HOST_AUTH_METHOD: scram-sha-256
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -53,6 +60,11 @@ services:
       timeout: 10s
       start_period: 15s
       retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
     restart: unless-stopped
     networks:
       - internal
