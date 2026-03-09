@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getStoreUrlForPlatform } from "@/lib/constants/appStore";
 
 export function SmartAppBanner() {
   const [visible, setVisible] = useState(false);
@@ -21,8 +20,6 @@ export function SmartAppBanner() {
     setVisible(false);
   }
 
-  const storeUrl = getStoreUrlForPlatform("smart-banner");
-
   return (
     <div className="bg-[var(--color-primary)] text-white px-4 py-3 flex items-center gap-3" data-testid="smart-app-banner">
       <div className="flex-1 min-w-0">
@@ -33,14 +30,11 @@ export function SmartAppBanner() {
           PillRight 앱으로 복용 시간을 놓치지 마세요
         </p>
       </div>
-      <a
-        href={storeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="shrink-0 px-3 py-1.5 rounded-xl bg-white text-[var(--color-primary)] text-sm font-medium hover:bg-[var(--color-primary-50)] transition-colors"
+      <span
+        className="shrink-0 px-3 py-1.5 rounded-xl bg-white/80 text-[var(--color-primary)] text-sm font-medium cursor-default"
       >
-        앱 설치
-      </a>
+        출시 예정
+      </span>
       <button
         onClick={handleDismiss}
         className="shrink-0 p-1 text-blue-200 hover:text-white transition-colors"

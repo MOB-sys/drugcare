@@ -1,9 +1,4 @@
-"use client";
-
-import { getStoreUrlForPlatform } from "@/lib/constants/appStore";
-
 export function AppPromotionCTA() {
-  const storeUrl = getStoreUrlForPlatform("result-cta");
 
   return (
     <div
@@ -16,14 +11,11 @@ export function AppPromotionCTA() {
       <p className="text-xs text-gray-500 mb-3">
         푸시 리마인더로 복용 시간도 놓치지 마세요
       </p>
-      <a
-        href={storeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-block px-5 py-2 rounded-xl text-white text-sm font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] shadow-md transition-all"
+      <span
+        className="inline-block px-5 py-2 rounded-xl text-white text-sm font-semibold bg-gray-400 cursor-default"
       >
-        앱 다운로드
-      </a>
+        앱 출시 예정
+      </span>
     </div>
   );
 }

@@ -1,9 +1,5 @@
 import Link from "next/link";
-import { getStoreUrl } from "@/lib/constants/appStore";
-
 export function EmptyState() {
-  const iosUrl = getStoreUrl("ios", "website", "empty-cabinet");
-  const androidUrl = getStoreUrl("android", "website", "empty-cabinet");
 
   return (
     <div className="text-center py-16">
@@ -25,29 +21,11 @@ export function EmptyState() {
         약물/영양제 검색하기
       </Link>
 
-      {/* 앱 다운로드 안내 */}
+      {/* 앱 출시 예정 안내 */}
       <div className="mt-8 pt-6 border-t border-gray-100">
-        <p className="text-xs text-gray-400 mb-2">
-          앱에서 복약 리마인더도 받아보세요
+        <p className="text-xs text-gray-400">
+          앱 출시 예정 — 복약 리마인더 기능을 준비 중입니다
         </p>
-        <div className="flex justify-center gap-3">
-          <a
-            href={iosUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-[var(--color-primary)] hover:underline"
-          >
-            App Store
-          </a>
-          <a
-            href={androidUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-[var(--color-primary)] hover:underline"
-          >
-            Google Play
-          </a>
-        </div>
       </div>
     </div>
   );
