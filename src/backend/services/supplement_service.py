@@ -3,7 +3,7 @@
 import math
 
 from redis.asyncio import Redis
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.redis import CACHE_TTL_SUPPLEMENT_DETAIL, CACHE_TTL_SUPPLEMENT_SEARCH
@@ -44,8 +44,19 @@ async def search_supplements(
         return cached
 
     # 검색 조건 (빈 쿼리면 전체 목록)
+    # 제품명, 주성분, 기능성, 분류, 제조사로 포괄 검색
     q_stripped = q.strip()
-    condition = Supplement.product_name.ilike(f"%{q_stripped}%") if q_stripped else None
+    if q_stripped:
+        like_pattern = f"%{q_stripped}%"
+        condition = or_(
+            Supplement.product_name.ilike(like_pattern),
+            Supplement.company.ilike(like_pattern),
+            Supplement.main_ingredient.ilike(like_pattern),
+            Supplement.functionality.ilike(like_pattern),
+            Supplement.category.ilike(like_pattern),
+        )
+    else:
+        condition = None
 
     # 전체 건수 조회
     count_stmt = select(func.count()).select_from(Supplement)

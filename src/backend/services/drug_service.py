@@ -3,7 +3,7 @@
 import math
 
 from redis.asyncio import Redis
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
@@ -45,8 +45,18 @@ async def search_drugs(
         return cached
 
     # 검색 조건 (빈 쿼리면 전체 목록)
+    # 제품명, 성분, 효능효과, 제약사명으로 포괄 검색
     q_stripped = q.strip()
-    condition = Drug.item_name.ilike(f"%{q_stripped}%") if q_stripped else None
+    if q_stripped:
+        like_pattern = f"%{q_stripped}%"
+        condition = or_(
+            Drug.item_name.ilike(like_pattern),
+            Drug.entp_name.ilike(like_pattern),
+            Drug.material_name.ilike(like_pattern),
+            Drug.efcy_qesitm.ilike(like_pattern),
+        )
+    else:
+        condition = None
 
     # 전체 건수 조회
     count_stmt = select(func.count()).select_from(Drug)
