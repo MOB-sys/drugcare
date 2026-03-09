@@ -20,7 +20,8 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { letter } = await params;
+  const { letter: rawLetter } = await params;
+  const letter = decodeURIComponent(rawLetter);
   const particle = (CHOSUNG as readonly string[]).includes(letter) ? "으로" : "로";
   const title = `${letter}${particle} 시작하는 의약품 목록`;
   return {
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function DrugBrowsePage({ params, searchParams }: PageProps) {
-  const { letter } = await params;
+  const { letter: rawLetter } = await params;
+  const letter = decodeURIComponent(rawLetter);
   const { page: pageStr } = await searchParams;
   const currentPage = Math.max(1, parseInt(pageStr ?? "1", 10) || 1);
   const particle = (CHOSUNG as readonly string[]).includes(letter) ? "으로" : "로";
