@@ -94,7 +94,7 @@ export default function HomePage() {
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">
             PillRight로 할 수 있는 것
           </h2>
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-6 grid-cols-2 sm:grid-cols-3">
             <Link href="/check" className="group block bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
               <div className="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center mb-3 group-hover:bg-blue-100 transition-colors">
                 <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -103,6 +103,24 @@ export default function HomePage() {
               </div>
               <h3 className="font-semibold text-gray-900 mb-1">상호작용 체크</h3>
               <p className="text-sm text-gray-500">복용 중인 약과 영양제의 상호작용을 확인하세요.</p>
+            </Link>
+            <Link href="/drugs" className="group block bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
+              <div className="w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center mb-3 group-hover:bg-rose-100 transition-colors">
+                <svg className="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-1">의약품 목록</h3>
+              <p className="text-sm text-gray-500">12,000여 의약품의 효능, 부작용 정보를 확인하세요.</p>
+            </Link>
+            <Link href="/supplements" className="group block bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
+              <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center mb-3 group-hover:bg-green-100 transition-colors">
+                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 mb-1">건강기능식품</h3>
+              <p className="text-sm text-gray-500">영양제 성분, 기능성, 섭취방법을 확인하세요.</p>
             </Link>
             <Link href="/tips" className="group block bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
               <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center mb-3 group-hover:bg-emerald-100 transition-colors">
@@ -113,7 +131,7 @@ export default function HomePage() {
               <h3 className="font-semibold text-gray-900 mb-1">건강팁</h3>
               <p className="text-sm text-gray-500">약과 영양제를 안전하게 복용하는 정보를 확인하세요.</p>
             </Link>
-            <Link href="/cabinet" className="group block bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
+            <Link href="/cabinet" className="group block bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all col-span-2 sm:col-span-1">
               <div className="w-10 h-10 rounded-lg bg-amber-50 flex items-center justify-center mb-3 group-hover:bg-amber-100 transition-colors">
                 <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
