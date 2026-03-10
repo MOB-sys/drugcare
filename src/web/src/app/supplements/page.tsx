@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   },
 };
 
+export const revalidate = 86400; // 24시간마다 갱신
+
 export default async function SupplementsIndexPage() {
   let counts: Record<string, number> = {};
 

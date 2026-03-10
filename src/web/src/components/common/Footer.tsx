@@ -89,7 +89,7 @@ export function Footer() {
 
           {/* Stats line */}
           <p className="text-[11px] text-gray-400 dark:text-gray-500">
-            44,081개 의약품 · 44,511개 건강기능식품 · 12,502건 상호작용 데이터
+            44,080개 의약품 · 43,400개 건강기능식품 · 12,502건 상호작용 데이터
           </p>
 
           {/* Disclaimer */}
