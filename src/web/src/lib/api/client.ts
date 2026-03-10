@@ -6,6 +6,39 @@ const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 const REQUEST_TIMEOUT = 10_000; // 10초
+const RATE_LIMIT_MAX = 30; // 엔드포인트 그룹당 최대 요청 수
+const RATE_LIMIT_WINDOW = 10_000; // 10초 윈도우
+
+/** 엔드포인트 그룹별 클라이언트 사이드 레이트 리미터. */
+const requestLog = new Map<string, number[]>();
+
+function getEndpointGroup(path: string): string {
+  const seg = path.split("/").filter(Boolean);
+  // /api/v1/drugs/... -> "drugs", /api/v1/interactions/... -> "interactions"
+  return seg[2] || "default";
+}
+
+async function waitForRateLimit(path: string): Promise<void> {
+  const group = getEndpointGroup(path);
+  const now = Date.now();
+  const timestamps = requestLog.get(group) ?? [];
+
+  // 윈도우 밖의 오래된 타임스탬프 제거
+  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW);
+
+  if (recent.length >= RATE_LIMIT_MAX) {
+    const oldest = recent[0];
+    const delay = RATE_LIMIT_WINDOW - (now - oldest);
+    if (delay > 0) {
+      await new Promise((r) => setTimeout(r, delay));
+    }
+    // 대기 후 가장 오래된 항목 제거
+    recent.shift();
+  }
+
+  recent.push(Date.now());
+  requestLog.set(group, recent);
+}
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -36,6 +69,7 @@ async function fetchApiOnce<T>(
   path: string,
   options?: RequestInit,
 ): Promise<T> {
+  await waitForRateLimit(path);
   const url = `${API_BASE_URL}${path}`;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);

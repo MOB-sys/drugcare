@@ -5,6 +5,7 @@ export interface ReviewCreate {
   effectiveness?: number | null;
   ease_of_use?: number | null;
   comment?: string | null;
+  recaptcha_token?: string | null;
 }
 
 export interface ReviewResponse {

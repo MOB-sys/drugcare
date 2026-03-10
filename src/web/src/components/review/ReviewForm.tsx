@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { StarRating } from "./StarRating";
 import { createReview } from "@/lib/api/reviews";
+import { executeRecaptcha } from "@/lib/recaptcha";
 
 interface ReviewFormProps {
   itemType: string;
@@ -29,11 +30,13 @@ export function ReviewForm({ itemType, itemId, onSubmitted }: ReviewFormProps) {
     setError(null);
 
     try {
+      const recaptchaToken = await executeRecaptcha("submit_review");
       await createReview(itemType, itemId, {
         rating,
         effectiveness: effectiveness || null,
         ease_of_use: easeOfUse || null,
         comment: comment.trim() || null,
+        recaptcha_token: recaptchaToken,
       });
       setRating(0);
       setEffectiveness(0);
