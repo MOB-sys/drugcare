@@ -4,6 +4,7 @@ import { getDrugBrowseCounts } from "@/lib/api/drugs";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { CHOSUNG, ALPHA } from "@/lib/utils/korean";
+import { QuickSearch } from "@/components/common/QuickSearch";
 
 export const metadata: Metadata = {
   title: "의약품 목록 — A-Z 인덱스",
@@ -43,16 +44,8 @@ export default async function DrugsIndexPage() {
           상세 페이지에서 효능, 용법, 상호작용을 확인할 수 있습니다.
         </p>
 
-        {/* 검색 유도 */}
-        <Link
-          href="/check"
-          className="block w-full p-4 mb-8 rounded-xl bg-[var(--color-primary-50)] border border-[var(--color-primary-100)] text-center hover:bg-[var(--color-primary-100)]/30 transition-colors"
-        >
-          <p className="text-sm font-medium text-[var(--color-primary)]">
-            찾으시는 약이 있으신가요? →{" "}
-            <span className="underline">상호작용 체크에서 검색하기</span>
-          </p>
-        </Link>
+        {/* 바로 검색 */}
+        <QuickSearch type="drug" />
 
         {/* 초성/알파벳 인덱스 그리드 */}
         <div className="space-y-6">

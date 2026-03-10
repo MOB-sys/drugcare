@@ -54,7 +54,7 @@ export default function HomePage() {
       <section className="py-10 bg-[var(--color-primary-50)]">
         <div className="max-w-3xl mx-auto px-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-            <div className="flex flex-col items-center text-center rounded-xl bg-[var(--color-surface)] p-4 shadow-sm">
+            <div className="flex flex-col items-center text-center p-4">
               <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2">
                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
@@ -63,7 +63,7 @@ export default function HomePage() {
               <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">44,081<span className="text-sm font-medium">개</span></p>
               <p className="text-xs text-[var(--color-text-secondary)]">의약품</p>
             </div>
-            <div className="flex flex-col items-center text-center rounded-xl bg-[var(--color-surface)] p-4 shadow-sm">
+            <div className="flex flex-col items-center text-center p-4">
               <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-2">
                 <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -72,7 +72,7 @@ export default function HomePage() {
               <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">44,511<span className="text-sm font-medium">개</span></p>
               <p className="text-xs text-[var(--color-text-secondary)]">건강기능식품</p>
             </div>
-            <div className="flex flex-col items-center text-center rounded-xl bg-[var(--color-surface)] p-4 shadow-sm">
+            <div className="flex flex-col items-center text-center p-4">
               <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-2">
                 <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -81,7 +81,7 @@ export default function HomePage() {
               <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">12,502<span className="text-sm font-medium">건</span></p>
               <p className="text-xs text-[var(--color-text-secondary)]">상호작용 데이터</p>
             </div>
-            <div className="flex flex-col items-center text-center rounded-xl bg-[var(--color-surface)] p-4 shadow-sm">
+            <div className="flex flex-col items-center text-center p-4">
               <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mb-2">
                 <svg className="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
