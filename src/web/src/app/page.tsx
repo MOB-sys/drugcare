@@ -9,14 +9,14 @@ export const revalidate = 86400; // ISR: 24시간마다 재생성
 import { SITE_URL } from "@/lib/constants/site";
 
 const POPULAR_COMBOS = [
-  { items: ["타이레놀", "비타민C"], label: "타이레놀 + 비타민C" },
-  { items: ["오메가3", "아스피린"], label: "오메가3 + 아스피린" },
-  { items: ["혈압약", "자몽"], label: "혈압약 + 자몽" },
+  { items: ["타이레놀", "오메가3"], label: "타이레놀 + 오메가3" },
+  { items: ["아스피린", "오메가3"], label: "아스피린 + 오메가3" },
   { items: ["비타민D", "칼슘"], label: "비타민D + 칼슘" },
-  { items: ["철분제", "칼슘"], label: "철분제 + 칼슘" },
+  { items: ["철분", "칼슘"], label: "철분 + 칼슘" },
   { items: ["유산균", "항생제"], label: "유산균 + 항생제" },
   { items: ["마그네슘", "비타민D"], label: "마그네슘 + 비타민D" },
   { items: ["아스피린", "이부프로펜"], label: "아스피린 + 이부프로펜" },
+  { items: ["밀크씨슬", "비타민C"], label: "밀크씨슬 + 비타민C" },
 ];
 
 /** 키워드로 약물/영양제를 검색하여 첫 번째 결과의 type:id:name을 반환 */
@@ -36,7 +36,7 @@ async function resolveKeyword(keyword: string): Promise<string | null> {
   }
 }
 
-/** 인기 조합의 결과 URL을 미리 빌드 */
+/** 인기 조합의 결과 URL을 미리 빌드. 두 키워드 모두 DB에 있는 조합만 반환. */
 async function resolveComboUrls(): Promise<Map<string, string>> {
   const urlMap = new Map<string, string>();
   const results = await Promise.all(
@@ -46,12 +46,11 @@ async function resolveComboUrls(): Promise<Map<string, string>> {
       if (valid.length >= 2) {
         return { label: combo.label, url: `/check/result?items=${valid.join(",")}` };
       }
-      // 폴백: 체크 페이지로
-      return { label: combo.label, url: `/check?q=${encodeURIComponent(combo.items.join(","))}` };
+      return null; // DB에 없는 조합은 제외
     }),
   );
-  for (const { label, url } of results) {
-    urlMap.set(label, url);
+  for (const r of results) {
+    if (r) urlMap.set(r.label, r.url);
   }
   return urlMap;
 }
@@ -255,10 +254,10 @@ export default async function HomePage() {
 
           {/* Mobile: horizontal scroll, Desktop: grid */}
           <div className="flex sm:grid sm:grid-cols-4 gap-3 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 snap-x snap-mandatory sm:snap-none scrollbar-hide">
-            {POPULAR_COMBOS.map((combo) => (
+            {POPULAR_COMBOS.filter((combo) => comboUrls.has(combo.label)).map((combo) => (
               <Link
                 key={combo.label}
-                href={comboUrls.get(combo.label) || `/check?q=${encodeURIComponent(combo.items.join(","))}`}
+                href={comboUrls.get(combo.label)!}
                 className="group flex-shrink-0 w-40 sm:w-auto snap-start bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all"
               >
                 <div className="flex items-center gap-1.5 mb-2">
