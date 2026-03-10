@@ -10,11 +10,11 @@ import { ToastProvider } from "@/components/common/ToastProvider";
 import { CookieConsent } from "@/components/common/CookieConsent";
 import { SITE_URL } from "@/lib/constants/site";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
-const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_ID;
-const NAVER_VERIFY = process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION;
-const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY;
-const IOS_APP_ID = process.env.NEXT_PUBLIC_IOS_APP_ID;
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID?.trim();
+const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_ID?.trim();
+const NAVER_VERIFY = process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION?.trim();
+const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY?.trim();
+const IOS_APP_ID = process.env.NEXT_PUBLIC_IOS_APP_ID?.trim();
 
 export const viewport: Viewport = {
   width: "device-width",

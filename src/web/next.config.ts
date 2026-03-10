@@ -54,14 +54,12 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              /* 'unsafe-inline' required: AdSense (pagead2), GA4 gtag inline init, Kakao SDK init, dark-mode flash-prevention script */
-              "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://www.googletagmanager.com https://t1.kakaocdn.net https://*.sentry.io",
-              "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
-              /* data: is needed for inline SVG icons and base64-encoded thumbnails */
-              "img-src 'self' data: blob: https: https://nedrug.mfds.go.kr",
-              "font-src 'self' https://cdn.jsdelivr.net",
-              "connect-src 'self' https://api.pillright.com https://www.google-analytics.com https://www.googletagmanager.com https://cdn.jsdelivr.net https://*.sentry.io https://pagead2.googlesyndication.com https://*.google.com https://*.googleapis.com",
-              "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https: blob:",
+              "style-src 'self' 'unsafe-inline' https:",
+              "img-src 'self' data: blob: https:",
+              "font-src 'self' https: data:",
+              "connect-src 'self' https:",
+              "frame-src 'self' https:",
               "object-src 'none'",
               "base-uri 'self'",
             ].join("; "),
