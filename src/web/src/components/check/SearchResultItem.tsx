@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { addCabinetItem } from "@/lib/api/cabinet";
+import { useState, useRef } from "react";
+import { addCabinetItem, deleteCabinetItem } from "@/lib/api/cabinet";
 import { ApiError } from "@/lib/api/client";
 
 interface SearchResultItemProps {
@@ -25,18 +25,33 @@ export function SearchResultItem({
   onToggle,
   showCabinetAdd = false,
 }: SearchResultItemProps) {
-  const [cabinetStatus, setCabinetStatus] = useState<"idle" | "added" | "duplicate">("idle");
+  const [cabinetStatus, setCabinetStatus] = useState<"idle" | "added" | "duplicate" | "removing">("idle");
+  const cabinetIdRef = useRef<number | null>(null);
 
   async function handleCabinetAdd(e: React.MouseEvent) {
     e.stopPropagation();
     if (!itemId || cabinetStatus !== "idle") return;
     try {
-      await addCabinetItem({ item_type: itemType, item_id: itemId, nickname: name });
+      const item = await addCabinetItem({ item_type: itemType, item_id: itemId, nickname: name });
+      cabinetIdRef.current = item.id;
       setCabinetStatus("added");
     } catch (err) {
       if (err instanceof ApiError && err.status === 409) {
         setCabinetStatus("duplicate");
       }
+    }
+  }
+
+  async function handleCabinetRemove(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (cabinetStatus !== "added" || cabinetIdRef.current === null) return;
+    setCabinetStatus("removing");
+    try {
+      await deleteCabinetItem(cabinetIdRef.current);
+      cabinetIdRef.current = null;
+      setCabinetStatus("idle");
+    } catch {
+      setCabinetStatus("added");
     }
   }
 
@@ -69,20 +84,30 @@ export function SearchResultItem({
         {sub && <p className="text-sm text-gray-500 truncate">{sub}</p>}
       </div>
       {showCabinetAdd && itemId && (
-        <button
-          onClick={handleCabinetAdd}
-          disabled={cabinetStatus !== "idle"}
-          className={`shrink-0 px-2 py-1 rounded-lg text-xs font-medium transition-colors ${
-            cabinetStatus === "added"
-              ? "bg-emerald-50 text-emerald-600"
-              : cabinetStatus === "duplicate"
+        cabinetStatus === "added" ? (
+          <button
+            onClick={handleCabinetRemove}
+            className="shrink-0 px-2 py-1 rounded-lg text-xs font-medium bg-emerald-50 text-emerald-600 hover:bg-red-50 hover:text-red-500 transition-colors"
+            aria-label={`${name} 복약함에서 제거`}
+          >
+            ✓ 취소
+          </button>
+        ) : (
+          <button
+            onClick={handleCabinetAdd}
+            disabled={cabinetStatus !== "idle"}
+            className={`shrink-0 px-2 py-1 rounded-lg text-xs font-medium transition-colors ${
+              cabinetStatus === "duplicate"
                 ? "bg-gray-100 text-gray-400"
-                : "bg-[var(--color-primary-50)] text-[var(--color-primary)] hover:bg-[var(--color-primary-100)]"
-          }`}
-          aria-label={`${name} 복약함에 추가`}
-        >
-          {cabinetStatus === "added" ? "추가됨" : cabinetStatus === "duplicate" ? "추가됨" : "+복약함"}
-        </button>
+                : cabinetStatus === "removing"
+                  ? "bg-gray-50 text-gray-400"
+                  : "bg-[var(--color-primary-50)] text-[var(--color-primary)] hover:bg-[var(--color-primary-100)]"
+            }`}
+            aria-label={`${name} 복약함에 추가`}
+          >
+            {cabinetStatus === "removing" ? "제거 중..." : cabinetStatus === "duplicate" ? "추가됨" : "+복약함"}
+          </button>
+        )
       )}
       {selected && (
         <svg className="w-5 h-5 text-[var(--color-primary)] shrink-0" fill="currentColor" viewBox="0 0 20 20">
