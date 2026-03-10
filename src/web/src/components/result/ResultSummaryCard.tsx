@@ -15,20 +15,50 @@ function countBySeverity(data: InteractionCheckResponse): Record<Severity, numbe
   return counts;
 }
 
+/** Determine the worst severity present and return an action summary message. */
+function getActionSummary(data: InteractionCheckResponse, counts: Record<Severity, number>): { message: string; className: string } | null {
+  if (counts.danger > 0) {
+    return {
+      message: "위험한 상호작용이 발견되었습니다. 반드시 전문가와 상담하세요.",
+      className: "text-red-700 bg-red-50 border-red-200 dark:text-red-300 dark:bg-red-950/40 dark:border-red-800",
+    };
+  }
+  if (counts.warning > 0) {
+    return {
+      message: "주의가 필요한 조합이 있습니다. 아래 대처 방법을 확인하세요.",
+      className: "text-amber-700 bg-amber-50 border-amber-200 dark:text-amber-300 dark:bg-amber-950/40 dark:border-amber-800",
+    };
+  }
+  if (counts.caution > 0) {
+    return {
+      message: "경미한 주의사항이 있습니다. 아래 대처 방법을 참고하세요.",
+      className: "text-blue-700 bg-blue-50 border-blue-200 dark:text-blue-300 dark:bg-blue-950/40 dark:border-blue-800",
+    };
+  }
+  if (data.interactions_found === 0) {
+    return {
+      message: "확인된 상호작용이 없습니다. 안심하고 복용하세요.",
+      className: "text-emerald-700 bg-emerald-50 border-emerald-200 dark:text-emerald-300 dark:bg-emerald-950/40 dark:border-emerald-800",
+    };
+  }
+  return null;
+}
+
 export function ResultSummaryCard({ data }: ResultSummaryCardProps) {
   const isDanger = data.has_danger;
   const hasInteractions = data.interactions_found > 0;
   const counts = countBySeverity(data);
   const total = data.interactions_found || 1;
+  const actionSummary = getActionSummary(data, counts);
 
   return (
     <div
       className={`rounded-xl border p-6 ${
         isDanger
-          ? "border-red-200 bg-red-50/50"
+          ? "border-red-200 bg-red-50/50 dark:border-red-800 dark:bg-red-950/30"
           : hasInteractions
-            ? "border-orange-200 bg-orange-50/50"
-            : "border-emerald-200 bg-emerald-50/50"
+            ? "border-orange-200 bg-orange-50/50 dark:border-orange-800 dark:bg-orange-950/30"
+            : "border-emerald-200 bg-emerald-50/50 dark:border-emerald-800 dark:bg-emerald-950/30"
       }`}
     >
       <div className="flex items-center gap-3 mb-3">
@@ -56,14 +86,14 @@ export function ResultSummaryCard({ data }: ResultSummaryCardProps) {
           )}
         </div>
         <div>
-          <h2 className="text-lg font-bold text-gray-900">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
             {isDanger
               ? "주의가 필요한 조합입니다"
               : hasInteractions
                 ? "일부 상호작용이 발견되었습니다"
                 : "특별한 상호작용이 없습니다"}
           </h2>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             {data.total_checked}개 조합 확인 · {data.interactions_found}건 발견
           </p>
         </div>
@@ -101,6 +131,27 @@ export function ResultSummaryCard({ data }: ResultSummaryCardProps) {
               );
             })}
           </div>
+        </div>
+      )}
+
+      {/* Action summary line */}
+      {actionSummary && (
+        <div className={`mt-4 rounded-lg border p-3 flex items-start gap-2 ${actionSummary.className}`}>
+          <svg
+            className="w-4 h-4 mt-0.5 shrink-0"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <p className="text-sm font-medium">{actionSummary.message}</p>
         </div>
       )}
     </div>

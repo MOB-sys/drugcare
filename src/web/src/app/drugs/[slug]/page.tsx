@@ -17,6 +17,9 @@ import { DataSource } from "@/components/common/DataSource";
 import { KakaoShareButton } from "@/components/common/KakaoShareButton";
 import { TableOfContents } from "@/components/common/TableOfContents";
 import type { TocItem } from "@/components/common/TableOfContents";
+import { DrugFAQ } from "@/components/drug/DrugFAQ";
+import { RelatedTips } from "@/components/drug/RelatedTips";
+import { buildDrugFAQItems, buildFAQJsonLd } from "@/lib/faq";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -100,23 +103,17 @@ export default async function DrugDetailPage({ params }: PageProps) {
     warning: drug.atpn_warn_qesitm ?? undefined,
   };
 
-  /* FAQ JSON-LD — 상세 정보를 Q&A로 구조화 */
-  const faqEntries: { question: string; answer: string }[] = [];
-  if (drug.efcy_qesitm) faqEntries.push({ question: `${drug.item_name}의 효능·효과는?`, answer: drug.efcy_qesitm });
-  if (drug.use_method_qesitm) faqEntries.push({ question: `${drug.item_name}의 용법·용량은?`, answer: drug.use_method_qesitm });
-  if (drug.se_qesitm) faqEntries.push({ question: `${drug.item_name}의 부작용은?`, answer: drug.se_qesitm });
-  if (drug.intrc_qesitm) faqEntries.push({ question: `${drug.item_name}의 상호작용 주의사항은?`, answer: drug.intrc_qesitm });
-  if (drug.deposit_method_qesitm) faqEntries.push({ question: `${drug.item_name}의 보관방법은?`, answer: drug.deposit_method_qesitm });
-
-  const faqJsonLd = faqEntries.length > 0 ? {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqEntries.map((e) => ({
-      "@type": "Question",
-      name: e.question,
-      acceptedAnswer: { "@type": "Answer", text: e.answer },
-    })),
-  } : null;
+  /* FAQ — 상세 정보를 Q&A로 구조화 (UI accordion + JSON-LD) */
+  const faqSourceFields = {
+    drugName: drug.item_name,
+    efcyQesitm: drug.efcy_qesitm,
+    seQesitm: drug.se_qesitm,
+    atpnQesitm: drug.atpn_qesitm,
+    intrcQesitm: drug.intrc_qesitm,
+    depositMethodQesitm: drug.deposit_method_qesitm,
+  };
+  const faqItems = buildDrugFAQItems(faqSourceFields);
+  const faqJsonLd = buildFAQJsonLd(faqSourceFields);
 
   /* 목차 아이템 구성 — 내용이 있는 섹션만 */
   const tocItems: TocItem[] = [
@@ -260,6 +257,12 @@ export default async function DrugDetailPage({ params }: PageProps) {
                 </div>
               </section>
             )}
+
+            {/* FAQ */}
+            <DrugFAQ items={faqItems} />
+
+            {/* 관련 건강팁 */}
+            <RelatedTips drugName={drug.item_name} classNo={drug.class_no} />
 
             {/* 리뷰 */}
             <ReviewSection itemType="drug" itemId={drug.id} />

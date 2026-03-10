@@ -50,8 +50,52 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Stats / Trust Section */}
+      <section className="py-10 bg-[var(--color-primary-50)]">
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            <div className="flex flex-col items-center text-center rounded-xl bg-[var(--color-surface)] p-4 shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2">
+                <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+              </div>
+              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">44,081<span className="text-sm font-medium">개</span></p>
+              <p className="text-xs text-[var(--color-text-secondary)]">의약품</p>
+            </div>
+            <div className="flex flex-col items-center text-center rounded-xl bg-[var(--color-surface)] p-4 shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-2">
+                <svg className="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">44,511<span className="text-sm font-medium">개</span></p>
+              <p className="text-xs text-[var(--color-text-secondary)]">건강기능식품</p>
+            </div>
+            <div className="flex flex-col items-center text-center rounded-xl bg-[var(--color-surface)] p-4 shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-2">
+                <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">12,502<span className="text-sm font-medium">건</span></p>
+              <p className="text-xs text-[var(--color-text-secondary)]">상호작용 데이터</p>
+            </div>
+            <div className="flex flex-col items-center text-center rounded-xl bg-[var(--color-surface)] p-4 shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center mb-2">
+                <svg className="w-5 h-5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                </svg>
+              </div>
+              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">식약처</p>
+              <p className="text-xs text-[var(--color-text-secondary)]">공공데이터 기반</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Trust badges */}
-      <section className="py-10 border-b border-gray-100">
+      <section className="py-10 border-b border-gray-100 dark:border-[var(--color-border)]">
         <div className="max-w-3xl mx-auto px-4">
           <div className="grid grid-cols-3 gap-3 sm:gap-6 text-center">
             <div>
@@ -140,6 +184,54 @@ export default function HomePage() {
               <h3 className="font-semibold text-gray-900 mb-1">내 복약함</h3>
               <p className="text-sm text-gray-500">복용 중인 약과 영양제를 관리하세요.</p>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Popular Combinations */}
+      <section className="py-16 bg-[var(--color-primary-50)]">
+        <div className="max-w-3xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-center text-[var(--color-text)] mb-2 flex items-center justify-center gap-2">
+            <svg className="w-6 h-6 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z" />
+            </svg>
+            자주 확인하는 조합
+          </h2>
+          <p className="text-center text-sm text-[var(--color-text-secondary)] mb-8">
+            다른 사용자들이 많이 확인한 약물 조합
+          </p>
+
+          {/* Mobile: horizontal scroll, Desktop: grid */}
+          <div className="flex sm:grid sm:grid-cols-4 gap-3 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 snap-x snap-mandatory sm:snap-none scrollbar-hide">
+            {[
+              { items: ["타이레놀", "비타민C"], label: "타이레놀 + 비타민C" },
+              { items: ["오메가3", "아스피린"], label: "오메가3 + 아스피린" },
+              { items: ["혈압약", "자몽"], label: "혈압약 + 자몽" },
+              { items: ["비타민D", "칼슘"], label: "비타민D + 칼슘" },
+              { items: ["철분제", "칼슘"], label: "철분제 + 칼슘" },
+              { items: ["유산균", "항생제"], label: "유산균 + 항생제" },
+              { items: ["마그네슘", "비타민D"], label: "마그네슘 + 비타민D" },
+              { items: ["아스피린", "이부프로펜"], label: "아스피린 + 이부프로펜" },
+            ].map((combo) => (
+              <Link
+                key={combo.label}
+                href={`/check?q=${encodeURIComponent(combo.items.join(","))}`}
+                className="group flex-shrink-0 w-40 sm:w-auto snap-start bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all"
+              >
+                <div className="flex items-center gap-1.5 mb-2">
+                  <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 truncate">
+                    {combo.items[0]}
+                  </span>
+                  <span className="text-[var(--color-text-muted)] text-xs">+</span>
+                  <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 truncate">
+                    {combo.items[1]}
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--color-primary)] dark:text-[var(--color-accent)] font-medium group-hover:underline">
+                  확인하기 →
+                </p>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

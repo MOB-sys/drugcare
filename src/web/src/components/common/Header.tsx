@@ -1,25 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PillRightLogo } from "./PillRightLogo";
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
 
-const NAV_ITEMS = [
+interface NavChild {
+  href: string;
+  label: string;
+}
+
+interface NavItem {
+  href: string;
+  label: string;
+  children?: NavChild[];
+}
+
+const NAV_ITEMS: NavItem[] = [
   { href: "/check", label: "상호작용 체크" },
-  { href: "/drugs", label: "의약품" },
+  {
+    href: "/drugs",
+    label: "의약품",
+    children: [
+      { href: "/drugs", label: "의약품 목록" },
+      { href: "/drugs/side-effects", label: "부작용 역검색" },
+      { href: "/drugs/conditions", label: "질환별 주의사항" },
+      { href: "/drugs/identify", label: "약 식별" },
+      { href: "/compare", label: "약물 비교" },
+    ],
+  },
   { href: "/supplements", label: "건강기능식품" },
   { href: "/symptoms", label: "증상검색" },
   { href: "/news", label: "소식" },
   { href: "/tips", label: "건강팁" },
   { href: "/cabinet", label: "내 복약함" },
-] as const;
+];
 
 export function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const { isDark, toggle } = useDarkMode();
+
+  // 외부 클릭 시 드롭다운 닫기
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [dropdownOpen]);
+
+  function isActive(href: string) {
+    return pathname === href || pathname?.startsWith(href + "/");
+  }
+
+  function isGroupActive(item: NavItem) {
+    if (isActive(item.href)) return true;
+    if (item.children) {
+      return item.children.some((c) => isActive(c.href));
+    }
+    return false;
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-surface)]/80 backdrop-blur-md">
@@ -30,22 +78,55 @@ export function Header() {
 
         {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-1 text-sm font-medium">
-          {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
-            return (
+          {NAV_ITEMS.map((item) =>
+            item.children ? (
+              <div key={item.href} className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-1 ${
+                    isGroupActive(item)
+                      ? "text-[var(--color-primary)] bg-[var(--color-primary-50)]"
+                      : "text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-hover)]"
+                  }`}
+                >
+                  {item.label}
+                  <svg className={`w-3.5 h-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {dropdownOpen && (
+                  <div className="absolute top-full left-0 mt-1 w-44 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-lg py-1 z-50">
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        onClick={() => setDropdownOpen(false)}
+                        className={`block px-4 py-2.5 text-sm transition-colors ${
+                          isActive(child.href)
+                            ? "text-[var(--color-primary)] bg-[var(--color-primary-50)]"
+                            : "text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-hover)]"
+                        }`}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
               <Link
                 key={item.href}
                 href={item.href}
                 className={`px-3 py-2 rounded-lg transition-colors ${
-                  isActive
+                  isActive(item.href)
                     ? "text-[var(--color-primary)] bg-[var(--color-primary-50)]"
                     : "text-[var(--color-text-secondary)] hover:text-[var(--color-primary)] hover:bg-[var(--color-surface-hover)]"
                 }`}
               >
                 {item.label}
               </Link>
-            );
-          })}
+            ),
+          )}
 
           {/* 다크모드 토글 */}
           <button
@@ -102,23 +183,42 @@ export function Header() {
       {/* Mobile dropdown */}
       {mobileOpen && (
         <div className="md:hidden border-t border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 space-y-1">
-          {NAV_ITEMS.map((item) => {
-            const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
-            return (
+          {NAV_ITEMS.map((item) =>
+            item.children ? (
+              <div key={item.href}>
+                <span className="block px-3 py-2 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide">
+                  {item.label}
+                </span>
+                {item.children.map((child) => (
+                  <Link
+                    key={child.href}
+                    href={child.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`block pl-6 pr-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      isActive(child.href)
+                        ? "text-[var(--color-primary)] bg-[var(--color-primary-50)]"
+                        : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]"
+                    }`}
+                  >
+                    {child.label}
+                  </Link>
+                ))}
+              </div>
+            ) : (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
                 className={`block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
+                  isActive(item.href)
                     ? "text-[var(--color-primary)] bg-[var(--color-primary-50)]"
                     : "text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]"
                 }`}
               >
                 {item.label}
               </Link>
-            );
-          })}
+            ),
+          )}
         </div>
       )}
     </header>
