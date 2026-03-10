@@ -7,13 +7,16 @@ type Theme = "light" | "dark" | "system";
 const STORAGE_KEY = "pillright_theme";
 
 export function useDarkMode() {
-  const [theme, setThemeState] = useState<Theme>("light");
+  const [theme, setThemeState] = useState<Theme>("system");
   const [isDark, setIsDark] = useState(false);
 
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-      if (stored) setThemeState(stored);
+      if (stored) {
+        setThemeState(stored);
+      }
+      // stored가 없으면 기본값 "system" 유지 → 브라우저 설정 따름
     } catch (e) { console.error("[useDarkMode] localStorage 읽기 실패:", e); }
   }, []);
 

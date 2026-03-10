@@ -5,7 +5,6 @@ import { CabinetItemCard } from "@/components/cabinet/CabinetItemCard";
 import { EmptyState } from "@/components/cabinet/EmptyState";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
-import { getStoreUrlForPlatform } from "@/lib/constants/appStore";
 import Link from "next/link";
 
 export default function CabinetPage() {
@@ -14,8 +13,6 @@ export default function CabinetPage() {
   const checkParams = items
     .map((it) => `${it.item_type}:${it.item_id}:${encodeURIComponent(it.nickname || it.item_name)}`)
     .join(",");
-
-  const storeUrl = getStoreUrlForPlatform("cabinet-cta");
 
   return (
     <>
@@ -69,24 +66,6 @@ export default function CabinetPage() {
         )}
 
         <AdBanner slot="cabinet-bottom" format="horizontal" className="mt-8" />
-
-        {/* 앱 유도 */}
-        <div className="mt-8 p-4 rounded-xl bg-[var(--color-primary-50)] border border-[var(--color-primary-100)] text-center">
-          <p className="text-sm font-medium text-[var(--color-primary)] mb-1">
-            매일 복약 리마인더가 필요하다면?
-          </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
-            약잘알 앱에서 푸시 알림으로 복용 시간을 놓치지 마세요.
-          </p>
-          <a
-            href={storeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block px-5 py-2 rounded-xl text-white text-sm font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] shadow-md transition-all"
-          >
-            앱 다운로드
-          </a>
-        </div>
 
         <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-6">
           이 서비스는 의사/약사의 전문적 판단을 대체하지 않습니다.

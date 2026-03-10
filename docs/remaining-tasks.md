@@ -5,14 +5,14 @@
 
 ---
 
-## 현재 DB 현황
+## 현재 DB 현황 (2026-03-11 확인)
 
 | 테이블 | 건수 | 커버리지 |
 |--------|------|----------|
-| drugs | 12,422 | 성분 100%, 효능 99.8% (e약은요 기준), slug 100% |
-| supplements | 155 (로컬) / 49 (서버) | 성분 100%, slug 100% |
-| interactions | 366,618 (서버) | 약-약 / 약-영양제 / 영양제-영양제 |
-| drug_dur_info | 31,728 | 임부/고령자/용량/기간/효능중복 |
+| drugs | 44,097 | 성분 100%, 효능 99.8%, slug 100% |
+| supplements | 44,551 | 성분 100%, 기능성 99.8%, slug 100% |
+| interactions | 366,629 | 약-약 / 약-영양제 / 영양제-영양제 |
+| drug_dur_info | 31,717 | 임부/고령자/용량/기간/효능중복 |
 
 ## 테스트 현황
 
@@ -37,19 +37,11 @@
 
 ---
 
-## A. 데이터 보강 (API 의존 — 대기)
+## A. 데이터 보강 — ✅ 완료 (2026-03-11 확인)
 
-- [ ] **A-1.** DUR 자동삽입 약물 7,710건 상세정보(효능/용법/주의사항) 보강
-  - 필요: 허가정보 API 복구 (현재 data.go.kr 500 에러)
-  - 실행: `python -m scripts.data-import.retry_permission_collector`
-
-- [ ] **A-2.** 영양제 데이터 확대 (155건 → 500+건)
-  - 필요: foodsafetykorea.go.kr API 키 신청 (data.go.kr 키와 별도)
-  - 신청: https://www.foodsafetykorea.go.kr → 인증키 발급
-  - 실행: `python -m scripts.data-import.run_collectors --supplements`
-
-- [ ] **A-3.** 서버 supplements 데이터 동기화 (로컬 155건 → 서버 49건 불일치)
-  - `seed_supplements_v2.sql` 서버에서 실행 필요
+- [x] **A-1.** 약물 데이터 확대 — 12,422건 → 44,097건 완료
+- [x] **A-2.** 영양제 데이터 확대 — 155건 → 44,551건 완료 (foodsafetykorea C003 API)
+- [x] **A-3.** 서버 데이터 동기화 — 완료
 
 ---
 

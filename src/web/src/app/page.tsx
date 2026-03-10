@@ -60,7 +60,7 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                 </svg>
               </div>
-              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">44,080<span className="text-sm font-medium">개</span></p>
+              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">44,097<span className="text-sm font-medium">개</span></p>
               <p className="text-xs text-[var(--color-text-secondary)]">의약품</p>
             </div>
             <div className="flex flex-col items-center text-center p-4">
@@ -69,7 +69,7 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
-              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">43,400<span className="text-sm font-medium">개</span></p>
+              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">44,551<span className="text-sm font-medium">개</span></p>
               <p className="text-xs text-[var(--color-text-secondary)]">건강기능식품</p>
             </div>
             <div className="flex flex-col items-center text-center p-4">
@@ -155,7 +155,7 @@ export default function HomePage() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">의약품 목록</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">12,000여 의약품의 효능, 부작용 정보를 확인하세요.</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">44,000여 의약품의 효능, 부작용 정보를 확인하세요.</p>
             </Link>
             <Link href="/supplements" className="group block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
               <div className="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-green-100 transition-colors">

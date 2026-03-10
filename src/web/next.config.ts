@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
         destination: "https://pillright.com/:path*",
         permanent: true,
       },
+      {
+        source: "/tip",
+        destination: "/tips",
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
