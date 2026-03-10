@@ -60,8 +60,8 @@ const nextConfig: NextConfig = {
               /* data: is needed for inline SVG icons and base64-encoded thumbnails */
               "img-src 'self' data: blob: https: https://nedrug.mfds.go.kr",
               "font-src 'self' https://cdn.jsdelivr.net",
-              "connect-src 'self' https://api.pillright.com https://www.google-analytics.com https://*.sentry.io https://pagead2.googlesyndication.com",
-              "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+              "connect-src 'self' https://api.pillright.com https://www.google-analytics.com https://www.googletagmanager.com https://cdn.jsdelivr.net https://*.sentry.io https://pagead2.googlesyndication.com https://*.google.com https://*.googleapis.com",
+              "frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://www.google.com",
               "object-src 'none'",
               "base-uri 'self'",
             ].join("; "),
