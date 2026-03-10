@@ -94,7 +94,7 @@ export default async function HomePage() {
           </p>
           <Link
             href="/check"
-            className="inline-block px-8 py-3.5 rounded-xl text-[var(--color-primary)] font-semibold bg-white hover:bg-gray-100 shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
+            className="inline-block px-6 sm:px-8 py-3.5 rounded-xl text-[var(--color-primary)] font-semibold bg-white hover:bg-gray-100 shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
           >
             상호작용 확인하기
           </Link>
@@ -104,7 +104,7 @@ export default async function HomePage() {
       {/* Stats / Trust Section */}
       <section className="py-10 bg-[var(--color-primary-50)]">
         <div className="max-w-3xl mx-auto px-4">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-6">
             <div className="flex flex-col items-center text-center p-4">
               <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-2">
                 <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -148,7 +148,7 @@ export default async function HomePage() {
       {/* Trust badges */}
       <section className="py-10 border-b border-gray-100 dark:border-[var(--color-border)]">
         <div className="max-w-3xl mx-auto px-4">
-          <div className="grid grid-cols-3 gap-3 sm:gap-6 text-center">
+          <div className="grid grid-cols-3 gap-2 sm:gap-6 text-center">
             <div>
               <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-[var(--color-primary-50)] flex items-center justify-center">
                 <svg className="w-6 h-6 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -258,14 +258,14 @@ export default async function HomePage() {
               <Link
                 key={combo.label}
                 href={comboUrls.get(combo.label)!}
-                className="group flex-shrink-0 w-40 sm:w-auto snap-start bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all"
+                className="group flex-shrink-0 w-44 sm:w-auto snap-start bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all"
               >
                 <div className="flex items-center gap-1.5 mb-2">
-                  <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 truncate">
+                  <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 break-keep">
                     {combo.items[0]}
                   </span>
                   <span className="text-[var(--color-text-muted)] text-xs">+</span>
-                  <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 truncate">
+                  <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 break-keep">
                     {combo.items[1]}
                   </span>
                 </div>

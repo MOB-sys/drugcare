@@ -31,7 +31,7 @@ export function CabinetItemCard({ item, isDeleting, onDelete }: CabinetItemCardP
       <button
         onClick={() => onDelete(item.id)}
         disabled={isDeleting}
-        className="shrink-0 p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+        className="shrink-0 p-2.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
         aria-label={`${item.nickname || item.item_name} 삭제`}
       >
         {isDeleting ? (

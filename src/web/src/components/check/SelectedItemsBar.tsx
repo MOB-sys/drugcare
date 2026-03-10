@@ -35,7 +35,7 @@ export function SelectedItemsBar({ items, onRemove, onClearAll }: SelectedItemsB
                 item.item_type === "drug" ? "bg-blue-500" : "bg-emerald-500"
               }`}
             />
-            <span className="truncate max-w-[120px]">{item.name}</span>
+            <span className="truncate max-w-[100px] sm:max-w-[150px]">{item.name}</span>
             <button
               onClick={() => onRemove(item.item_id, item.item_type)}
               className="ml-1 text-gray-400 hover:text-gray-600"

@@ -131,7 +131,7 @@ export function Header() {
           {/* 다크모드 토글 */}
           <button
             onClick={toggle}
-            className="ml-2 p-2 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
+            className="ml-2 p-2.5 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
             aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
           >
             {isDark ? (
@@ -150,7 +150,7 @@ export function Header() {
         <div className="md:hidden flex items-center gap-1">
           <button
             onClick={toggle}
-            className="p-2 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]"
+            className="p-2.5 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]"
             aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
           >
             {isDark ? (
@@ -165,7 +165,7 @@ export function Header() {
           </button>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-2 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]"
+            className="p-2.5 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]"
             aria-label="메뉴 열기"
             aria-expanded={mobileOpen}
           >

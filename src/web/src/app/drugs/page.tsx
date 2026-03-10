@@ -65,7 +65,7 @@ export default async function DrugsIndexPage() {
                     className="flex flex-col items-center justify-center rounded-xl p-2 sm:p-3 bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]/40 transition-colors border border-[var(--color-primary-100)]"
                   >
                     <span className="text-base sm:text-lg font-bold text-[var(--color-primary)]">{key}</span>
-                    <span className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">{count.toLocaleString()}</span>
+                    <span className="text-[11px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">{count.toLocaleString()}</span>
                   </Link>
                 ) : (
                   <div
@@ -73,7 +73,7 @@ export default async function DrugsIndexPage() {
                     className="flex flex-col items-center justify-center rounded-xl p-2 sm:p-3 bg-gray-50 border border-gray-100"
                   >
                     <span className="text-base sm:text-lg font-bold text-gray-300">{key}</span>
-                    <span className="text-[10px] sm:text-xs text-gray-300 mt-0.5 sm:mt-1">0</span>
+                    <span className="text-[11px] sm:text-xs text-gray-300 mt-0.5 sm:mt-1">0</span>
                   </div>
                 );
               })}
@@ -94,7 +94,7 @@ export default async function DrugsIndexPage() {
                     className="flex flex-col items-center justify-center rounded-xl p-2 sm:p-3 bg-[var(--color-primary-50)] hover:bg-[var(--color-primary-100)]/40 transition-colors border border-[var(--color-primary-100)]"
                   >
                     <span className="text-base sm:text-lg font-bold text-[var(--color-primary)]">{key}</span>
-                    <span className="text-[10px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">{count.toLocaleString()}</span>
+                    <span className="text-[11px] sm:text-xs text-gray-500 mt-0.5 sm:mt-1">{count.toLocaleString()}</span>
                   </Link>
                 ) : (
                   <div
@@ -102,7 +102,7 @@ export default async function DrugsIndexPage() {
                     className="flex flex-col items-center justify-center rounded-xl p-2 sm:p-3 bg-gray-50 border border-gray-100"
                   >
                     <span className="text-base sm:text-lg font-bold text-gray-300">{key}</span>
-                    <span className="text-[10px] sm:text-xs text-gray-300 mt-0.5 sm:mt-1">0</span>
+                    <span className="text-[11px] sm:text-xs text-gray-300 mt-0.5 sm:mt-1">0</span>
                   </div>
                 );
               })}

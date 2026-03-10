@@ -80,7 +80,7 @@ export function Footer() {
             {DATA_SOURCES.map((source) => (
               <span
                 key={source}
-                className="inline-block px-2.5 py-0.5 rounded-full text-[11px] bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
+                className="inline-block px-2.5 py-0.5 rounded-full text-xs bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400"
               >
                 {source}
               </span>
@@ -88,7 +88,7 @@ export function Footer() {
           </div>
 
           {/* Stats line */}
-          <p className="text-[11px] text-gray-400 dark:text-gray-500">
+          <p className="text-xs text-gray-400 dark:text-gray-500">
             44,097개 의약품 · 44,551개 건강기능식품 · 366,629건 상호작용 데이터
           </p>
 

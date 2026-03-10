@@ -14,7 +14,7 @@ export function SeverityBadge({ severity }: SeverityBadgeProps) {
     >
       <span className={`w-1.5 h-1.5 rounded-full ${config.dotColor}`} />
       {config.label}
-      <span className="text-[10px] font-medium opacity-70">({config.labelEn})</span>
+      <span className="hidden sm:inline text-[10px] font-medium opacity-70">({config.labelEn})</span>
     </span>
   );
 }

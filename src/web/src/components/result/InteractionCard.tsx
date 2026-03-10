@@ -33,7 +33,7 @@ export function InteractionCard({ interaction }: InteractionCardProps) {
             </span>
           </div>
           {interaction.description && (
-            <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2">{interaction.description}</p>
+            <p className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2 break-keep">{interaction.description}</p>
           )}
         </div>
         <svg

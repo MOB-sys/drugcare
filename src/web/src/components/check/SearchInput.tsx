@@ -77,7 +77,7 @@ export function SearchInput({
       {value && (
         <button
           onClick={() => onChange("")}
-          className="absolute right-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 hover:text-gray-600"
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 w-7 h-7 text-gray-400 hover:text-gray-600"
           aria-label="검색어 지우기"
         >
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
