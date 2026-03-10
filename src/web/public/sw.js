@@ -1,6 +1,6 @@
 /** 약잘알 Service Worker — 오프라인 지원 + 정적 자산 캐싱 */
 
-const CACHE_VERSION = "2";
+const CACHE_VERSION = "3";
 const CACHE_NAME = `pillright-v${CACHE_VERSION}`;
 const OFFLINE_URL = "/offline";
 
@@ -32,7 +32,9 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
 
-  /* API 호출은 항상 네트워크 */
+  /* 외부 도메인 및 API 호출은 SW가 관여하지 않음 */
+  const url = new URL(request.url);
+  if (url.origin !== self.location.origin) return;
   if (request.url.includes("/api/")) return;
 
   /* Navigation (HTML) — 네트워크 우선, 실패 시 오프라인 페이지 */
