@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { useSearch } from "@/lib/hooks/useSearch";
 import { useRecentSearches } from "@/lib/hooks/useRecentSearches";
 import { SearchInput } from "@/components/check/SearchInput";
@@ -13,9 +13,22 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 
 export default function CheckPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const search = useSearch();
   const recent = useRecentSearches();
   const [isChecking, setIsChecking] = useState(false);
+
+  /* URL ?q= 파라미터로 자동 검색 (인기 조합 카드 등에서 유입) */
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q) {
+      const keywords = q.split(",").filter(Boolean);
+      if (keywords.length > 0) {
+        search.setQuery(keywords[0]);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function handleQueryChange(q: string) {
     search.setQuery(q);
