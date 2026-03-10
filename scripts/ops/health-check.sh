@@ -1,65 +1,135 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# 약먹어 Ops — 헬스체크 스크립트 (30분 간격 cron 권장)
-# 듀얼 플랫폼: API + 웹 + 인프라 통합 감시
+# 약잘알 Ops — 헬스체크 + 자동 복구 스크립트
+# 크론: */5 * * * * /opt/drugcare/scripts/ops/health-check.sh >> /var/log/yakmeogeo-health.log 2>&1
 # ==============================================================================
-set -euo pipefail
 
 # --- 설정 ---
-PROJECT_DIR="${PROJECT_DIR:-$HOME/workspace/yakmeogeo}"
-API_BASE="${API_BASE_URL:-http://localhost:8000}"
-WEB_BASE="${WEB_BASE_URL:-http://localhost:3000}"
+API_BASE="${API_BASE_URL:-https://api.pillright.com}"
+WEB_BASE="${WEB_BASE_URL:-https://pillright.com}"
 HEALTH_ENDPOINT="${API_BASE}/api/v1/health"
-LOG_DIR="${LOG_DIR:-$PROJECT_DIR/.agents/ops-squad/health-checker/logs}"
-TIMESTAMP=$(date +%Y%m%d-%H%M)
-LOG_FILE="${LOG_DIR}/HEALTH-${TIMESTAMP}.json"
+LOG_DIR="${LOG_DIR:-/var/log}"
+TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 ALERT_WEBHOOK="${ALERT_WEBHOOK_URL:-}"
+BACKEND_CONTAINER="yakmeogeo-backend"
+REDIS_CONTAINER="yakmeogeo-redis"
+DOMAIN="pillright.com"
 TIMEOUT=10
 
-mkdir -p "$LOG_DIR"
-
-timestamp() {
-    date '+%Y-%m-%d %H:%M:%S'
+log() {
+    echo "[$TIMESTAMP] $1"
 }
 
 send_alert() {
-    local message="$1"
+    local alert_key="$1"
+    local message="$2"
+    # 중복 알림 방지 (1시간 내 동일 알림 차단)
+    local stamp_file="/tmp/yakmeogeo-alert-${alert_key}"
+    if [ -f "$stamp_file" ]; then
+        local last=$(cat "$stamp_file")
+        local now=$(date +%s)
+        if [ $((now - last)) -lt 3600 ]; then
+            return
+        fi
+    fi
+    date +%s > "$stamp_file"
+    log "ALERT: $message"
     if [ -n "$ALERT_WEBHOOK" ]; then
         curl -sf -X POST "$ALERT_WEBHOOK" \
             -H 'Content-Type: application/json' \
-            -d "{\"text\": \"🚨 약먹어 헬스체크 알림: ${message}\"}" \
+            -d "{\"text\": \"[약잘알] ${message}\"}" \
             > /dev/null 2>&1 || true
     fi
 }
 
-# --- API 헬스체크 ---
+# --- 1. 백엔드 API 헬스체크 + 자동 복구 ---
 API_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "$HEALTH_ENDPOINT" --max-time "$TIMEOUT" 2>/dev/null || echo "000")
 API_TIME=$(curl -s -o /dev/null -w '%{time_total}' "$HEALTH_ENDPOINT" --max-time "$TIMEOUT" 2>/dev/null || echo "0")
 
-# --- 웹 헬스체크 ---
+if [ "$API_STATUS" = "200" ]; then
+    log "OK: Backend API (HTTP $API_STATUS, ${API_TIME}s)"
+else
+    log "FAIL: Backend API (HTTP $API_STATUS)"
+    log "ACTION: Restarting $BACKEND_CONTAINER..."
+    docker restart "$BACKEND_CONTAINER" 2>/dev/null || true
+    sleep 30
+    API_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "$HEALTH_ENDPOINT" --max-time "$TIMEOUT" 2>/dev/null || echo "000")
+    if [ "$API_STATUS" = "200" ]; then
+        log "RECOVERED: Backend auto-recovered"
+        send_alert "backend" "Backend was down, auto-recovered after restart"
+    else
+        log "CRITICAL: Backend still down after restart"
+        send_alert "backend-critical" "Backend is DOWN! Auto-restart failed (HTTP $API_STATUS)"
+    fi
+fi
+
+# --- 2. Redis 헬스체크 + 자동 복구 ---
+REDIS_STATUS=$(docker inspect --format='{{.State.Status}}' "$REDIS_CONTAINER" 2>/dev/null || echo "unknown")
+if [ "$REDIS_STATUS" = "running" ]; then
+    log "OK: Redis running"
+else
+    log "FAIL: Redis status=$REDIS_STATUS"
+    docker restart "$REDIS_CONTAINER" 2>/dev/null || true
+    sleep 10
+    send_alert "redis" "Redis was down ($REDIS_STATUS), restarted"
+fi
+
+# --- 3. 웹(Vercel) 헬스체크 ---
 WEB_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "$WEB_BASE" --max-time "$TIMEOUT" 2>/dev/null || echo "000")
 WEB_TIME=$(curl -s -o /dev/null -w '%{time_total}' "$WEB_BASE" --max-time "$TIMEOUT" 2>/dev/null || echo "0")
-
-# --- sitemap 확인 ---
-SITEMAP_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "$WEB_BASE/sitemap.xml" --max-time "$TIMEOUT" 2>/dev/null || echo "000")
-
-# --- Docker 상태 ---
-DOCKER_STATUS="N/A"
-if command -v docker &> /dev/null; then
-    DOCKER_STATUS=$(docker ps --format '{{.Names}}: {{.Status}}' 2>/dev/null | tr '\n' ', ' || echo "docker not running")
+if [ "$WEB_STATUS" = "200" ]; then
+    log "OK: Web (HTTP $WEB_STATUS, ${WEB_TIME}s)"
+else
+    log "WARN: Web unreachable (HTTP $WEB_STATUS)"
+    send_alert "web" "Web (pillright.com) unreachable: HTTP $WEB_STATUS"
 fi
 
-# --- SSL 만료일 ---
-SSL_EXPIRY="N/A"
-DOMAIN="${DOMAIN:-pillright.com}"
-if [ "$WEB_STATUS" != "000" ] && echo "$WEB_BASE" | grep -q "https"; then
-    SSL_EXPIRY=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN":443 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2 || echo "unknown")
+# --- 4. 디스크 체크 + 자동 정리 ---
+DISK_USAGE=$(df / | awk 'NR==2 {print $5}' | tr -d '%')
+if [ "$DISK_USAGE" -lt 80 ]; then
+    log "OK: Disk ${DISK_USAGE}%"
+elif [ "$DISK_USAGE" -lt 95 ]; then
+    log "WARN: Disk ${DISK_USAGE}%"
+    docker image prune -f > /dev/null 2>&1 || true
+    docker container prune -f > /dev/null 2>&1 || true
+    send_alert "disk" "Disk usage ${DISK_USAGE}%, auto-pruned Docker"
+else
+    log "CRITICAL: Disk ${DISK_USAGE}%!"
+    send_alert "disk-critical" "Disk CRITICAL: ${DISK_USAGE}%!"
 fi
 
-# --- 디스크 사용량 ---
-DISK_USAGE=$(df -h / | awk 'NR==2 {print $5}' | tr -d '%')
+# --- 5. 메모리 체크 ---
+MEM_AVAIL=$(free -m 2>/dev/null | awk '/^Mem:/ {print $7}' || echo "0")
+if [ "$MEM_AVAIL" -gt 200 ]; then
+    log "OK: Memory ${MEM_AVAIL}MB available"
+elif [ "$MEM_AVAIL" -gt 100 ]; then
+    log "WARN: Memory low ${MEM_AVAIL}MB"
+    send_alert "memory" "Available memory low: ${MEM_AVAIL}MB"
+else
+    log "CRITICAL: Memory ${MEM_AVAIL}MB!"
+    send_alert "memory-critical" "Memory CRITICAL: ${MEM_AVAIL}MB!"
+fi
 
-# --- 종합 판정 ---
+# --- 6. SSL 만료 체크 (매일 09시에만) ---
+HOUR=$(date +%H)
+if [ "$HOUR" = "09" ]; then
+    SSL_EXPIRY=$(echo | openssl s_client -servername "$DOMAIN" -connect "$DOMAIN":443 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2 || echo "")
+    if [ -n "$SSL_EXPIRY" ]; then
+        EXPIRY_EPOCH=$(date -d "$SSL_EXPIRY" +%s 2>/dev/null || echo "0")
+        NOW_EPOCH=$(date +%s)
+        if [ "$EXPIRY_EPOCH" -gt 0 ]; then
+            DAYS_LEFT=$(( (EXPIRY_EPOCH - NOW_EPOCH) / 86400 ))
+            if [ "$DAYS_LEFT" -gt 14 ]; then
+                log "OK: SSL expires in ${DAYS_LEFT} days"
+            else
+                log "WARN: SSL expires in ${DAYS_LEFT} days!"
+                send_alert "ssl" "SSL expires in ${DAYS_LEFT} days! Renew ASAP"
+            fi
+        fi
+    fi
+fi
+
+# --- 종합 ---
 if [ "$API_STATUS" = "200" ] && [ "$WEB_STATUS" = "200" ]; then
     OVERALL="ok"
 elif [ "$API_STATUS" = "000" ] || [ "$WEB_STATUS" = "000" ]; then
@@ -67,30 +137,4 @@ elif [ "$API_STATUS" = "000" ] || [ "$WEB_STATUS" = "000" ]; then
 else
     OVERALL="degraded"
 fi
-
-# --- JSON 저장 ---
-cat > "$LOG_FILE" << EOF
-{
-  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "overall": "$OVERALL",
-  "api": { "status": $API_STATUS, "response_time": $API_TIME },
-  "web": { "status": $WEB_STATUS, "response_time": $WEB_TIME },
-  "sitemap": { "status": $SITEMAP_STATUS },
-  "docker": "$DOCKER_STATUS",
-  "ssl_expiry": "$SSL_EXPIRY",
-  "disk_usage_pct": $DISK_USAGE
-}
-EOF
-
-# --- 알림 ---
-if [ "$OVERALL" != "ok" ]; then
-    echo "🔴 약먹어 서비스 이상 감지: API=$API_STATUS, WEB=$WEB_STATUS"
-    send_alert "서비스 이상: API=$API_STATUS WEB=$WEB_STATUS"
-fi
-
-if [ "$DISK_USAGE" -gt 90 ]; then
-    echo "⚠️  디스크 사용률 높음: ${DISK_USAGE}%"
-    send_alert "디스크 사용률 ${DISK_USAGE}%"
-fi
-
-echo "✅ 헬스체크 완료 [$OVERALL]: $LOG_FILE"
+log "=== Result: $OVERALL ==="

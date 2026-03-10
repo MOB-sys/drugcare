@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     # OpenAI (Phase 2)
     OPENAI_API_KEY: str = ""
 
+    # Sentry
+    SENTRY_DSN: str = ""
+
     # CORS
     CORS_ORIGINS: str = ""
 

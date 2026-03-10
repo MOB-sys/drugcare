@@ -1,13 +1,36 @@
-"""약먹어 FastAPI 애플리케이션 — 메인 엔트리포인트."""
+"""약잘알 FastAPI 애플리케이션 — 메인 엔트리포인트."""
 
 import logging
+import os
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from urllib.parse import urlparse
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.backend.core.config import get_settings
+
+# ─── Sentry 초기화 (FastAPI 앱 생성 전에 호출) ───
+_sentry_dsn = os.getenv("SENTRY_DSN", "")
+if _sentry_dsn:
+    import sentry_sdk
+
+    def _filter_transactions(event, hint):
+        url = event.get("request", {}).get("url", "")
+        if url:
+            path = urlparse(url).path
+            if path in ("/api/v1/health", "/health", "/ping"):
+                return None
+        return event
+
+    sentry_sdk.init(
+        dsn=_sentry_dsn,
+        environment=os.getenv("APP_ENV", "production"),
+        traces_sample_rate=0.2,
+        send_default_pii=False,
+        before_send_transaction=_filter_transactions,
+    )
 from src.backend.core.database import engine
 from src.backend.core.redis import pool as redis_pool
 from src.backend.middleware.device_auth import DeviceAuthMiddleware
