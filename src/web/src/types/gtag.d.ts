@@ -1,4 +1,6 @@
 interface Window {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  gtag: (...args: any[]) => void;
+  gtag(command: "js", date: Date): void;
+  gtag(command: "config", id: string, params?: Record<string, unknown>): void;
+  gtag(command: "event", action: string, params?: Record<string, unknown>): void;
+  gtag(command: "set", params: Record<string, unknown>): void;
 }

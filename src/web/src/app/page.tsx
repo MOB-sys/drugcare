@@ -117,7 +117,7 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">12,502<span className="text-sm font-medium">건</span></p>
+              <p className="text-lg sm:text-xl font-bold text-[var(--color-text)]">366,629<span className="text-sm font-medium">건</span></p>
               <p className="text-xs text-[var(--color-text-secondary)]">상호작용 데이터</p>
             </div>
             <div className="flex flex-col items-center text-center p-4">

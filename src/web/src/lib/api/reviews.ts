@@ -8,12 +8,19 @@ import type {
   ReviewListResponse,
 } from "@/types/review";
 
+function validateItemType(itemType: string): asserts itemType is "drug" | "supplement" {
+  if (itemType !== "drug" && itemType !== "supplement") {
+    throw new Error(`Invalid item type: ${itemType}`);
+  }
+}
+
 /** 리뷰 작성/수정 (upsert). */
 export function createReview(
   itemType: string,
   itemId: number,
   data: ReviewCreate,
 ): Promise<ReviewResponse> {
+  validateItemType(itemType);
   const params = new URLSearchParams({
     item_type: itemType,
     item_id: String(itemId),
@@ -31,6 +38,7 @@ export function getReviews(
   page = 1,
   pageSize = 10,
 ): Promise<ReviewListResponse> {
+  validateItemType(itemType);
   const params = new URLSearchParams({
     page: String(page),
     page_size: String(pageSize),
@@ -45,6 +53,7 @@ export function getReviewSummary(
   itemType: string,
   itemId: number,
 ): Promise<ReviewSummary> {
+  validateItemType(itemType);
   return fetchApi<ReviewSummary>(
     `/api/v1/reviews/${itemType}/${itemId}/summary`,
   );

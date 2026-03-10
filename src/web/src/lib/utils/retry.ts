@@ -24,9 +24,9 @@ export async function withRetry<T>(
       if (
         error instanceof Error &&
         "status" in error &&
-        typeof (error as Record<string, unknown>).status === "number"
+        typeof (error as { status: unknown }).status === "number"
       ) {
-        const status = (error as Record<string, unknown>).status as number;
+        const status = (error as { status: number }).status;
         if (status >= 400 && status < 500) throw error;
       }
 

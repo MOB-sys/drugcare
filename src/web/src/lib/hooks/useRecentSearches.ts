@@ -11,7 +11,12 @@ export function useRecentSearches() {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setRecentSearches(JSON.parse(stored));
+      if (stored) {
+        const parsed: unknown = JSON.parse(stored);
+        if (Array.isArray(parsed) && parsed.every((s) => typeof s === "string")) {
+          setRecentSearches(parsed as string[]);
+        }
+      }
     } catch (e) { console.error("[useRecentSearches] localStorage 읽기 실패:", e); }
   }, []);
 

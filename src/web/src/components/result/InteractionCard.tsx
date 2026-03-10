@@ -12,8 +12,9 @@ interface InteractionCardProps {
 
 export function InteractionCard({ interaction }: InteractionCardProps) {
   const [expanded, setExpanded] = useState(false);
-  const config = SEVERITY_CONFIG[interaction.severity as Severity] ?? SEVERITY_CONFIG.info;
-  const isDanger = interaction.severity === "danger";
+  const sev: Severity = (interaction.severity in SEVERITY_CONFIG) ? interaction.severity as Severity : "info";
+  const config = SEVERITY_CONFIG[sev];
+  const isDanger = sev === "danger";
 
   return (
     <div
@@ -27,7 +28,7 @@ export function InteractionCard({ interaction }: InteractionCardProps) {
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <SeverityBadge severity={interaction.severity as Severity} />
+            <SeverityBadge severity={sev} />
             <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
               {interaction.item_a_name} + {interaction.item_b_name}
             </span>
@@ -94,7 +95,7 @@ export function InteractionCard({ interaction }: InteractionCardProps) {
           )}
           <p className="text-xs text-gray-400">출처: {interaction.source}</p>
 
-          <ActionGuidanceBox severity={interaction.severity as Severity} />
+          <ActionGuidanceBox severity={sev} />
         </div>
       )}
     </div>

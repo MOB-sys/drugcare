@@ -59,7 +59,7 @@ export function ReviewSection({ itemType, itemId }: ReviewSectionProps) {
         사용자 리뷰
       </h2>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm space-y-6">
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm space-y-6">
         {loading && !summary ? (
           <div className="text-center py-8 text-gray-400 text-sm">
             리뷰를 불러오는 중...

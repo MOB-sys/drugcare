@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { searchDrugs } from "@/lib/api/drugs";
 import { searchSupplements } from "@/lib/api/supplements";
@@ -23,30 +23,33 @@ export function QuickSearch({ type, placeholder }: QuickSearchProps) {
   const [isLoading, setIsLoading] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
 
-  const doSearch = useCallback(async (q: string) => {
-    if (q.trim().length < 1) {
+  useEffect(() => {
+    const q = debouncedQuery.trim();
+    if (q.length < 1) {
       setResults([]);
       return;
     }
+    const controller = new AbortController();
     setIsLoading(true);
-    try {
-      if (type === "drug") {
-        const res = await searchDrugs(q, 1, 8);
-        setResults(res.items.map((d) => ({ slug: d.slug, name: d.item_name, sub: d.entp_name ?? null })));
-      } else {
-        const res = await searchSupplements(q, 1, 8);
-        setResults(res.items.map((s) => ({ slug: s.slug, name: s.product_name, sub: s.company ?? null })));
-      }
-    } catch {
-      setResults([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [type]);
 
-  useEffect(() => {
-    doSearch(debouncedQuery);
-  }, [debouncedQuery, doSearch]);
+    (async () => {
+      try {
+        if (type === "drug") {
+          const res = await searchDrugs(q, 1, 8);
+          if (!controller.signal.aborted) setResults(res.items.map((d) => ({ slug: d.slug, name: d.item_name, sub: d.entp_name ?? null })));
+        } else {
+          const res = await searchSupplements(q, 1, 8);
+          if (!controller.signal.aborted) setResults(res.items.map((s) => ({ slug: s.slug, name: s.product_name, sub: s.company ?? null })));
+        }
+      } catch {
+        if (!controller.signal.aborted) setResults([]);
+      } finally {
+        if (!controller.signal.aborted) setIsLoading(false);
+      }
+    })();
+
+    return () => controller.abort();
+  }, [debouncedQuery, type]);
 
   const basePath = type === "drug" ? "/drugs" : "/supplements";
   const defaultPlaceholder = type === "drug" ? "의약품 이름으로 검색 (예: 타이레놀)" : "건강기능식품 이름으로 검색 (예: 비타민D)";

@@ -161,7 +161,7 @@ export default function RootLayout({
               strategy="afterInteractive"
             />
             <Script id="kakao-init" strategy="afterInteractive">
-              {`(function check(){if(window.Kakao&&!window.Kakao.isInitialized()){window.Kakao.init('${KAKAO_JS_KEY}')}else{setTimeout(check,200)}})();`}
+              {`(function check(n){if(n>20)return;if(window.Kakao&&!window.Kakao.isInitialized()){window.Kakao.init('${KAKAO_JS_KEY}')}else{setTimeout(function(){check(n+1)},200)}})(0);`}
             </Script>
           </>
         )}

@@ -18,7 +18,8 @@ function parseItems(raw: string): { checkItems: InteractionCheckItem[]; names: M
   const names = new Map<string, string>();
 
   for (const segment of raw.split(",")) {
-    const [type, id, name] = segment.split(":");
+    const [type, id, ...nameParts] = segment.split(":");
+    const name = nameParts.join(":");
     const numId = Number(id);
     if ((type === "drug" || type === "supplement") && id && name && !Number.isNaN(numId) && Number.isInteger(numId) && numId > 0) {
       checkItems.push({ item_type: type, item_id: numId });

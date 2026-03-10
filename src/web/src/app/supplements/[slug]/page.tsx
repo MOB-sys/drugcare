@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getSupplementBySlug, getAllSupplementSlugs, getRelatedSupplements } from "@/lib/api/supplements";
+import { getSupplementBySlug, getRelatedSupplements } from "@/lib/api/supplements";
 import { InfoSection } from "@/components/detail/InfoSection";
 import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { CheckCTA } from "@/components/detail/CheckCTA";
@@ -60,6 +60,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title,
         description,
       },
+      alternates: { canonical: `/supplements/${slug}` },
     };
   } catch {
     return { title: "영양제 정보" };

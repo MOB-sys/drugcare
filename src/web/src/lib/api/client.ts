@@ -38,7 +38,11 @@ async function waitForRateLimit(path: string): Promise<void> {
   }
 
   recent.push(Date.now());
-  requestLog.set(group, recent);
+  if (recent.length > 0) {
+    requestLog.set(group, recent);
+  } else {
+    requestLog.delete(group);
+  }
 }
 
 export interface ApiResponse<T> {
@@ -75,11 +79,18 @@ async function fetchApiOnce<T>(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
+  // caller signal과 timeout signal을 합성
+  const signals = [controller.signal];
+  if (options?.signal) signals.push(options.signal);
+  const composedSignal = signals.length > 1
+    ? AbortSignal.any(signals)
+    : controller.signal;
+
   try {
     const res = await fetch(url, {
       ...options,
       credentials: "include",
-      signal: options?.signal ?? controller.signal,
+      signal: composedSignal,
       headers: {
         "Content-Type": "application/json",
         // SSR에서 POST 요청 시 CSRF 검증 통과를 위해 Origin 헤더 추가

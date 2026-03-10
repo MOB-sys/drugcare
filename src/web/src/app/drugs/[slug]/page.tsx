@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { SafeImage } from "@/components/common/SafeImage";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getDrugBySlug, getAllDrugSlugs, getRelatedDrugs } from "@/lib/api/drugs";
+import { getDrugBySlug, getRelatedDrugs } from "@/lib/api/drugs";
 import { InfoSection } from "@/components/detail/InfoSection";
 import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { DURSafetySection } from "@/components/detail/DURSafetySection";
@@ -66,6 +66,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title,
         description,
       },
+      alternates: { canonical: `/drugs/${slug}` },
     };
   } catch {
     return { title: "약물 정보" };

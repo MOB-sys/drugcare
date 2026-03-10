@@ -72,6 +72,7 @@ export function SearchInput({
         role="combobox"
         aria-expanded={shouldShowDropdown}
         autoComplete="off"
+        maxLength={200}
         className="w-full pl-11 pr-10 py-3 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-base bg-white dark:bg-gray-800 dark:text-gray-100"
       />
       {value && (

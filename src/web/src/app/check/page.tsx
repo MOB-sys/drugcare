@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, Suspense } from "react";
 import { useSearch } from "@/lib/hooks/useSearch";
 import { useRecentSearches } from "@/lib/hooks/useRecentSearches";
@@ -13,7 +13,6 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 
 function CheckPageContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const search = useSearch();
   const recent = useRecentSearches();
   const [isChecking, setIsChecking] = useState(false);

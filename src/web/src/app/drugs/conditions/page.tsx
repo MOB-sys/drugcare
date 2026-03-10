@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { searchDrugsByCondition } from "@/lib/api/drugs";
@@ -39,7 +39,7 @@ function extractSnippet(text: string, keyword: string, radius = 50): string {
   return `${prefix}${text.slice(start, end)}${suffix}`;
 }
 
-export default function ConditionsPage() {
+function ConditionsContent() {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [activeKeyword, setActiveKeyword] = useState("");
@@ -73,14 +73,14 @@ export default function ConditionsPage() {
   }, []);
 
   /* URL 파라미터로 자동 검색 */
+  const initialQuery = searchParams.get("q");
   useEffect(() => {
-    const q = searchParams.get("q");
-    if (q) {
-      setQuery(q);
-      setActiveKeyword(q);
-      doSearch(q);
+    if (initialQuery) {
+      setQuery(initialQuery);
+      setActiveKeyword(initialQuery);
+      doSearch(initialQuery);
     }
-  }, [searchParams, doSearch]);
+  }, [initialQuery, doSearch]);
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -249,6 +249,7 @@ export default function ConditionsPage() {
                     <button
                       onClick={() => handlePageChange(state.page - 1)}
                       disabled={state.page <= 1}
+                      aria-label="이전 페이지"
                       className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
                     >
                       이전
@@ -259,6 +260,7 @@ export default function ConditionsPage() {
                     <button
                       onClick={() => handlePageChange(state.page + 1)}
                       disabled={state.page >= state.totalPages}
+                      aria-label="다음 페이지"
                       className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
                     >
                       다음
@@ -279,5 +281,13 @@ export default function ConditionsPage() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function ConditionsPage() {
+  return (
+    <Suspense>
+      <ConditionsContent />
+    </Suspense>
   );
 }

@@ -35,8 +35,7 @@ export function CookieConsent() {
       // GA4 옵트아웃: google analytics 공식 비활성화 프로퍼티
       const gaId = process.env.NEXT_PUBLIC_GA_ID;
       if (gaId) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (window as any)[`ga-disable-${gaId}`] = true;
+        (window as unknown as Record<string, boolean>)[`ga-disable-${gaId}`] = true;
       }
       // AdSense 비활성화 — 이미 로드된 광고 숨김
       document.querySelectorAll("ins.adsbygoogle").forEach((el) => {
