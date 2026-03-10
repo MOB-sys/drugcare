@@ -29,7 +29,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: {
-    canonical: "./",
+    canonical: "/",
   },
   title: {
     default: "약잘알 (PillRight) — 약/영양제 상호작용 체커",
