@@ -82,6 +82,8 @@ async function fetchApiOnce<T>(
       signal: options?.signal ?? controller.signal,
       headers: {
         "Content-Type": "application/json",
+        // SSR에서 POST 요청 시 CSRF 검증 통과를 위해 Origin 헤더 추가
+        ...(typeof window === "undefined" && { Origin: "https://pillright.com" }),
         ...options?.headers,
       },
     });
