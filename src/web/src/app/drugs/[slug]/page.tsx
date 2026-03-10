@@ -20,6 +20,7 @@ import type { TocItem } from "@/components/common/TableOfContents";
 import { DrugFAQ } from "@/components/drug/DrugFAQ";
 import { RelatedTips } from "@/components/drug/RelatedTips";
 import { buildDrugFAQItems, buildFAQJsonLd } from "@/lib/faq";
+import { SITE_URL } from "@/lib/constants/site";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -45,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const description = drug.efcy_qesitm
       ? `${drug.item_name} — ${drug.efcy_qesitm.slice(0, 120)}`
       : `${drug.item_name} 의약품 상세 정보를 확인하세요.`;
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+    const siteUrl = SITE_URL;
     return {
       title,
       description,
@@ -217,8 +218,8 @@ export default async function DrugDetailPage({ params }: PageProps) {
               <KakaoShareButton
                 title={`${drug.item_name} 효능·용법·상호작용`}
                 description={drug.efcy_qesitm ? drug.efcy_qesitm.slice(0, 100) : `${drug.item_name} 의약품 상세 정보를 확인하세요.`}
-                imageUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/api/og?title=${encodeURIComponent(drug.item_name)}&type=drug`}
-                pageUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/drugs/${slug}`}
+                imageUrl={`${SITE_URL}/api/og?title=${encodeURIComponent(drug.item_name)}&type=drug`}
+                pageUrl={`${SITE_URL}/drugs/${slug}`}
               />
             </div>
 

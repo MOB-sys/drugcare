@@ -37,6 +37,7 @@ export function KakaoShareButton({
     /** Kakao SDK가 비동기 로드되므로 폴링으로 초기화 상태를 확인합니다. */
     let attempts = 0;
     const maxAttempts = 20; // 최대 4초 (200ms * 20)
+    let timerId: ReturnType<typeof setTimeout> | null = null;
 
     function check() {
       if (window.Kakao?.isInitialized()) {
@@ -45,11 +46,15 @@ export function KakaoShareButton({
       }
       attempts++;
       if (attempts < maxAttempts) {
-        setTimeout(check, 200);
+        timerId = setTimeout(check, 200);
       }
     }
 
     check();
+
+    return () => {
+      if (timerId !== null) clearTimeout(timerId);
+    };
   }, []);
 
   if (!ready) return null;

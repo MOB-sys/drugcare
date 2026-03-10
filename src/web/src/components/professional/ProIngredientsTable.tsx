@@ -49,14 +49,20 @@ export function ProIngredientsTable({ ingredients }: ProIngredientsTableProps) {
     <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse">
         <thead>
-          <tr className="bg-gray-100 text-left">
+          <tr className="bg-gray-100 dark:bg-gray-800 text-left">
             {columns.map((col) => (
               <th
                 key={col.key}
-                onClick={() => handleSort(col.key)}
-                className="px-3 py-2 font-semibold text-gray-700 cursor-pointer select-none hover:bg-gray-200 border-b border-gray-300"
+                className="px-3 py-2 font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-300 dark:border-gray-700"
               >
-                {col.label}{sortIndicator(col.key)}
+                <button
+                  type="button"
+                  onClick={() => handleSort(col.key)}
+                  aria-label={`${col.label} 기준으로 정렬`}
+                  className="w-full text-left cursor-pointer select-none hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                >
+                  {col.label}{sortIndicator(col.key)}
+                </button>
               </th>
             ))}
           </tr>
@@ -65,13 +71,13 @@ export function ProIngredientsTable({ ingredients }: ProIngredientsTableProps) {
           {sorted.map((ing, i) => (
             <tr
               key={i}
-              className="border-b border-gray-200 hover:bg-gray-50"
+              className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
-              <td className="px-3 py-1.5 text-gray-900">{ing.name}</td>
-              <td className="px-3 py-1.5 text-gray-700 font-mono">
+              <td className="px-3 py-1.5 text-gray-900 dark:text-gray-100">{ing.name}</td>
+              <td className="px-3 py-1.5 text-gray-700 dark:text-gray-300 font-mono">
                 {ing.amount ?? "-"}
               </td>
-              <td className="px-3 py-1.5 text-gray-700">
+              <td className="px-3 py-1.5 text-gray-700 dark:text-gray-300">
                 {ing.unit ?? "-"}
               </td>
             </tr>

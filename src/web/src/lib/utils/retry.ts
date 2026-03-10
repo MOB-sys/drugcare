@@ -27,7 +27,7 @@ export async function withRetry<T>(
         typeof (error as Record<string, unknown>).status === "number"
       ) {
         const status = (error as Record<string, unknown>).status as number;
-        if (status < 500 && status !== 0) throw error;
+        if (status >= 400 && status < 500) throw error;
       }
 
       if (attempt < maxRetries) {

@@ -16,7 +16,9 @@ export interface FAQSourceFields {
 
 function truncate(text: string, maxLen = 200): string {
   if (text.length <= maxLen) return text;
-  return text.slice(0, maxLen).trimEnd() + "...";
+  const cutoff = text.lastIndexOf(" ", maxLen - 3);
+  const end = cutoff > maxLen * 0.5 ? cutoff : maxLen - 3;
+  return text.slice(0, end).trimEnd() + "...";
 }
 
 export function buildDrugFAQItems(fields: FAQSourceFields): FAQItem[] {

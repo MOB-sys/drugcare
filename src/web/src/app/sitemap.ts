@@ -3,8 +3,9 @@ import { getAllDrugSlugs } from "@/lib/api/drugs";
 import { getAllSupplementSlugs } from "@/lib/api/supplements";
 import { getAllTipSlugs } from "@/lib/data/tips";
 import { ALL_LETTERS } from "@/lib/utils/korean";
+import { SITE_URL } from "@/lib/constants/site";
 
-const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+const BASE_URL = SITE_URL;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [

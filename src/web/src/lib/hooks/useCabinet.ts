@@ -76,7 +76,8 @@ export function useCabinet(): UseCabinetReturn {
       await deleteCabinetItem(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
       return true;
-    } catch {
+    } catch (e) {
+      console.error("[useCabinet] 복약함 항목 삭제 실패:", e);
       return false;
     } finally {
       setDeletingIds((prev) => {

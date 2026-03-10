@@ -87,7 +87,17 @@ function extractMaxDailyDose(text: string): string | null {
 }
 
 /** Parse raw dosage text into structured dosage information. */
-export function parseDosage(text: string): DosageInfo {
+export function parseDosage(text: string | null | undefined): DosageInfo {
+  if (!text) {
+    return {
+      doseAmount: null,
+      frequency: null,
+      timing: null,
+      ageBasedDosing: [],
+      maxDailyDose: null,
+      rawText: "",
+    };
+  }
   return {
     doseAmount: extractDoseAmount(text),
     frequency: extractFrequency(text),

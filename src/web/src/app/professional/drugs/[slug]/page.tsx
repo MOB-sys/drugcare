@@ -82,12 +82,12 @@ export default async function ProDrugDetailPage({ params }: PageProps) {
 
       <div className="max-w-4xl mx-auto px-4 py-6">
         {/* Breadcrumb */}
-        <nav className="text-[11px] text-gray-400 mb-4 flex items-center gap-1">
-          <Link href="/professional" className="hover:text-gray-600">
+        <nav className="text-[11px] text-gray-400 dark:text-gray-500 mb-4 flex items-center gap-1">
+          <Link href="/professional" className="hover:text-gray-600 dark:hover:text-gray-300">
             전문가
           </Link>
           <span>/</span>
-          <span className="text-gray-600 truncate max-w-xs">
+          <span className="text-gray-600 dark:text-gray-400 truncate max-w-xs">
             {drug.item_name}
           </span>
         </nav>
@@ -106,26 +106,26 @@ export default async function ProDrugDetailPage({ params }: PageProps) {
         <div className="flex flex-wrap gap-3 text-xs mb-6">
           <Link
             href={`/drugs/${slug}`}
-            className="text-blue-600 hover:text-blue-800 underline underline-offset-2"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2"
           >
             일반 사용자용 페이지로 보기
           </Link>
           <Link
             href="/check"
-            className="text-blue-600 hover:text-blue-800 underline underline-offset-2"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2"
           >
             상호작용 체크
           </Link>
           <Link
             href="/professional"
-            className="text-blue-600 hover:text-blue-800 underline underline-offset-2"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline underline-offset-2"
           >
             전문가 메인
           </Link>
         </div>
 
         {/* Disclaimer */}
-        <p className="text-[11px] text-gray-400 border-t border-gray-200 pt-3">
+        <p className="text-[11px] text-gray-400 dark:text-gray-500 border-t border-gray-200 dark:border-gray-700 pt-3">
           본 정보는 전문 의료인의 임상적 판단을 보조하기 위한 참고 자료입니다.
           식약처 공공데이터를 기반으로 하며, 의사/약사의 전문적 판단을 대체하지 않습니다.
         </p>

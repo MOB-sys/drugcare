@@ -32,6 +32,7 @@ export default function IdentifyPage() {
   const [selectedShape, setSelectedShape] = useState<string | null>(null);
   const [imprint, setImprint] = useState("");
   const [state, setState] = useState<SearchState>(INITIAL_STATE);
+  const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
 
   const doSearch = useCallback(
     async (color: string | null, shape: string | null, imp: string, page = 1) => {
@@ -224,21 +225,13 @@ export default function IdentifyPage() {
                     href={`/drugs/${drug.slug}`}
                     className="block p-3 border border-gray-200 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 transition-colors"
                   >
-                    {drug.item_image ? (
+                    {drug.item_image && !failedImages.has(drug.id) ? (
                       <img
                         src={drug.item_image}
                         alt={drug.item_name}
                         className="w-full h-24 object-contain rounded-lg bg-gray-50 mb-2"
-                        onError={(e) => {
-                          const el = e.currentTarget;
-                          el.style.display = "none";
-                          const fallback = el.nextElementSibling;
-                          if (!fallback) {
-                            const div = document.createElement("div");
-                            div.className = "w-full h-24 bg-gray-100 rounded-lg mb-2 flex items-center justify-center";
-                            div.innerHTML = '<span class="text-gray-300 text-xs">이미지 없음</span>';
-                            el.parentElement?.insertBefore(div, el.nextSibling);
-                          }
+                        onError={() => {
+                          setFailedImages((prev) => new Set(prev).add(drug.id));
                         }}
                       />
                     ) : (

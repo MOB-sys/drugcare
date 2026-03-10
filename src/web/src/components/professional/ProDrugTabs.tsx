@@ -22,17 +22,17 @@ export function ProDrugTabs({ drug }: ProDrugTabsProps) {
   const [activeTab, setActiveTab] = useState(tabs[0]?.id ?? "pharmacology");
 
   return (
-    <div className="border border-gray-300 rounded-lg bg-white overflow-hidden">
+    <div className="border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 overflow-hidden">
       {/* Tab bar */}
-      <div className="flex overflow-x-auto border-b border-gray-300 bg-gray-50">
+      <div className="flex overflow-x-auto border-b border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2.5 text-xs font-semibold whitespace-nowrap border-b-2 transition-colors ${
               activeTab === tab.id
-                ? "border-gray-800 text-gray-900 bg-white"
-                : "border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                ? "border-gray-800 dark:border-gray-200 text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-900"
+                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             }`}
           >
             {tab.label}
@@ -88,17 +88,17 @@ function PharmacologyTab({ drug }: { drug: DrugDetail }) {
     <div className="space-y-4">
       {drug.efcy_qesitm && (
         <div>
-          <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+          <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
             효능/효과
           </h4>
-          <p className="text-xs text-gray-800 leading-relaxed whitespace-pre-line">
+          <p className="text-xs text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-line">
             {drug.efcy_qesitm}
           </p>
         </div>
       )}
       {drug.ingredients && drug.ingredients.length > 0 && (
         <div>
-          <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+          <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
             성분 ({drug.ingredients.length}건)
           </h4>
           <ProIngredientsTable ingredients={drug.ingredients} />
@@ -114,20 +114,20 @@ function WarningsTab({ drug }: { drug: DrugDetail }) {
     <div className="space-y-4">
       {drug.atpn_warn_qesitm && (
         <div>
-          <h4 className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">
+          <h4 className="text-xs font-semibold text-red-600 dark:text-red-400 uppercase tracking-wider mb-1">
             경고
           </h4>
-          <p className="text-xs text-gray-800 leading-relaxed whitespace-pre-line bg-red-50 border border-red-200 rounded p-3">
+          <p className="text-xs text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-line bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded p-3">
             {drug.atpn_warn_qesitm}
           </p>
         </div>
       )}
       {drug.atpn_qesitm && (
         <div>
-          <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+          <h4 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
             일반 주의사항
           </h4>
-          <p className="text-xs text-gray-800 leading-relaxed whitespace-pre-line">
+          <p className="text-xs text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-line">
             {drug.atpn_qesitm}
           </p>
         </div>
@@ -138,9 +138,9 @@ function WarningsTab({ drug }: { drug: DrugDetail }) {
 
 /** 단순 텍스트 블록. */
 function TextBlock({ content }: { content: string | null }) {
-  if (!content) return <p className="text-xs text-gray-400">정보 없음</p>;
+  if (!content) return <p className="text-xs text-gray-400 dark:text-gray-500">정보 없음</p>;
   return (
-    <p className="text-xs text-gray-800 leading-relaxed whitespace-pre-line">
+    <p className="text-xs text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-line">
       {content}
     </p>
   );

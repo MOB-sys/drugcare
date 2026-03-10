@@ -8,6 +8,7 @@ export function searchSupplements(
   query: string,
   page = 1,
   pageSize = 20,
+  options?: RequestInit,
 ): Promise<PaginatedResponse<SupplementSearchItem>> {
   const params = new URLSearchParams({
     q: query,
@@ -16,6 +17,7 @@ export function searchSupplements(
   });
   return fetchApi<PaginatedResponse<SupplementSearchItem>>(
     `/api/v1/supplements/search?${params}`,
+    options,
   );
 }
 

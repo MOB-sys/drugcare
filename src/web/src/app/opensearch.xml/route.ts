@@ -1,6 +1,6 @@
 /** OpenSearch description — 브라우저 주소창 검색 통합 */
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+import { SITE_URL } from "@/lib/constants/site";
 
 export function GET() {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

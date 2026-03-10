@@ -7,6 +7,7 @@ import {
 } from "@/lib/data/drugCategories";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { SITE_URL } from "@/lib/constants/site";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -25,8 +26,7 @@ export async function generateMetadata({
   const cat = getCategoryBySlug(slug);
   if (!cat) return { title: "약물 분류" };
 
-  const siteUrl =
-    process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+  const siteUrl = SITE_URL;
   return {
     title: `${cat.name} — 대표 약물과 복용 주의사항`,
     description: cat.description,

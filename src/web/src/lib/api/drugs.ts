@@ -14,6 +14,7 @@ export function searchDrugs(
   query: string,
   page = 1,
   pageSize = 20,
+  options?: RequestInit,
 ): Promise<PaginatedResponse<DrugSearchItem>> {
   const params = new URLSearchParams({
     q: query,
@@ -22,6 +23,7 @@ export function searchDrugs(
   });
   return fetchApi<PaginatedResponse<DrugSearchItem>>(
     `/api/v1/drugs/search?${params}`,
+    options,
   );
 }
 

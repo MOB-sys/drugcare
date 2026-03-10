@@ -8,6 +8,7 @@ import { WebVitals } from "@/components/common/WebVitals";
 import { ServiceWorkerRegister } from "@/components/common/ServiceWorkerRegister";
 import { ToastProvider } from "@/components/common/ToastProvider";
 import { CookieConsent } from "@/components/common/CookieConsent";
+import { SITE_URL } from "@/lib/constants/site";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_ID;
@@ -24,8 +25,6 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: dark)", color: "#0F172A" },
   ],
 };
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -53,7 +52,7 @@ export const metadata: Metadata = {
     siteName: "약잘알 (PillRight)",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/api/og?title=${encodeURIComponent("약잘알 (PillRight)")}&type=default`,
+        url: `${SITE_URL}/api/og?title=${encodeURIComponent("약잘알 (PillRight)")}&type=default`,
         width: 1200,
         height: 630,
         alt: "약잘알 (PillRight) — 약/영양제 상호작용 체커",

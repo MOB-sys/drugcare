@@ -17,8 +17,8 @@ const FIELD_ITEMS: { label: string; key: keyof DrugDetail }[] = [
 
 export function ProDrugHeader({ drug }: ProDrugHeaderProps) {
   return (
-    <div className="border border-gray-300 rounded-lg bg-white overflow-hidden">
-      <div className="bg-gray-800 px-4 py-2.5">
+    <div className="border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 overflow-hidden">
+      <div className="bg-gray-800 dark:bg-gray-950 px-4 py-2.5">
         <h1 className="text-lg font-bold text-white leading-tight">
           {drug.item_name}
         </h1>
@@ -30,10 +30,10 @@ export function ProDrugHeader({ drug }: ProDrugHeaderProps) {
           return (
             <div
               key={key}
-              className="border-b border-r border-gray-200 px-3 py-2 last:border-r-0"
+              className="border-b border-r border-gray-200 dark:border-gray-700 px-3 py-2 last:border-r-0"
             >
-              <dt className="text-gray-500 font-medium mb-0.5">{label}</dt>
-              <dd className="text-gray-900 break-all">{String(value)}</dd>
+              <dt className="text-gray-500 dark:text-gray-400 font-medium mb-0.5">{label}</dt>
+              <dd className="text-gray-900 dark:text-gray-100 break-all">{String(value)}</dd>
             </div>
           );
         })}

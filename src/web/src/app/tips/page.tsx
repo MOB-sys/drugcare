@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { tips } from "@/lib/data/tips";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { TipsList } from "@/components/tips/TipsList";
+import { SITE_URL } from "@/lib/constants/site";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "건강팁 — 약과 영양제, 똑똑하게 복용하기",

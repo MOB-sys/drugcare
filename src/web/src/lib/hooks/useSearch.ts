@@ -133,12 +133,14 @@ export function useSearch(): UseSearchReturn {
       try {
         const merged: SearchResultItem[] = [];
 
+        const signal = controller.signal;
         if (filter === "all" || filter === "drug") {
-          const drugs = await searchDrugs(debouncedQuery, 1, 10);
+          const drugs = await searchDrugs(debouncedQuery, 1, 10, { signal });
           merged.push(...drugs.items.map(toDrugResult));
         }
+        if (signal.aborted) return;
         if (filter === "all" || filter === "supplement") {
-          const supps = await searchSupplements(debouncedQuery, 1, 10);
+          const supps = await searchSupplements(debouncedQuery, 1, 10, { signal });
           merged.push(...supps.items.map(toSupplementResult));
         }
 

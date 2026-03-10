@@ -9,6 +9,7 @@ import {
 } from "@/lib/data/ingredients";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { SITE_URL } from "@/lib/constants/site";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const title = `${ingredient.name}(${ingredient.nameEn}) — 효과, 부작용, 주의사항`;
   const description = ingredient.summary;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+  const siteUrl = SITE_URL;
 
   return {
     title,

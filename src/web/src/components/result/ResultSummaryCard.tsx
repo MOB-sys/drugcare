@@ -1,3 +1,6 @@
+"use client";
+
+import { useMemo } from "react";
 import { SEVERITY_CONFIG, SEVERITY_ORDER, type Severity } from "@/lib/constants/severity";
 import type { InteractionCheckResponse } from "@/types/interaction";
 
@@ -47,9 +50,9 @@ function getActionSummary(data: InteractionCheckResponse, counts: Record<Severit
 export function ResultSummaryCard({ data }: ResultSummaryCardProps) {
   const isDanger = data.has_danger;
   const hasInteractions = data.interactions_found > 0;
-  const counts = countBySeverity(data);
+  const counts = useMemo(() => countBySeverity(data), [data]);
   const total = data.interactions_found || 1;
-  const actionSummary = getActionSummary(data, counts);
+  const actionSummary = useMemo(() => getActionSummary(data, counts), [data, counts]);
 
   return (
     <div

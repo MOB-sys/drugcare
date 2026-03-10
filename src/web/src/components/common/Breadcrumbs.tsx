@@ -1,6 +1,7 @@
 /** Breadcrumbs — SEO BreadcrumbList JSON-LD + 시각적 네비게이션. */
 
 import Link from "next/link";
+import { SITE_URL } from "@/lib/constants/site";
 
 export interface BreadcrumbItem {
   label: string;
@@ -19,7 +20,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
       "@type": "ListItem",
       position: i + 1,
       name: item.label,
-      ...(item.href ? { item: `${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}${item.href}` } : {}),
+      ...(item.href ? { item: `${SITE_URL}${item.href}` } : {}),
     })),
   };
 

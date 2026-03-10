@@ -13,11 +13,11 @@ type SortKey = "dur_type" | "ingr_name" | "prohibition_content" | "remark";
 type SortDir = "asc" | "desc";
 
 const SEVERITY_COLORS: Record<string, string> = {
-  pregnancy: "bg-red-100 text-red-800",
-  elderly: "bg-orange-100 text-orange-800",
-  dosage: "bg-amber-100 text-amber-800",
-  duration: "bg-yellow-100 text-yellow-800",
-  efficacy_dup: "bg-purple-100 text-purple-800",
+  pregnancy: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
+  elderly: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
+  dosage: "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+  duration: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+  efficacy_dup: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
 };
 
 const TYPE_LABELS: Record<string, string> = {
@@ -66,14 +66,20 @@ export function ProDURTable({ items }: ProDURTableProps) {
     <div className="overflow-x-auto">
       <table className="w-full text-xs border-collapse">
         <thead>
-          <tr className="bg-gray-100 text-left">
+          <tr className="bg-gray-100 dark:bg-gray-800 text-left">
             {columns.map((col) => (
               <th
                 key={col.key}
-                onClick={() => handleSort(col.key)}
-                className="px-3 py-2 font-semibold text-gray-700 cursor-pointer select-none hover:bg-gray-200 border-b border-gray-300 whitespace-nowrap"
+                className="px-3 py-2 font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-300 dark:border-gray-700 whitespace-nowrap"
               >
-                {col.label}{sortIndicator(col.key)}
+                <button
+                  type="button"
+                  onClick={() => handleSort(col.key)}
+                  aria-label={`${col.label} 기준으로 정렬`}
+                  className="w-full text-left cursor-pointer select-none hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                >
+                  {col.label}{sortIndicator(col.key)}
+                </button>
               </th>
             ))}
           </tr>
@@ -81,7 +87,7 @@ export function ProDURTable({ items }: ProDURTableProps) {
         <tbody>
           {sorted.map((item, i) => {
             const colorCls =
-              SEVERITY_COLORS[item.dur_type] ?? "bg-gray-100 text-gray-800";
+              SEVERITY_COLORS[item.dur_type] ?? "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
             const typeLabel =
               TYPE_LABELS[item.dur_type] ??
               item.type_name ??
@@ -89,7 +95,7 @@ export function ProDURTable({ items }: ProDURTableProps) {
             return (
               <tr
                 key={i}
-                className="border-b border-gray-200 hover:bg-gray-50"
+                className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 <td className="px-3 py-1.5">
                   <span
@@ -98,13 +104,13 @@ export function ProDURTable({ items }: ProDURTableProps) {
                     {typeLabel}
                   </span>
                 </td>
-                <td className="px-3 py-1.5 text-gray-900 font-medium">
+                <td className="px-3 py-1.5 text-gray-900 dark:text-gray-100 font-medium">
                   {item.ingr_name ?? "-"}
                 </td>
-                <td className="px-3 py-1.5 text-gray-700 max-w-md">
+                <td className="px-3 py-1.5 text-gray-700 dark:text-gray-300 max-w-md">
                   {item.prohibition_content ?? "-"}
                 </td>
-                <td className="px-3 py-1.5 text-gray-500">
+                <td className="px-3 py-1.5 text-gray-500 dark:text-gray-400">
                   {item.remark ?? "-"}
                 </td>
               </tr>

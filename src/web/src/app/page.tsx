@@ -4,7 +4,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 
 export const revalidate = 86400; // ISR: 24시간마다 재생성
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+import { SITE_URL } from "@/lib/constants/site";
 
 const websiteJsonLd = {
   "@context": "https://schema.org",

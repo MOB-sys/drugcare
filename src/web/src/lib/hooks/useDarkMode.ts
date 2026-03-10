@@ -14,7 +14,7 @@ export function useDarkMode() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
       if (stored) setThemeState(stored);
-    } catch { /* SSR or test environment */ }
+    } catch (e) { console.error("[useDarkMode] localStorage 읽기 실패:", e); }
   }, []);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function useDarkMode() {
         const dark = t === "dark" || (t === "system" && prefersDark);
         setIsDark(dark);
         document.documentElement.classList.toggle("dark", dark);
-      } catch { /* SSR or test environment */ }
+      } catch (e) { console.error("[useDarkMode] 테마 적용 실패:", e); }
     }
 
     applyTheme(theme);
@@ -34,12 +34,12 @@ export function useDarkMode() {
       function handleChange() { if (theme === "system") applyTheme("system"); }
       mql.addEventListener("change", handleChange);
       return () => mql.removeEventListener("change", handleChange);
-    } catch { /* SSR or test environment */ }
+    } catch (e) { console.error("[useDarkMode] matchMedia 리스너 등록 실패:", e); }
   }, [theme]);
 
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t);
-    try { localStorage.setItem(STORAGE_KEY, t); } catch { /* SSR */ }
+    try { localStorage.setItem(STORAGE_KEY, t); } catch (e) { console.error("[useDarkMode] localStorage 저장 실패:", e); }
   }, []);
 
   const toggle = useCallback(() => {

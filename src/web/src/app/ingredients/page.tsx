@@ -7,8 +7,9 @@ import {
 } from "@/lib/data/ingredients";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { AdBanner } from "@/components/ads/AdBanner";
+import { SITE_URL } from "@/lib/constants/site";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "주요 성분 가이드",

@@ -128,16 +128,17 @@ export default function ComparePage() {
   const [loading, setLoading] = useState(false);
 
   async function loadDetails(item: SearchResult): Promise<CompareItem> {
-    const { fetchApi } = await import("@/lib/api/client");
     if (item.type === "drug") {
-      const d = await fetchApi<Record<string, unknown>>(`/api/v1/drugs/by-slug/${item.slug}`);
+      const { getDrugBySlug } = await import("@/lib/api/drugs");
+      const d = await getDrugBySlug(item.slug) as unknown as Record<string, unknown>;
       const details: Record<string, string | null> = {};
       for (const f of DRUG_FIELDS) details[f.key] = (d[f.key] as string) ?? null;
       details._entp_name = (d.entp_name as string) ?? null;
       details._etc_otc_code = (d.etc_otc_code as string) ?? null;
       return { ...item, details };
     }
-    const s = await fetchApi<Record<string, unknown>>(`/api/v1/supplements/by-slug/${item.slug}`);
+    const { getSupplementBySlug } = await import("@/lib/api/supplements");
+    const s = await getSupplementBySlug(item.slug) as unknown as Record<string, unknown>;
     const details: Record<string, string | null> = {};
     for (const f of SUPP_FIELDS) details[f.key] = (s[f.key] as string) ?? null;
     details._company = (s.company as string) ?? null;

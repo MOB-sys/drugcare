@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { drugCategories } from "@/lib/data/drugCategories";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { SITE_URL } from "@/lib/constants/site";
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
   title: "약물 분류별 가이드 — 진통제부터 안약까지",

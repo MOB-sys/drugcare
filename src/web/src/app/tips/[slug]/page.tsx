@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getTipBySlug, getAllTipSlugs } from "@/lib/data/tips";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { SITE_URL } from "@/lib/constants/site";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const tip = getTipBySlug(slug);
   if (!tip) return { title: "건강팁" };
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
+  const siteUrl = SITE_URL;
   return {
     title: tip.title,
     description: tip.description,
