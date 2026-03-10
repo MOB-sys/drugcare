@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 # DUR 병용금기 API 엔드포인트
 DUR_API_URL = (
-    "http://apis.data.go.kr/1471000/DURPrdlstInfoService03"
+    "https://apis.data.go.kr/1471000/DURPrdlstInfoService03"
     "/getUsjntTabooInfoList03"
 )
 

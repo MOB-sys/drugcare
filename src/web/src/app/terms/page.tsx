@@ -4,7 +4,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 
 export const metadata: Metadata = {
   title: "이용약관",
-  description: "PillRight 서비스 이용약관. 서비스 이용 조건, 면책사항, 약물 정보 제공 범위를 안내합니다.",
+  description: "약잘알 서비스 이용약관. 서비스 이용 조건, 면책사항, 약물 정보 제공 범위를 안내합니다.",
 };
 
 export default function TermsPage() {
@@ -24,7 +24,7 @@ export default function TermsPage() {
         <div className="space-y-8 text-[var(--color-text)] text-sm leading-relaxed break-keep">
           <section>
             <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-3">제1조 (목적)</h2>
-            <p>본 약관은 PillRight(이하 &quot;서비스&quot;)가 제공하는 약물·건강기능식품 정보 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
+            <p>본 약관은 약잘알(이하 &quot;서비스&quot;)이 제공하는 약물·건강기능식품 정보 서비스의 이용 조건 및 절차에 관한 사항을 규정함을 목적으로 합니다.</p>
           </section>
 
           <section>
@@ -102,8 +102,8 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-3">운영 정보</h2>
             <ul className="space-y-1">
-              <li><strong>서비스명:</strong> PillRight</li>
-              <li><strong>운영자:</strong> PillRight Team</li>
+              <li><strong>서비스명:</strong> 약잘알 (PillRight)</li>
+              <li><strong>운영자:</strong> 약잘알 Team</li>
               <li><strong>문의:</strong> <a href="mailto:support@pillright.com" className="text-[var(--color-primary)] hover:underline">support@pillright.com</a></li>
               <li><strong>웹사이트:</strong> <a href="https://pillright.com" className="text-[var(--color-primary)] hover:underline">https://pillright.com</a></li>
             </ul>

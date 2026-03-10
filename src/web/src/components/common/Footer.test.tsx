@@ -15,7 +15,7 @@ describe("Footer", () => {
   it("renders copyright", () => {
     render(<Footer />);
     expect(
-      screen.getAllByText(/PillRight. All rights reserved/).length,
+      screen.getAllByText(/약잘알 \(PillRight\). All rights reserved/).length,
     ).toBeGreaterThanOrEqual(1);
   });
 });

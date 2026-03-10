@@ -9,7 +9,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com";
 const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  name: "PillRight",
+  name: "약잘알",
   url: SITE_URL,
   potentialAction: {
     "@type": "SearchAction",
@@ -92,7 +92,7 @@ export default function HomePage() {
       <section className="py-16">
         <div className="max-w-3xl mx-auto px-4">
           <h2 className="text-2xl font-bold text-center text-gray-900 mb-10">
-            PillRight로 할 수 있는 것
+            약잘알로 할 수 있는 것
           </h2>
           <div className="grid gap-3 sm:gap-6 grid-cols-2 sm:grid-cols-3">
             <Link href="/check" className="group block bg-white rounded-xl border border-gray-200 p-4 sm:p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">

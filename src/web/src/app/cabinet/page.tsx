@@ -76,7 +76,7 @@ export default function CabinetPage() {
             매일 복약 리마인더가 필요하다면?
           </p>
           <p className="text-xs text-gray-500 mb-3">
-            PillRight 앱에서 푸시 알림으로 복용 시간을 놓치지 마세요.
+            약잘알 앱에서 푸시 알림으로 복용 시간을 놓치지 마세요.
           </p>
           <a
             href={storeUrl}

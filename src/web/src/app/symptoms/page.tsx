@@ -4,11 +4,11 @@ import { AdBanner } from "@/components/ads/AdBanner";
 import { SymptomChecker } from "./SymptomChecker";
 
 export const metadata: Metadata = {
-  title: "증상별 약물 검색 | PillRight",
+  title: "증상별 약물 검색 | 약잘알",
   description:
     "두통, 소화불량, 기침 등 증상에 맞는 의약품을 검색하세요. 증상별로 효능이 있는 약물을 빠르게 찾을 수 있습니다.",
   openGraph: {
-    title: "증상별 약물 검색 | PillRight",
+    title: "증상별 약물 검색 | 약잘알",
     description:
       "증상에 맞는 의약품을 빠르게 검색하세요.",
   },

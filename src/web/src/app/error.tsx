@@ -12,7 +12,7 @@ export default function Error({
 }) {
   useEffect(() => {
     Sentry.captureException(error);
-    console.error("[PillRight Error]", error);
+    console.error("[약잘알 Error]", error);
   }, [error]);
 
   return (

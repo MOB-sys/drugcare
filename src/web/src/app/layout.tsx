@@ -32,8 +32,8 @@ export const metadata: Metadata = {
     canonical: "./",
   },
   title: {
-    default: "PillRight — 약/영양제 상호작용 체커",
-    template: "%s | PillRight",
+    default: "약잘알 (PillRight) — 약/영양제 상호작용 체커",
+    template: "%s | 약잘알",
   },
   description:
     "이 약이랑 이 영양제, 같이 먹어도 돼? 3초 만에 확인하는 복약 안전 체커. 의약품·건강기능식품 상호작용 정보를 무료로 확인하세요.",
@@ -43,26 +43,26 @@ export const metadata: Metadata = {
     "복약 체크",
     "약물 상호작용 확인",
     "건강기능식품",
+    "약잘알",
     "PillRight",
-    "필라이트",
   ],
   openGraph: {
     type: "website",
     locale: "ko_KR",
-    siteName: "PillRight",
+    siteName: "약잘알 (PillRight)",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/api/og?title=PillRight&type=default`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/api/og?title=${encodeURIComponent("약잘알 (PillRight)")}&type=default`,
         width: 1200,
         height: 630,
-        alt: "PillRight — 약/영양제 상호작용 체커",
+        alt: "약잘알 (PillRight) — 약/영양제 상호작용 체커",
       },
     ],
   },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "PillRight",
+    title: "약잘알",
   },
   formatDetection: {
     telephone: false,
@@ -96,7 +96,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         {/* OpenSearch — 브라우저 주소창 검색 통합 */}
-        <link rel="search" type="application/opensearchdescription+xml" title="PillRight" href="/opensearch.xml" />
+        <link rel="search" type="application/opensearchdescription+xml" title="약잘알" href="/opensearch.xml" />
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />

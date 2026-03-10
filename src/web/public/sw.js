@@ -1,4 +1,4 @@
-/** PillRight Service Worker — 오프라인 지원 + 정적 자산 캐싱 */
+/** 약잘알 Service Worker — 오프라인 지원 + 정적 자산 캐싱 */
 
 const CACHE_VERSION = "2";
 const CACHE_NAME = `pillright-v${CACHE_VERSION}`;

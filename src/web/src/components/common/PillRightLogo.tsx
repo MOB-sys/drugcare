@@ -1,4 +1,4 @@
-/** PillRight brand logo — shield + check SVG symbol with text. */
+/** 약잘알 brand logo — shield + check SVG symbol with text. */
 
 interface PillRightLogoProps {
   size?: "sm" | "md" | "lg";
@@ -51,7 +51,7 @@ export function PillRightLogo({ size = "md", showText = true, className = "" }: 
       </svg>
       {showText && (
         <span className={`font-bold tracking-tight text-[var(--color-primary)] ${s.text}`}>
-          PillRight
+          약잘알
         </span>
       )}
     </span>

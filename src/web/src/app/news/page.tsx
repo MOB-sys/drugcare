@@ -9,11 +9,11 @@ import type { DrugSearchItem } from "@/types/drug";
 export const revalidate = 86400; // ISR 24시간
 
 export const metadata: Metadata = {
-  title: "의약품 소식 | PillRight",
+  title: "의약품 소식 | 약잘알",
   description:
     "최근 등록된 의약품과 약물 안전 정보를 확인하세요.",
   openGraph: {
-    title: "의약품 소식 | PillRight",
+    title: "의약품 소식 | 약잘알",
     description: "최근 등록된 의약품과 약물 안전 정보를 확인하세요.",
   },
 };

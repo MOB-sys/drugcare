@@ -53,8 +53,8 @@ export default async function TipDetailPage({ params }: PageProps) {
     "@type": "Article",
     headline: tip.title,
     description: tip.description,
-    author: { "@type": "Organization", name: "PillRight" },
-    publisher: { "@type": "Organization", name: "PillRight" },
+    author: { "@type": "Organization", name: "약잘알" },
+    publisher: { "@type": "Organization", name: "약잘알" },
     keywords: tip.tags.join(", "),
   };
 
@@ -128,7 +128,7 @@ export default async function TipDetailPage({ params }: PageProps) {
             지금 복용 중인 약, 괜찮은지 확인해보세요
           </p>
           <p className="text-sm text-gray-500 mb-4">
-            PillRight에서 3초 만에 상호작용을 체크할 수 있습니다.
+            약잘알에서 3초 만에 상호작용을 체크할 수 있습니다.
           </p>
           <Link
             href="/check"

@@ -14,6 +14,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 import { ReviewSection } from "@/components/review/ReviewSection";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
+import { KakaoShareButton } from "@/components/common/KakaoShareButton";
 import { TableOfContents } from "@/components/common/TableOfContents";
 import type { TocItem } from "@/components/common/TableOfContents";
 
@@ -214,8 +215,14 @@ export default async function DrugDetailPage({ params }: PageProps) {
 
             {/* CTA */}
             <CheckCTA itemType="drug" itemId={drug.id} itemName={drug.item_name} />
-            <div className="pb-4">
+            <div className="pb-4 flex flex-wrap items-center gap-3">
               <AddToCabinetButton itemType="drug" itemId={drug.id} itemName={drug.item_name} />
+              <KakaoShareButton
+                title={`${drug.item_name} 효능·용법·상호작용`}
+                description={drug.efcy_qesitm ? drug.efcy_qesitm.slice(0, 100) : `${drug.item_name} 의약품 상세 정보를 확인하세요.`}
+                imageUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/api/og?title=${encodeURIComponent(drug.item_name)}&type=drug`}
+                pageUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/drugs/${slug}`}
+              />
             </div>
 
             {/* 관련 의약품 */}

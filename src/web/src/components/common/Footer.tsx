@@ -81,11 +81,11 @@ export function Footer() {
         {/* Disclaimer + Copyright */}
         <div className="mt-8 pt-6 border-t border-gray-100 text-center text-xs text-gray-400 space-y-2">
           <p>
-            PillRight는 의학적 진단이나 치료를 제공하지 않습니다.
+            약잘알은 의학적 진단이나 치료를 제공하지 않습니다.
             <br />
             제공되는 정보는 참고용이며, 반드시 의사 또는 약사와 상담하세요.
           </p>
-          <p>&copy; {new Date().getFullYear()} PillRight. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} 약잘알 (PillRight). All rights reserved.</p>
         </div>
       </div>
     </footer>

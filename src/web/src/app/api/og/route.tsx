@@ -10,7 +10,7 @@ const SUPPLEMENT_BG = "#ECFDF5";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
-  const title = searchParams.get("title") || "PillRight";
+  const title = searchParams.get("title") || "약잘알";
   const description = searchParams.get("description") || "";
   const type = searchParams.get("type") || "drug";
 
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
               color: PRIMARY_COLOR,
             }}
           >
-            PillRight
+            약잘알
           </span>
         </div>
 

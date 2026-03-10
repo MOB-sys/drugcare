@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   try {
     const drug = await getDrugBySlug(slug);
-    const title = `${drug.item_name} - 전문가 약물정보 | PillRight`;
+    const title = `${drug.item_name} - 전문가 약물정보 | 약잘알`;
     const desc = [
       drug.item_seq && `품목기준코드 ${drug.item_seq}`,
       drug.entp_name,
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       openGraph: { title, description: desc },
     };
   } catch {
-    return { title: "전문가 약물정보 | PillRight" };
+    return { title: "전문가 약물정보 | 약잘알" };
   }
 }
 

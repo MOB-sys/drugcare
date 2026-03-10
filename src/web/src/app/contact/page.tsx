@@ -5,7 +5,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 
 export const metadata: Metadata = {
   title: "문의하기",
-  description: "PillRight 서비스에 대한 문의, 오류 신고, 데이터 수정 요청 등을 보내주세요.",
+  description: "약잘알 서비스에 대한 문의, 오류 신고, 데이터 수정 요청 등을 보내주세요.",
 };
 
 const faqJsonLd = {
@@ -33,7 +33,7 @@ const faqJsonLd = {
       name: "회원가입이 필요한가요?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "아닙니다. PillRight는 회원가입 없이 모든 기능을 이용할 수 있습니다. 복약함 데이터는 기기에 저장됩니다.",
+        text: "아닙니다. 약잘알은 회원가입 없이 모든 기능을 이용할 수 있습니다. 복약함 데이터는 기기에 저장됩니다.",
       },
     },
   ],
@@ -56,7 +56,7 @@ export default function ContactPage() {
       <section className="max-w-3xl mx-auto px-4 py-8">
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2">문의하기</h1>
         <p className="text-[var(--color-text-secondary)] mb-8">
-          PillRight 서비스에 대한 문의사항이나 피드백을 보내주세요.
+          약잘알 서비스에 대한 문의사항이나 피드백을 보내주세요.
         </p>
 
         <div className="mb-8">
@@ -99,7 +99,7 @@ export default function ContactPage() {
             <div>
               <h3 className="font-medium text-[var(--color-text)] mb-1">회원가입이 필요한가요?</h3>
               <p className="text-sm text-[var(--color-text-secondary)]">
-                아닙니다. PillRight는 회원가입 없이 모든 기능을 이용할 수 있습니다. 복약함 데이터는 기기에 저장됩니다.
+                아닙니다. 약잘알은 회원가입 없이 모든 기능을 이용할 수 있습니다. 복약함 데이터는 기기에 저장됩니다.
               </p>
             </div>
           </div>

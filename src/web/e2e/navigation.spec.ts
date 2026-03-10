@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 test.describe("페이지 내비게이션", () => {
   test("홈페이지가 정상 로드된다", async ({ page }) => {
     await page.goto("/");
-    await expect(page).toHaveTitle(/PillRight/);
+    await expect(page).toHaveTitle(/약잘알/);
     await expect(page.locator("text=상호작용 확인하기")).toBeVisible();
   });
 

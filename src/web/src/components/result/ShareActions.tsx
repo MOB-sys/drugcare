@@ -1,17 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-declare global {
-  interface Window {
-    Kakao?: {
-      isInitialized(): boolean;
-      Share: {
-        sendDefault(params: Record<string, unknown>): void;
-      };
-    };
-  }
-}
+import { KakaoShareButton } from "@/components/common/KakaoShareButton";
 
 export function ShareActions() {
   const [copied, setCopied] = useState(false);
@@ -41,26 +31,6 @@ export function ShareActions() {
     window.print();
   }
 
-  function handleKakaoShare() {
-    try {
-      if (!window.Kakao?.isInitialized()) return;
-      window.Kakao.Share.sendDefault({
-        objectType: "feed",
-        content: {
-          title: document.title,
-          description: "PillRight — 약/영양제 상호작용 체커",
-          imageUrl: `${window.location.origin}/icon-512`,
-          link: { mobileWebUrl: window.location.href, webUrl: window.location.href },
-        },
-        buttons: [
-          { title: "확인하기", link: { mobileWebUrl: window.location.href, webUrl: window.location.href } },
-        ],
-      });
-    } catch { /* Kakao SDK not loaded */ }
-  }
-
-  const kakaoAvailable = typeof window !== "undefined" && window.Kakao?.isInitialized();
-
   return (
     <div className="flex flex-wrap gap-2">
       {/* URL 복사 */}
@@ -75,17 +45,12 @@ export function ShareActions() {
       </button>
 
       {/* 카카오톡 공유 */}
-      {kakaoAvailable && (
-        <button
-          onClick={handleKakaoShare}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-[#FEE500] hover:border-[#FEE500] hover:text-[#191919] transition-colors"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 3C6.48 3 2 6.36 2 10.44c0 2.61 1.73 4.91 4.33 6.24l-1.1 4.08c-.1.36.3.65.6.44l4.82-3.18c.44.04.89.06 1.35.06 5.52 0 10-3.36 10-7.64C22 6.36 17.52 3 12 3z" />
-          </svg>
-          카카오톡
-        </button>
-      )}
+      <KakaoShareButton
+        title="상호작용 체크 결과"
+        description="약잘알 — 약/영양제 상호작용 체커에서 결과를 확인하세요."
+        buttonLabel="카카오톡"
+        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium border border-gray-200 text-gray-600 hover:bg-[#FEE500] hover:border-[#FEE500] hover:text-[#191919] transition-colors"
+      />
 
       {/* 공유 */}
       <button

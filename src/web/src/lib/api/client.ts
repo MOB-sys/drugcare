@@ -1,4 +1,4 @@
-/** PillRight API 클라이언트 — 서버/클라이언트 양쪽 사용 가능. */
+/** 약잘알 API 클라이언트 — 서버/클라이언트 양쪽 사용 가능. */
 
 import { withRetry } from "@/lib/utils/retry";
 

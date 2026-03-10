@@ -10,6 +10,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 import { ReviewSection } from "@/components/review/ReviewSection";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
+import { KakaoShareButton } from "@/components/common/KakaoShareButton";
 import { TableOfContents } from "@/components/common/TableOfContents";
 import type { TocItem } from "@/components/common/TableOfContents";
 import type { IngredientInfo } from "@/types/drug";
@@ -184,8 +185,14 @@ export default async function SupplementDetailPage({ params }: PageProps) {
 
             {/* CTA */}
             <CheckCTA itemType="supplement" itemId={supp.id} itemName={supp.product_name} />
-            <div className="pb-4">
+            <div className="pb-4 flex flex-wrap items-center gap-3">
               <AddToCabinetButton itemType="supplement" itemId={supp.id} itemName={supp.product_name} />
+              <KakaoShareButton
+                title={`${supp.product_name} 기능성·성분·섭취방법`}
+                description={supp.functionality ? supp.functionality.slice(0, 100) : `${supp.product_name} 건강기능식품 상세 정보를 확인하세요.`}
+                imageUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/api/og?title=${encodeURIComponent(supp.product_name)}&type=supplement`}
+                pageUrl={`${process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com"}/supplements/${slug}`}
+              />
             </div>
 
             {/* 관련 건강기능식품 */}
