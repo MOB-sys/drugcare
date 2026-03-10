@@ -20,16 +20,14 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-/* ── SSG ────────────────────────────────────────── */
+/* ── ISR ────────────────────────────────────────── */
+
+export const dynamicParams = true;
+export const revalidate = 86400; // 24시간
 
 export async function generateStaticParams() {
-  try {
-    const slugs = await getAllSupplementSlugs();
-    return slugs.map((slug) => ({ slug }));
-  } catch (error) {
-    console.error("[generateStaticParams:supplements] Failed to fetch supplement slugs:", error);
-    return [];
-  }
+  // 빌드 시 생성하지 않고 요청 시 생성 (ISR)
+  return [];
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
