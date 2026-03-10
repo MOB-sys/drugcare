@@ -91,6 +91,7 @@ export function SymptomChecker() {
           value={customQuery}
           onChange={(e) => setCustomQuery(e.target.value)}
           placeholder="증상을 직접 입력하세요 (예: 두통, 소화불량)"
+          aria-label="증상 검색"
           className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)]"
         />
         <button

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearch } from "@/lib/hooks/useSearch";
 import { useRecentSearches } from "@/lib/hooks/useRecentSearches";
 import { SearchInput } from "@/components/check/SearchInput";
@@ -11,7 +11,7 @@ import { SelectedItemsBar } from "@/components/check/SelectedItemsBar";
 import { CheckButton } from "@/components/check/CheckButton";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 
-export default function CheckPage() {
+function CheckPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const search = useSearch();
@@ -60,7 +60,7 @@ export default function CheckPage() {
 
       <section className="max-w-2xl mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2">상호작용 체크</h1>
-        <p className="text-gray-500 mb-6">
+        <p className="text-gray-500 dark:text-gray-400 mb-6">
           복용 중인 약물과 영양제를 검색해서 선택하세요.
         </p>
 
@@ -75,7 +75,7 @@ export default function CheckPage() {
           />
           <FilterChips current={search.filter} onChange={search.setFilter} />
 
-          <div className="border border-gray-200 rounded-xl bg-white overflow-hidden shadow-sm">
+          <div className="border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 overflow-hidden shadow-sm">
             <SearchResults
               results={search.results}
               isLoading={search.isLoading}
@@ -101,5 +101,13 @@ export default function CheckPage() {
         </div>
       </section>
     </>
+  );
+}
+
+export default function CheckPage() {
+  return (
+    <Suspense>
+      <CheckPageContent />
+    </Suspense>
   );
 }

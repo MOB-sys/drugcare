@@ -29,6 +29,9 @@ export function searchDrugs(
 
 /** slug로 약물 상세 조회 (SSG용). */
 export function getDrugBySlug(slug: string): Promise<DrugDetail> {
+  if (!/^[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ\-]+$/i.test(slug)) {
+    throw new Error("Invalid slug format");
+  }
   return fetchApi<DrugDetail>(`/api/v1/drugs/by-slug/${slug}`);
 }
 

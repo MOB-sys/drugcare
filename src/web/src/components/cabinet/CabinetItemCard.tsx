@@ -12,7 +12,7 @@ export function CabinetItemCard({ item, isDeleting, onDelete }: CabinetItemCardP
   const dateStr = new Date(item.created_at).toLocaleDateString("ko-KR");
 
   return (
-    <div className={`flex items-center gap-3 px-4 py-3 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all ${isDeleting ? "opacity-50 pointer-events-none" : ""}`}>
+    <div className={`flex items-center gap-3 px-4 py-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all ${isDeleting ? "opacity-50 pointer-events-none" : ""}`}>
       <span
         className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-medium ${
           item.item_type === "drug"
@@ -23,7 +23,7 @@ export function CabinetItemCard({ item, isDeleting, onDelete }: CabinetItemCardP
         {item.item_type === "drug" ? "의약품" : "영양제"}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="font-medium text-gray-900 truncate">
+        <p className="font-medium text-gray-900 dark:text-gray-100 truncate">
           {item.nickname || item.item_name}
         </p>
         <p className="text-xs text-gray-400">{dateStr} 추가</p>

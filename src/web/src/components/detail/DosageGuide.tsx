@@ -8,13 +8,13 @@ interface DosageGuideProps {
 /** Icon card for a single dosage data point. */
 function DosageCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+    <div className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700">
       <div className="w-9 h-9 rounded-lg bg-[var(--color-primary-50)] flex items-center justify-center shrink-0">
         {icon}
       </div>
       <div className="min-w-0">
-        <p className="text-xs font-medium text-gray-500">{label}</p>
-        <p className="text-sm font-semibold text-gray-800">{value}</p>
+        <p className="text-xs font-medium text-gray-500 dark:text-gray-400">{label}</p>
+        <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{value}</p>
       </div>
     </div>
   );
@@ -76,7 +76,7 @@ export function DosageGuide({ content, id }: DosageGuideProps) {
   const hasData = hasStructuredData(info);
 
   return (
-    <section id={id} className="py-4 border-b border-gray-100 last:border-b-0 scroll-mt-24">
+    <section id={id} className="py-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 scroll-mt-24">
       <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-3">용법 · 용량</h2>
 
       {hasData && (
@@ -97,16 +97,16 @@ export function DosageGuide({ content, id }: DosageGuideProps) {
       )}
 
       {hasData && info.ageBasedDosing.length > 0 && (
-        <div className="mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+        <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-100 dark:border-gray-700">
           <div className="flex items-center gap-2 mb-2">
             <UsersIcon />
-            <p className="text-xs font-medium text-gray-500">연령별 용량</p>
+            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">연령별 용량</p>
           </div>
           <div className="space-y-1.5">
             {info.ageBasedDosing.map((ad, i) => (
               <div key={i} className="flex gap-2 text-sm">
-                <span className="font-semibold text-gray-700 min-w-[3rem]">{ad.ageGroup}</span>
-                <span className="text-gray-600">{ad.dose}</span>
+                <span className="font-semibold text-gray-700 dark:text-gray-300 min-w-[3rem]">{ad.ageGroup}</span>
+                <span className="text-gray-600 dark:text-gray-400">{ad.dose}</span>
               </div>
             ))}
           </div>
@@ -114,7 +114,7 @@ export function DosageGuide({ content, id }: DosageGuideProps) {
       )}
 
       {/* Always show raw text as fallback / full detail */}
-      <p className="text-gray-700 leading-relaxed whitespace-pre-line break-keep text-sm">
+      <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line break-keep text-sm">
         {content}
       </p>
     </section>

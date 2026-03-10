@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 export type ToastType = "success" | "error" | "warning" | "info";
 
@@ -20,9 +20,24 @@ export interface UseToastReturn {
 
 export function useToast(): UseToastReturn {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const timerMap = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+
+  /** Clean up all timers on unmount. */
+  useEffect(() => {
+    const timers = timerMap.current;
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+      timers.clear();
+    };
+  }, []);
 
   const removeToast = useCallback((id: string) => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
+    const timer = timerMap.current.get(id);
+    if (timer) {
+      clearTimeout(timer);
+      timerMap.current.delete(id);
+    }
   }, []);
 
   const addToast = useCallback(
@@ -30,9 +45,11 @@ export function useToast(): UseToastReturn {
       const id = `toast-${++toastCounter}`;
       setToasts((prev) => [...prev.slice(-4), { id, message, type }]);
 
-      setTimeout(() => {
+      const timer = setTimeout(() => {
+        timerMap.current.delete(id);
         removeToast(id);
       }, 3500);
+      timerMap.current.set(id, timer);
     },
     [removeToast],
   );

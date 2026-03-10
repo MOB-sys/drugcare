@@ -28,7 +28,7 @@ export function SelectedItemsBar({ items, onRemove, onClearAll }: SelectedItemsB
         {items.map((item) => (
           <span
             key={`${item.item_type}-${item.item_id}`}
-            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-white border border-[var(--color-primary-100)] shadow-sm"
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm bg-white dark:bg-gray-800 border border-[var(--color-primary-100)] shadow-sm"
           >
             <span
               className={`w-1.5 h-1.5 rounded-full ${

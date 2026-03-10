@@ -9,10 +9,10 @@ export default function NotFound() {
         </svg>
       </div>
       <div className="text-6xl font-bold text-[var(--color-primary)] mb-4">404</div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-3">
+      <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
         페이지를 찾을 수 없습니다
       </h1>
-      <p className="text-gray-500 mb-8">
+      <p className="text-gray-500 dark:text-gray-400 mb-8">
         요청하신 페이지가 존재하지 않거나, 주소가 변경되었을 수 있습니다.
       </p>
       <div className="flex justify-center gap-4">
@@ -24,7 +24,7 @@ export default function NotFound() {
         </Link>
         <Link
           href="/check"
-          className="px-6 py-3 rounded-xl font-semibold border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+          className="px-6 py-3 rounded-xl font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
         >
           상호작용 체크
         </Link>

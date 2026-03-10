@@ -75,7 +75,7 @@ export default function CabinetPage() {
           <p className="text-sm font-medium text-[var(--color-primary)] mb-1">
             매일 복약 리마인더가 필요하다면?
           </p>
-          <p className="text-xs text-gray-500 mb-3">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">
             약잘알 앱에서 푸시 알림으로 복용 시간을 놓치지 마세요.
           </p>
           <a
@@ -88,7 +88,7 @@ export default function CabinetPage() {
           </a>
         </div>
 
-        <p className="text-xs text-gray-400 text-center mt-6">
+        <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-6">
           이 서비스는 의사/약사의 전문적 판단을 대체하지 않습니다.
         </p>
       </div>

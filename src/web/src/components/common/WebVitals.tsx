@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { onCLS, onFCP, onINP, onLCP, onTTFB } from "web-vitals";
 import type { Metric } from "web-vitals";
 
 /** Core Web Vitals → GA4 전송 */
@@ -17,11 +16,13 @@ function sendToGA(metric: Metric) {
 
 export function WebVitals() {
   useEffect(() => {
-    onCLS(sendToGA);
-    onFCP(sendToGA);
-    onINP(sendToGA);
-    onLCP(sendToGA);
-    onTTFB(sendToGA);
+    import("web-vitals").then(({ onCLS, onFCP, onINP, onLCP, onTTFB }) => {
+      onCLS(sendToGA);
+      onFCP(sendToGA);
+      onINP(sendToGA);
+      onLCP(sendToGA);
+      onTTFB(sendToGA);
+    });
   }, []);
 
   return null;

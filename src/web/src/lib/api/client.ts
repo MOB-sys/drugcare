@@ -19,6 +19,7 @@ function getEndpointGroup(path: string): string {
 }
 
 async function waitForRateLimit(path: string): Promise<void> {
+  if (typeof window === "undefined") return; // skip rate limiting on server
   const group = getEndpointGroup(path);
   const now = Date.now();
   const timestamps = requestLog.get(group) ?? [];

@@ -134,12 +134,12 @@ export default async function DrugDetailPage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
       {faqJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c') }}
         />
       )}
 
@@ -165,20 +165,20 @@ export default async function DrugDetailPage({ params }: PageProps) {
                   height={128}
                   priority
                   sizes="128px"
-                  className="rounded-xl object-contain bg-white border border-gray-200 shadow-sm shrink-0"
+                  className="rounded-xl object-contain bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
                 />
               )}
               <div className="min-w-0">
                 <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2 break-keep">{drug.item_name}</h1>
                 <div className="flex flex-wrap gap-2 text-sm mb-3">
                   {drug.entp_name && (
-                    <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-600">{drug.entp_name}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{drug.entp_name}</span>
                   )}
                   {otcLabel && (
                     <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700">{otcLabel}</span>
                   )}
                   {drug.class_no && (
-                    <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-500">분류 {drug.class_no}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">분류 {drug.class_no}</span>
                   )}
                 </div>
                 <DataSource source="식약처 의약품안전나라" />
@@ -186,7 +186,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
             </div>
 
             {/* 정보 섹션 */}
-            <div className="bg-white rounded-xl border border-gray-200 px-6 divide-y divide-gray-100 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-6 divide-y divide-gray-100 dark:divide-gray-700 shadow-sm">
               <InfoSection id="efficacy" title="효능·효과" content={drug.efcy_qesitm} />
               {drug.use_method_qesitm ? (
                 <DosageGuide id="usage" content={drug.use_method_qesitm} />
@@ -232,7 +232,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
                     <Link
                       key={rd.id}
                       href={`/drugs/${rd.slug}`}
-                      className="flex items-center gap-3 p-3 bg-white rounded-xl border border-gray-200 hover:border-[var(--color-primary-100)] hover:shadow-sm transition-all"
+                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-[var(--color-primary-100)] hover:shadow-sm transition-all"
                     >
                       {rd.item_image ? (
                         <SafeImage
@@ -240,7 +240,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
                           alt={rd.item_name}
                           width={40}
                           height={40}
-                          className="rounded-lg object-contain bg-white border border-gray-100 shrink-0"
+                          className="rounded-lg object-contain bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 shrink-0"
                         />
                       ) : (
                         <div className="w-10 h-10 rounded-lg bg-[var(--color-primary-50)] flex items-center justify-center shrink-0">
@@ -250,8 +250,8 @@ export default async function DrugDetailPage({ params }: PageProps) {
                         </div>
                       )}
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">{rd.item_name}</p>
-                        {rd.entp_name && <p className="text-xs text-gray-500 truncate">{rd.entp_name}</p>}
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{rd.item_name}</p>
+                        {rd.entp_name && <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{rd.entp_name}</p>}
                       </div>
                     </Link>
                   ))}
@@ -275,14 +275,14 @@ export default async function DrugDetailPage({ params }: PageProps) {
             <div className="text-center mt-4">
               <Link
                 href={`/professional/drugs/${slug}`}
-                className="text-xs text-gray-500 hover:text-[var(--color-primary)] underline underline-offset-2 transition-colors"
+                className="text-xs text-gray-500 dark:text-gray-400 hover:text-[var(--color-primary)] underline underline-offset-2 transition-colors"
               >
                 전문가용 상세 정보 보기
               </Link>
             </div>
 
             {/* 면책조항 */}
-            <p className="text-xs text-gray-400 text-center mt-2">
+            <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-2">
               이 정보는 식약처 공공데이터를 기반으로 하며, 의사/약사의 전문적 판단을 대체하지 않습니다.
             </p>
           </article>
@@ -297,21 +297,21 @@ export default async function DrugDetailPage({ params }: PageProps) {
               <AdBanner slot="drug-detail-sidebar" format="rectangle" />
 
               {/* 관련 링크 */}
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">바로가기</p>
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">바로가기</p>
                 <ul className="space-y-1.5">
                   <li>
-                    <Link href="/check" className="text-sm text-gray-600 hover:text-[var(--color-primary)] transition-colors">
+                    <Link href="/check" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[var(--color-primary)] transition-colors">
                       상호작용 체크
                     </Link>
                   </li>
                   <li>
-                    <Link href="/drugs" className="text-sm text-gray-600 hover:text-[var(--color-primary)] transition-colors">
+                    <Link href="/drugs" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[var(--color-primary)] transition-colors">
                       의약품 목록
                     </Link>
                   </li>
                   <li>
-                    <Link href="/cabinet" className="text-sm text-gray-600 hover:text-[var(--color-primary)] transition-colors">
+                    <Link href="/cabinet" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[var(--color-primary)] transition-colors">
                       내 복약함
                     </Link>
                   </li>

@@ -58,7 +58,9 @@ export function QuickSearch({ type, placeholder }: QuickSearchProps) {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          maxLength={200}
           placeholder={placeholder || defaultPlaceholder}
+          aria-label="검색어 입력"
           className="w-full px-4 py-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-xl bg-[var(--color-surface)] text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-sm"
         />
         <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

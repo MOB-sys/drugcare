@@ -131,12 +131,12 @@ export default async function SupplementDetailPage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
       {faqJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c') }}
         />
       )}
 
@@ -157,20 +157,20 @@ export default async function SupplementDetailPage({ params }: PageProps) {
               <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2 break-keep">{supp.product_name}</h1>
               <div className="flex flex-wrap gap-2 text-sm mb-3">
                 {supp.company && (
-                  <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-600">{supp.company}</span>
+                  <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{supp.company}</span>
                 )}
                 {supp.category && (
                   <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700">{supp.category}</span>
                 )}
                 {supp.registration_no && (
-                  <span className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-500">{supp.registration_no}</span>
+                  <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">{supp.registration_no}</span>
                 )}
               </div>
               <DataSource source="식약처 건강기능식품 정보" />
             </div>
 
             {/* 정보 섹션 */}
-            <div className="bg-white rounded-xl border border-gray-200 px-6 divide-y divide-gray-100 shadow-sm">
+            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-6 divide-y divide-gray-100 dark:divide-gray-700 shadow-sm">
               <InfoSection id="functionality" title="기능성" content={supp.functionality} />
               <InfoSection id="main-ingredient" title="주성분" content={supp.main_ingredient} />
 
@@ -205,7 +205,7 @@ export default async function SupplementDetailPage({ params }: PageProps) {
                     <Link
                       key={rs.id}
                       href={`/supplements/${rs.slug}`}
-                      className="flex items-center gap-3 p-3 bg-white rounded-xl border border-gray-200 hover:border-[var(--color-primary-100)] hover:shadow-sm transition-all"
+                      className="flex items-center gap-3 p-3 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-[var(--color-primary-100)] hover:shadow-sm transition-all"
                     >
                       <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center shrink-0">
                         <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,8 +213,8 @@ export default async function SupplementDetailPage({ params }: PageProps) {
                         </svg>
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">{rs.product_name}</p>
-                        {rs.company && <p className="text-xs text-gray-500 truncate">{rs.company}</p>}
+                        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">{rs.product_name}</p>
+                        {rs.company && <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{rs.company}</p>}
                       </div>
                     </Link>
                   ))}
@@ -229,7 +229,7 @@ export default async function SupplementDetailPage({ params }: PageProps) {
             <AdBanner slot="supplement-detail-bottom" format="horizontal" />
 
             {/* 면책조항 */}
-            <p className="text-xs text-gray-400 text-center mt-4">
+            <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-4">
               이 정보는 식약처 공공데이터를 기반으로 하며, 의사/약사의 전문적 판단을 대체하지 않습니다.
             </p>
           </article>
@@ -244,21 +244,21 @@ export default async function SupplementDetailPage({ params }: PageProps) {
               <AdBanner slot="supplement-detail-sidebar" format="rectangle" />
 
               {/* 관련 링크 */}
-              <div className="bg-white rounded-xl border border-gray-200 p-4">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">바로가기</p>
+              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
+                <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">바로가기</p>
                 <ul className="space-y-1.5">
                   <li>
-                    <Link href="/check" className="text-sm text-gray-600 hover:text-[var(--color-primary)] transition-colors">
+                    <Link href="/check" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[var(--color-primary)] transition-colors">
                       상호작용 체크
                     </Link>
                   </li>
                   <li>
-                    <Link href="/supplements" className="text-sm text-gray-600 hover:text-[var(--color-primary)] transition-colors">
+                    <Link href="/supplements" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[var(--color-primary)] transition-colors">
                       건강기능식품 목록
                     </Link>
                   </li>
                   <li>
-                    <Link href="/cabinet" className="text-sm text-gray-600 hover:text-[var(--color-primary)] transition-colors">
+                    <Link href="/cabinet" className="text-sm text-gray-600 dark:text-gray-400 hover:text-[var(--color-primary)] transition-colors">
                       내 복약함
                     </Link>
                   </li>

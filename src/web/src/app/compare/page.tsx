@@ -7,8 +7,8 @@ import { searchSupplements } from "@/lib/api/supplements";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { useDebounce } from "@/lib/hooks/useDebounce";
-import type { DrugSearchItem } from "@/types/drug";
-import type { SupplementSearchItem } from "@/types/supplement";
+import type { DrugSearchItem, DrugDetail } from "@/types/drug";
+import type { SupplementSearchItem, SupplementDetail } from "@/types/supplement";
 
 type CompareItem = {
   type: "drug" | "supplement";
@@ -79,6 +79,7 @@ function DrugSearchBox({
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="약물 또는 영양제 검색..."
+        aria-label={`${label} 검색`}
         className="w-full px-3 py-2 border border-[var(--color-border)] rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] bg-[var(--color-surface)]"
       />
       {loading && <p className="text-xs text-[var(--color-text-muted)] mt-2">검색 중...</p>}
@@ -130,19 +131,19 @@ export default function ComparePage() {
   async function loadDetails(item: SearchResult): Promise<CompareItem> {
     if (item.type === "drug") {
       const { getDrugBySlug } = await import("@/lib/api/drugs");
-      const d = await getDrugBySlug(item.slug) as unknown as Record<string, unknown>;
+      const d: DrugDetail = await getDrugBySlug(item.slug);
       const details: Record<string, string | null> = {};
-      for (const f of DRUG_FIELDS) details[f.key] = (d[f.key] as string) ?? null;
-      details._entp_name = (d.entp_name as string) ?? null;
-      details._etc_otc_code = (d.etc_otc_code as string) ?? null;
+      for (const f of DRUG_FIELDS) details[f.key] = d[f.key as keyof DrugDetail] as string | null ?? null;
+      details._entp_name = d.entp_name ?? null;
+      details._etc_otc_code = d.etc_otc_code ?? null;
       return { ...item, details };
     }
     const { getSupplementBySlug } = await import("@/lib/api/supplements");
-    const s = await getSupplementBySlug(item.slug) as unknown as Record<string, unknown>;
+    const s: SupplementDetail = await getSupplementBySlug(item.slug);
     const details: Record<string, string | null> = {};
-    for (const f of SUPP_FIELDS) details[f.key] = (s[f.key] as string) ?? null;
-    details._company = (s.company as string) ?? null;
-    details._category = (s.category as string) ?? null;
+    for (const f of SUPP_FIELDS) details[f.key] = s[f.key as keyof SupplementDetail] as string | null ?? null;
+    details._company = s.company ?? null;
+    details._category = s.category ?? null;
     return { ...item, details };
   }
 

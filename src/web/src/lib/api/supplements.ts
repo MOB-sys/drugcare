@@ -23,6 +23,9 @@ export function searchSupplements(
 
 /** slug로 영양제 상세 조회 (SSG용). */
 export function getSupplementBySlug(slug: string): Promise<SupplementDetail> {
+  if (!/^[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ\-]+$/i.test(slug)) {
+    throw new Error("Invalid slug format");
+  }
   return fetchApi<SupplementDetail>(`/api/v1/supplements/by-slug/${slug}`);
 }
 

@@ -69,8 +69,10 @@ export function SearchInput({
         onFocus={() => setShowDropdown(true)}
         placeholder="약물 또는 영양제를 검색하세요"
         aria-label="약물 또는 영양제 검색"
+        role="combobox"
+        aria-expanded={shouldShowDropdown}
         autoComplete="off"
-        className="w-full pl-11 pr-10 py-3 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-base bg-white"
+        className="w-full pl-11 pr-10 py-3 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-base bg-white dark:bg-gray-800 dark:text-gray-100"
       />
       {value && (
         <button
@@ -91,10 +93,10 @@ export function SearchInput({
 
       {/* 드롭다운: 최근 검색 + 인기 검색어 */}
       {shouldShowDropdown && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-20 overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-20 overflow-hidden">
           {/* 최근 검색 */}
           {recentSearches.length > 0 && (
-            <div className="p-3 border-b border-gray-100">
+            <div className="p-3 border-b border-gray-100 dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">최근 검색</p>
                 {onClearRecent && (
@@ -108,7 +110,7 @@ export function SearchInput({
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {recentSearches.map((q) => (
-                  <div key={q} className="inline-flex items-center gap-1 rounded-lg bg-gray-50 text-sm text-gray-700 hover:bg-gray-100 transition-colors group">
+                  <div key={q} className="inline-flex items-center gap-1 rounded-lg bg-gray-50 dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors group">
                     <button
                       onClick={() => handleSelect(q)}
                       className="pl-2.5 py-1 hover:text-[var(--color-primary)]"

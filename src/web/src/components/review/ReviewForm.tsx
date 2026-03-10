@@ -52,11 +52,11 @@ export function ReviewForm({ itemType, itemId, onSubmitted }: ReviewFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <h3 className="text-sm font-semibold text-gray-700">리뷰 작성</h3>
+      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">리뷰 작성</h3>
 
       {/* 전체 평점 */}
       <div>
-        <label className="block text-xs text-gray-500 mb-1">
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
           전체 평점 <span className="text-red-400">*</span>
         </label>
         <StarRating value={rating} onChange={setRating} size="lg" label="전체 평점" />
@@ -65,18 +65,18 @@ export function ReviewForm({ itemType, itemId, onSubmitted }: ReviewFormProps) {
       {/* 세부 평점 */}
       <div className="flex flex-wrap gap-6">
         <div>
-          <label className="block text-xs text-gray-500 mb-1">효과</label>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">효과</label>
           <StarRating value={effectiveness} onChange={setEffectiveness} size="sm" label="효과" />
         </div>
         <div>
-          <label className="block text-xs text-gray-500 mb-1">복용 편의성</label>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">복용 편의성</label>
           <StarRating value={easeOfUse} onChange={setEaseOfUse} size="sm" label="복용 편의성" />
         </div>
       </div>
 
       {/* 코멘트 */}
       <div>
-        <label className="block text-xs text-gray-500 mb-1">
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
           한줄평 (선택, 최대 500자)
         </label>
         <textarea
@@ -85,7 +85,7 @@ export function ReviewForm({ itemType, itemId, onSubmitted }: ReviewFormProps) {
           placeholder="복용 경험을 공유해주세요..."
           rows={3}
           maxLength={500}
-          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] resize-none"
+          className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] resize-none bg-white dark:bg-gray-800 dark:text-gray-100"
         />
         <p className="text-xs text-gray-400 text-right">{comment.length}/500</p>
       </div>
@@ -100,7 +100,7 @@ export function ReviewForm({ itemType, itemId, onSubmitted }: ReviewFormProps) {
         {submitting ? "등록 중..." : "리뷰 등록"}
       </button>
 
-      <p className="text-xs text-gray-400">
+      <p className="text-xs text-gray-400 dark:text-gray-500">
         리뷰는 다른 사용자에게 도움이 됩니다. 의사/약사의 전문적 판단을 대체하지 않습니다.
       </p>
     </form>

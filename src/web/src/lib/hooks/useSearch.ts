@@ -46,12 +46,12 @@ function parsePreselect(param: string | null): SelectedItem[] {
   if (!param) return [];
   try {
     return param.split(",").reduce<SelectedItem[]>((acc, part) => {
-      const [type, id, ...nameParts] = part.split("|");
+      const [type, id, ...nameParts] = part.split(":");
       if ((type === "drug" || type === "supplement") && id && nameParts.length) {
         acc.push({
           item_type: type,
           item_id: Number(id),
-          name: decodeURIComponent(nameParts.join("|")),
+          name: decodeURIComponent(nameParts.join(":")),
         });
       }
       return acc;
@@ -116,7 +116,8 @@ export function useSearch(): UseSearchReturn {
   const clearAll = useCallback(() => setSelectedItems([]), []);
 
   useEffect(() => {
-    if (!debouncedQuery.trim()) {
+    const trimmedQuery = debouncedQuery.trim().slice(0, 200);
+    if (!trimmedQuery) {
       setResults([]);
       setSearchError(null);
       return;
@@ -135,12 +136,12 @@ export function useSearch(): UseSearchReturn {
 
         const signal = controller.signal;
         if (filter === "all" || filter === "drug") {
-          const drugs = await searchDrugs(debouncedQuery, 1, 10, { signal });
+          const drugs = await searchDrugs(trimmedQuery, 1, 10, { signal });
           merged.push(...drugs.items.map(toDrugResult));
         }
         if (signal.aborted) return;
         if (filter === "all" || filter === "supplement") {
-          const supps = await searchSupplements(debouncedQuery, 1, 10, { signal });
+          const supps = await searchSupplements(trimmedQuery, 1, 10, { signal });
           merged.push(...supps.items.map(toSupplementResult));
         }
 

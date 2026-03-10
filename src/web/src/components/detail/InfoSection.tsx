@@ -10,9 +10,9 @@ export function InfoSection({ title, content, id }: InfoSectionProps) {
   if (!content) return null;
 
   return (
-    <section id={id} className="py-4 border-b border-gray-100 last:border-b-0 scroll-mt-24">
+    <section id={id} className="py-4 border-b border-gray-100 dark:border-gray-700 last:border-b-0 scroll-mt-24">
       <h2 className="text-lg font-semibold text-[var(--color-primary)] mb-2">{title}</h2>
-      <p className="text-gray-700 leading-relaxed whitespace-pre-line break-keep">{content}</p>
+      <p className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line break-keep">{content}</p>
     </section>
   );
 }

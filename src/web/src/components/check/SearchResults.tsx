@@ -61,7 +61,7 @@ export function SearchResults({
   }
 
   return (
-    <div className="divide-y divide-gray-100 max-h-80 overflow-y-auto scrollbar-thin" role="listbox" aria-label={`검색 결과 ${results.length}건`}>
+    <div className="divide-y divide-gray-100 dark:divide-gray-700 max-h-80 overflow-y-auto scrollbar-thin" role="listbox" aria-label={`검색 결과 ${results.length}건`}>
       {results.map((r) => (
         <SearchResultItem
           key={`${r.item_type}-${r.item_id}`}
