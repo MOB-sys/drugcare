@@ -1,59 +1,49 @@
 import Link from "next/link";
 import { PillRightLogo } from "@/components/common/PillRightLogo";
 import { AdBanner } from "@/components/ads/AdBanner";
-import { searchDrugs } from "@/lib/api/drugs";
-import { searchSupplements } from "@/lib/api/supplements";
 
 export const revalidate = 86400; // ISR: 24시간마다 재생성
 
 import { SITE_URL } from "@/lib/constants/site";
 
+/** 인기 조합 — DB에서 검증된 아이템 ID를 하드코딩 (빌드 시 API 의존성 제거). */
 const POPULAR_COMBOS = [
-  { items: ["타이레놀", "오메가3"], label: "타이레놀 + 오메가3" },
-  { items: ["아스피린", "오메가3"], label: "아스피린 + 오메가3" },
-  { items: ["비타민D", "칼슘"], label: "비타민D + 칼슘" },
-  { items: ["철분", "칼슘"], label: "철분 + 칼슘" },
-  { items: ["유산균", "항생제"], label: "유산균 + 항생제" },
-  { items: ["마그네슘", "비타민D"], label: "마그네슘 + 비타민D" },
-  { items: ["아스피린", "이부프로펜"], label: "아스피린 + 이부프로펜" },
-  { items: ["밀크씨슬", "비타민C"], label: "밀크씨슬 + 비타민C" },
+  {
+    items: ["타이레놀", "오메가3"],
+    label: "타이레놀 + 오메가3",
+    url: `/check/result?items=drug:4443:${encodeURIComponent("타이레놀정500밀리그람(아세트아미노펜)")},supplement:9683:${encodeURIComponent("식물성츄어블오메가3")}`,
+  },
+  {
+    items: ["아스피린", "오메가3"],
+    label: "아스피린 + 오메가3",
+    url: `/check/result?items=drug:1210:${encodeURIComponent("바이엘아스피린정500밀리그람")},supplement:9683:${encodeURIComponent("식물성츄어블오메가3")}`,
+  },
+  {
+    items: ["비타민D", "칼슘"],
+    label: "비타민D + 칼슘",
+    url: `/check/result?items=supplement:10240:${encodeURIComponent("키즈비타D-드롭 500IU")},supplement:15579:${encodeURIComponent("프리솔라 칼마디케이")}`,
+  },
+  {
+    items: ["철분", "칼슘"],
+    label: "철분 + 칼슘",
+    url: `/check/result?items=supplement:30333:${encodeURIComponent("비:너지 리프철분")},supplement:15579:${encodeURIComponent("프리솔라 칼마디케이")}`,
+  },
+  {
+    items: ["마그네슘", "비타민D"],
+    label: "마그네슘 + 비타민D",
+    url: `/check/result?items=supplement:35804:${encodeURIComponent("일동 액상마그네슘")},supplement:10240:${encodeURIComponent("키즈비타D-드롭 500IU")}`,
+  },
+  {
+    items: ["아스피린", "이부프로펜"],
+    label: "아스피린 + 이부프로펜",
+    url: `/check/result?items=drug:1210:${encodeURIComponent("바이엘아스피린정500밀리그람")},drug:2558:${encodeURIComponent("이부로엔연질캡슐(이부프로펜)")}`,
+  },
+  {
+    items: ["밀크씨슬", "비타민C"],
+    label: "밀크씨슬 + 비타민C",
+    url: `/check/result?items=supplement:23124:${encodeURIComponent("프라코루 디티엑스 골드")},supplement:33005:${encodeURIComponent("프롬바이오 비타민C 1000")}`,
+  },
 ];
-
-/** 키워드로 약물/영양제를 검색하여 첫 번째 결과의 type:id:name을 반환 */
-async function resolveKeyword(keyword: string): Promise<string | null> {
-  try {
-    const [drugRes, suppRes] = await Promise.all([
-      searchDrugs(keyword, 1, 1).catch(() => ({ items: [] })),
-      searchSupplements(keyword, 1, 1).catch(() => ({ items: [] })),
-    ]);
-    const drug = drugRes.items[0];
-    const supp = suppRes.items[0];
-    if (drug) return `drug:${drug.id}:${encodeURIComponent(drug.item_name)}`;
-    if (supp) return `supplement:${supp.id}:${encodeURIComponent(supp.product_name)}`;
-    return null;
-  } catch {
-    return null;
-  }
-}
-
-/** 인기 조합의 결과 URL을 미리 빌드. 두 키워드 모두 DB에 있는 조합만 반환. */
-async function resolveComboUrls(): Promise<Map<string, string>> {
-  const urlMap = new Map<string, string>();
-  const results = await Promise.all(
-    POPULAR_COMBOS.map(async (combo) => {
-      const resolved = await Promise.all(combo.items.map(resolveKeyword));
-      const valid = resolved.filter(Boolean) as string[];
-      if (valid.length >= 2) {
-        return { label: combo.label, url: `/check/result?items=${valid.join(",")}` };
-      }
-      return null; // DB에 없는 조합은 제외
-    }),
-  );
-  for (const r of results) {
-    if (r) urlMap.set(r.label, r.url);
-  }
-  return urlMap;
-}
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
@@ -70,9 +60,7 @@ const websiteJsonLd = {
   },
 };
 
-export default async function HomePage() {
-  const comboUrls = await resolveComboUrls();
-
+export default function HomePage() {
   return (
     <>
       <script
@@ -253,11 +241,11 @@ export default async function HomePage() {
           </p>
 
           {/* Mobile: horizontal scroll, Desktop: grid */}
-          <div className="flex sm:grid sm:grid-cols-4 gap-3 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 snap-x snap-mandatory sm:snap-none scrollbar-hide">
-            {POPULAR_COMBOS.filter((combo) => comboUrls.has(combo.label)).map((combo) => (
+          <div className="flex sm:grid sm:grid-cols-3 lg:grid-cols-4 gap-3 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 snap-x snap-mandatory sm:snap-none scrollbar-hide">
+            {POPULAR_COMBOS.map((combo) => (
               <Link
                 key={combo.label}
-                href={comboUrls.get(combo.label)!}
+                href={combo.url}
                 className="group flex-shrink-0 w-44 sm:w-auto snap-start bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all"
               >
                 <div className="flex items-center gap-1.5 mb-2">
