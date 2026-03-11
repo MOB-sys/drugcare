@@ -6,6 +6,7 @@ import 'package:pillright/core/theme/app_colors.dart';
 import 'package:pillright/features/home/providers/home_provider.dart';
 import 'package:pillright/features/home/widgets/cabinet_summary_card.dart';
 import 'package:pillright/features/home/widgets/health_tip_card.dart';
+import 'package:pillright/features/home/widgets/explore_tools_section.dart';
 import 'package:pillright/features/home/widgets/quick_search_bar.dart';
 import 'package:pillright/shared/widgets/ads/native_ad_widget.dart';
 import 'package:pillright/shared/widgets/common/disclaimer_banner.dart';
@@ -40,6 +41,10 @@ class HomeScreen extends ConsumerWidget {
 
               // 복약함 요약 카드
               _buildCabinetSummary(ref, context),
+              const SizedBox(height: 16),
+
+              // 도구 모음
+              const ExploreToolsSection(),
               const SizedBox(height: 16),
 
               // 건강팁 카드

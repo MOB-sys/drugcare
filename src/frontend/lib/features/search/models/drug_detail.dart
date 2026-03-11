@@ -1,3 +1,4 @@
+import 'package:pillright/features/detail/models/dur_safety_item.dart';
 import 'package:pillright/shared/models/ingredient_info.dart';
 
 /// 약물 상세 정보.
@@ -56,6 +57,9 @@ class DrugDetail {
   /// 약물 이미지 URL.
   final String? itemImage;
 
+  /// DUR 안전성 정보 목록.
+  final List<DURSafetyItem>? durSafety;
+
   /// [DrugDetail] 생성자.
   const DrugDetail({
     required this.id,
@@ -76,6 +80,7 @@ class DrugDetail {
     this.seQesitm,
     this.depositMethodQesitm,
     this.itemImage,
+    this.durSafety,
   });
 
   /// JSON에서 [DrugDetail]을 생성한다.
@@ -101,6 +106,9 @@ class DrugDetail {
       seQesitm: json['se_qesitm'] as String?,
       depositMethodQesitm: json['deposit_method_qesitm'] as String?,
       itemImage: json['item_image'] as String?,
+      durSafety: (json['dur_safety'] as List?)
+          ?.map((e) => DURSafetyItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
   }
 }

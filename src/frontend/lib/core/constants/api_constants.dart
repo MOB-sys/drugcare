@@ -18,6 +18,23 @@ class ApiConstants {
   /// 약물 상세 (drug_id 치환 필요).
   static String drugDetail(int drugId) => '$apiPrefix/drugs/$drugId';
 
+  /// 증상별 약물 검색.
+  static const String drugSymptomSearch = '$apiPrefix/drugs/symptoms/search';
+
+  /// 부작용 역검색.
+  static const String drugSideEffectSearch =
+      '$apiPrefix/drugs/side-effects/search';
+
+  /// 질환별 주의약물 검색.
+  static const String drugConditionSearch =
+      '$apiPrefix/drugs/conditions/search';
+
+  /// 알약 식별.
+  static const String drugIdentify = '$apiPrefix/drugs/identify';
+
+  /// 최근 등록 약물.
+  static const String drugRecent = '$apiPrefix/drugs/recent';
+
   // ── 영양제 (Supplements) ──
   /// 영양제 검색.
   static const String supplementSearch = '$apiPrefix/supplements/search';
@@ -52,6 +69,26 @@ class ApiConstants {
   // ── 메트릭스 (Metrics) ──
   /// 앱 메트릭스 이벤트 기록.
   static const String metrics = '$apiPrefix/metrics/event';
+
+  // ── 리뷰 (Reviews) ──
+  /// 리뷰 작성.
+  static const String reviews = '$apiPrefix/reviews';
+
+  /// 리뷰 목록 조회.
+  static String reviewList(String itemType, int itemId) =>
+      '$apiPrefix/reviews/$itemType/$itemId';
+
+  /// 리뷰 통계 조회.
+  static String reviewSummary(String itemType, int itemId) =>
+      '$apiPrefix/reviews/$itemType/$itemId/summary';
+
+  /// 리뷰 도움됨.
+  static String reviewHelpful(int reviewId) =>
+      '$apiPrefix/reviews/$reviewId/helpful';
+
+  /// 리뷰 삭제.
+  static String reviewDelete(int reviewId) =>
+      '$apiPrefix/reviews/$reviewId';
 
   // ── 헬스체크 ──
   /// 서버 헬스체크.

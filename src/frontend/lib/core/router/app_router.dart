@@ -4,6 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import 'package:pillright/core/router/navigation_shell.dart';
 import 'package:pillright/features/cabinet/screens/cabinet_screen.dart';
+import 'package:pillright/features/detail/screens/drug_detail_screen.dart';
+import 'package:pillright/features/detail/screens/supplement_detail_screen.dart';
+import 'package:pillright/features/explore/screens/condition_search_screen.dart';
+import 'package:pillright/features/explore/screens/side_effect_search_screen.dart';
+import 'package:pillright/features/explore/screens/symptom_search_screen.dart';
 import 'package:pillright/features/home/screens/home_screen.dart';
 import 'package:pillright/features/reminder/models/reminder.dart';
 import 'package:pillright/features/reminder/screens/reminder_form_screen.dart';
@@ -119,6 +124,41 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/settings/feedback',
         builder: (context, state) => const FeedbackScreen(),
+      ),
+
+      // ── 상세 화면 ──
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/drugs/:id',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return DrugDetailScreen(drugId: id);
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/supplements/:id',
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return SupplementDetailScreen(supplementId: id);
+        },
+      ),
+
+      // ── 탐색 도구 ──
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/explore/symptoms',
+        builder: (context, state) => const SymptomSearchScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/explore/side-effects',
+        builder: (context, state) => const SideEffectSearchScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/explore/conditions',
+        builder: (context, state) => const ConditionSearchScreen(),
       ),
     ],
   );
