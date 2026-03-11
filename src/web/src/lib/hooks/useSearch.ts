@@ -161,7 +161,13 @@ export function useSearch(): UseSearchReturn {
           ? searchHerbalMedicines(trimmedQuery, 1, 10, { signal })
           : null;
 
-        const [drugs, supps, foods, herbals] = await Promise.all([searchDrug, searchSupp, searchFood, searchHerbal]);
+        const [drugResult, suppResult, foodResult, herbalResult] = await Promise.allSettled([
+          searchDrug, searchSupp, searchFood, searchHerbal,
+        ]);
+        const drugs = drugResult.status === "fulfilled" ? drugResult.value : null;
+        const supps = suppResult.status === "fulfilled" ? suppResult.value : null;
+        const foods = foodResult.status === "fulfilled" ? foodResult.value : null;
+        const herbals = herbalResult.status === "fulfilled" ? herbalResult.value : null;
         if (drugs) merged.push(...drugs.items.map(toDrugResult));
         if (supps) merged.push(...supps.items.map(toSupplementResult));
         if (foods) merged.push(...foods.items.map(toFoodResult));

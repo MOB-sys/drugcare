@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { getHerbalMedicineCount } from "@/lib/api/herbal";
@@ -148,10 +147,9 @@ export default async function HerbalMedicinesIndexPage() {
         {/* 카테고리 그리드 */}
         <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
           {HERBAL_CATEGORIES.map((cat) => (
-            <Link
+            <div
               key={cat.name}
-              href={`/herbal-medicines?category=${encodeURIComponent(cat.name)}`}
-              className={`group block rounded-xl border p-4 shadow-sm hover:shadow-md transition-all ${cat.color}`}
+              className={`rounded-xl border p-4 shadow-sm ${cat.color}`}
             >
               <div className="flex items-start gap-3">
                 <div className={`w-10 h-10 rounded-lg ${cat.iconBg} flex items-center justify-center text-lg shrink-0`}>
@@ -176,7 +174,7 @@ export default async function HerbalMedicinesIndexPage() {
                   </div>
                 </div>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
 
