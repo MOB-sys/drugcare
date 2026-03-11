@@ -93,7 +93,9 @@ export function InteractionCard({ interaction }: InteractionCardProps) {
               </div>
             </div>
           )}
-          <p className="text-xs text-gray-400">출처: {interaction.source}</p>
+          {interaction.source && (
+            <p className="text-xs text-gray-400">출처: {interaction.source}</p>
+          )}
 
           <ActionGuidanceBox severity={sev} />
         </div>

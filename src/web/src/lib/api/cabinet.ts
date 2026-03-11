@@ -20,5 +20,5 @@ export async function addCabinetItem(
 
 /** 복약함에서 아이템 삭제. */
 export async function deleteCabinetItem(id: number): Promise<void> {
-  await fetchApi<null>(`/api/v1/cabinet/${id}`, { method: "DELETE" });
+  await fetchApi<null>(`/api/v1/cabinet/${id}`, { method: "DELETE", allowNullData: true });
 }

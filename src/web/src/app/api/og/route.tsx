@@ -10,8 +10,8 @@ const SUPPLEMENT_BG = "#ECFDF5";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
-  const title = searchParams.get("title") || "약잘알";
-  const description = searchParams.get("description") || "";
+  const title = (searchParams.get("title") || "약잘알").slice(0, 100);
+  const description = (searchParams.get("description") || "").slice(0, 200);
   const type = searchParams.get("type") || "drug";
 
   const bgColor = type === "supplement" ? SUPPLEMENT_BG : DRUG_BG;
@@ -136,6 +136,9 @@ export async function GET(request: NextRequest) {
     {
       width: 1200,
       height: 630,
+      headers: {
+        "Cache-Control": "public, max-age=86400, s-maxage=604800",
+      },
     },
   );
 }

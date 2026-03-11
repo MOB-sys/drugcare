@@ -2,8 +2,11 @@
 
 import { withRetry } from "@/lib/utils/retry";
 
+// 서버(SSR/SSG): 백엔드 직접 호출, 클라이언트(브라우저): 상대 경로 → Next.js rewrite로 프록시
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+  typeof window === "undefined"
+    ? (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000")
+    : "";
 
 const REQUEST_TIMEOUT = 10_000; // 10초
 const RATE_LIMIT_MAX = 30; // 엔드포인트 그룹당 최대 요청 수
@@ -65,26 +68,35 @@ export class ApiError extends Error {
 /** 타입 안전한 API 호출 함수 (타임아웃 + 재시도 포함). */
 export async function fetchApi<T>(
   path: string,
-  options?: RequestInit,
+  options?: RequestInit & { allowNullData?: boolean },
 ): Promise<T> {
+  const method = (options?.method ?? "GET").toUpperCase();
+  // POST/PUT/DELETE 등 비멱등 요청은 재시도하지 않음 (중복 생성/삭제 방지)
+  if (method !== "GET" && method !== "HEAD") {
+    return fetchApiOnce<T>(path, options);
+  }
   return withRetry(() => fetchApiOnce<T>(path, options));
 }
 
 async function fetchApiOnce<T>(
   path: string,
-  options?: RequestInit,
+  options?: RequestInit & { allowNullData?: boolean },
 ): Promise<T> {
   await waitForRateLimit(path);
   const url = `${API_BASE_URL}${path}`;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
 
-  // caller signal과 timeout signal을 합성
-  const signals = [controller.signal];
-  if (options?.signal) signals.push(options.signal);
-  const composedSignal = signals.length > 1
-    ? AbortSignal.any(signals)
-    : controller.signal;
+  // caller signal과 timeout signal을 합성 (AbortSignal.any 대신 수동 합성 — Node 18 호환)
+  if (options?.signal) {
+    const callerSignal = options.signal;
+    if (callerSignal.aborted) {
+      controller.abort(callerSignal.reason);
+    } else {
+      callerSignal.addEventListener("abort", () => controller.abort(callerSignal.reason), { once: true });
+    }
+  }
+  const composedSignal = controller.signal;
 
   try {
     const res = await fetch(url, {
@@ -94,7 +106,7 @@ async function fetchApiOnce<T>(
       headers: {
         "Content-Type": "application/json",
         // SSR에서 POST 요청 시 CSRF 검증 통과를 위해 Origin 헤더 추가
-        ...(typeof window === "undefined" && { Origin: "https://pillright.com" }),
+        ...(typeof window === "undefined" && { Origin: process.env.NEXT_PUBLIC_SITE_URL || "https://pillright.com" }),
         ...options?.headers,
       },
     });
@@ -109,11 +121,16 @@ async function fetchApiOnce<T>(
 
     const json: ApiResponse<T> = await res.json();
 
-    if (!json.success || json.data === null) {
+    if (!json.success) {
       throw new ApiError(res.status, json.error || "알 수 없는 오류");
     }
 
-    return json.data;
+    // DELETE 등 응답 본문이 없는 경우 allowNullData 옵션으로 null 허용
+    if (json.data === null && !options?.allowNullData) {
+      throw new ApiError(res.status, json.error || "알 수 없는 오류");
+    }
+
+    return json.data as T;
   } catch (error) {
     if (
       (typeof DOMException !== "undefined" && error instanceof DOMException && error.name === "AbortError") ||

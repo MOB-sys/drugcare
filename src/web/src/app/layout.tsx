@@ -10,11 +10,18 @@ import { ToastProvider } from "@/components/common/ToastProvider";
 import { CookieConsent } from "@/components/common/CookieConsent";
 import { SITE_URL } from "@/lib/constants/site";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID?.trim();
-const ADSENSE_ID = process.env.NEXT_PUBLIC_ADSENSE_ID?.trim();
-const NAVER_VERIFY = process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION?.trim();
-const KAKAO_JS_KEY = process.env.NEXT_PUBLIC_KAKAO_JS_KEY?.trim();
-const IOS_APP_ID = process.env.NEXT_PUBLIC_IOS_APP_ID?.trim();
+/** 환경변수 값이 안전한 영숫자/하이픈 문자열인지 검증 (XSS 방지). */
+function sanitizeEnvId(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+  return /^[\w-]+$/.test(trimmed) ? trimmed : undefined;
+}
+
+const GA_ID = sanitizeEnvId(process.env.NEXT_PUBLIC_GA_ID);
+const ADSENSE_ID = sanitizeEnvId(process.env.NEXT_PUBLIC_ADSENSE_ID);
+const NAVER_VERIFY = sanitizeEnvId(process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION);
+const KAKAO_JS_KEY = sanitizeEnvId(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
+const IOS_APP_ID = sanitizeEnvId(process.env.NEXT_PUBLIC_IOS_APP_ID);
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -83,8 +90,6 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
-        {/* 네이버 서치어드바이저 사이트 소유 확인 */}
-        {NAVER_VERIFY && <meta name="naver-site-verification" content={NAVER_VERIFY} />}
         {/* Apple Smart App Banner */}
         {IOS_APP_ID && <meta name="apple-itunes-app" content={`app-id=${IOS_APP_ID}`} />}
         {/* Pretendard 폰트 preload — CLS 방지 */}
@@ -118,7 +123,7 @@ export default function RootLayout({
         <Header />
         <DisclaimerBanner />
         <ToastProvider>
-          <main id="main-content" className="flex-1" role="main">{children}</main>
+          <main id="main-content" className="flex-1">{children}</main>
         </ToastProvider>
         <Footer />
         <CookieConsent />

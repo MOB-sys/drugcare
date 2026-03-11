@@ -89,7 +89,12 @@ export default async function SupplementDetailPage({ params }: PageProps) {
   }
 
   const ingredients = normalizeIngredients(supp.ingredients);
-  const relatedSupps = await getRelatedSupplements(supp.category, slug);
+  let relatedSupps: Awaited<ReturnType<typeof getRelatedSupplements>> = [];
+  try {
+    relatedSupps = await getRelatedSupplements(supp.category, slug);
+  } catch {
+    // 관련 건강기능식품 로드 실패 시 빈 배열로 대체 — 메인 콘텐츠 표시에 영향 없음
+  }
 
   const jsonLd = {
     "@context": "https://schema.org",

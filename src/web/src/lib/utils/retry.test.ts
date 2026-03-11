@@ -22,7 +22,7 @@ describe("withRetry", () => {
       .mockRejectedValueOnce(new Error("network"))
       .mockResolvedValueOnce("recovered");
 
-    const promise = withRetry(fn, { baseDelay: 100 });
+    const promise = withRetry(fn, { baseDelay: 100, disableJitter: true });
     await vi.advanceTimersByTimeAsync(100);
     const result = await promise;
 
@@ -33,7 +33,7 @@ describe("withRetry", () => {
   it("throws after max retries exhausted", async () => {
     const fn = vi.fn().mockRejectedValue(new Error("fail"));
 
-    const promise = withRetry(fn, { maxRetries: 1, baseDelay: 50 });
+    const promise = withRetry(fn, { maxRetries: 1, baseDelay: 50, disableJitter: true });
     // Catch to avoid unhandled rejection warning, we'll assert below
     promise.catch(() => {});
     await vi.advanceTimersByTimeAsync(50);
@@ -56,7 +56,7 @@ describe("withRetry", () => {
       .mockRejectedValueOnce(err)
       .mockResolvedValueOnce("ok");
 
-    const promise = withRetry(fn, { baseDelay: 100 });
+    const promise = withRetry(fn, { baseDelay: 100, disableJitter: true });
     await vi.advanceTimersByTimeAsync(100);
     const result = await promise;
 
@@ -70,7 +70,7 @@ describe("withRetry", () => {
       .mockRejectedValueOnce(new Error("fail"))
       .mockResolvedValueOnce("ok");
 
-    const promise = withRetry(fn, { maxRetries: 2, baseDelay: 3000, maxDelay: 5000 });
+    const promise = withRetry(fn, { maxRetries: 2, baseDelay: 3000, maxDelay: 5000, disableJitter: true });
     // First retry: min(3000 * 2^0, 5000) = 3000
     await vi.advanceTimersByTimeAsync(3000);
     // Second retry: min(3000 * 2^1, 5000) = 5000

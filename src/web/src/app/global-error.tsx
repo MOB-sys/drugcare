@@ -53,11 +53,9 @@ export default function GlobalError({
           >
             다시 시도
           </button>
-          {error.digest && (
-            <p className="ge-code" style={{ color: "#9CA3AF", fontSize: 12, marginTop: 24 }}>
-              오류 코드: {error.digest}
-            </p>
-          )}
+          <p className="ge-code" style={{ color: "#9CA3AF", fontSize: 12, marginTop: 24 }}>
+            문제가 지속되면 관리자에게 문의해주세요.
+          </p>
         </div>
       </body>
     </html>

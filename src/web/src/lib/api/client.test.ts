@@ -57,8 +57,9 @@ describe("fetchApi", () => {
 
     const promise = fetchApi("/api/v1/broken");
     promise.catch(() => {}); // prevent unhandled rejection
-    await vi.advanceTimersByTimeAsync(500);
-    await vi.advanceTimersByTimeAsync(1000);
+    // 지터 범위를 고려하여 충분한 시간을 진행 (500*1.15 = 575, 1000*1.15 = 1150)
+    await vi.advanceTimersByTimeAsync(600);
+    await vi.advanceTimersByTimeAsync(1200);
 
     await expect(promise).rejects.toThrow(ApiError);
     expect(fn).toHaveBeenCalledTimes(3); // 1 initial + 2 retries
@@ -136,7 +137,8 @@ describe("fetchApi", () => {
     global.fetch = fn;
 
     const promise = fetchApi("/api/v1/test");
-    await vi.advanceTimersByTimeAsync(500);
+    // 지터 범위를 고려하여 충분한 시간을 진행 (500*1.15 = 575)
+    await vi.advanceTimersByTimeAsync(600);
     const result = await promise;
 
     expect(result).toBe("recovered");

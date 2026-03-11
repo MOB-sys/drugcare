@@ -73,7 +73,7 @@ const nextConfig: NextConfig = {
               "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
               "img-src 'self' data: blob: https:",
               "font-src 'self' https://cdn.jsdelivr.net data:",
-              "connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://pagead2.googlesyndication.com https://*.sentry.io https://www.google.com",
+              "connect-src 'self' https://api.pillright.com https://www.google-analytics.com https://analytics.google.com https://pagead2.googlesyndication.com https://*.sentry.io https://www.google.com",
               "frame-src 'self' https://pagead2.googlesyndication.com https://www.google.com https://tpc.googlesyndication.com",
               "object-src 'none'",
               "base-uri 'self'",

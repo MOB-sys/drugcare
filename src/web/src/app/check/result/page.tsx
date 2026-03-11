@@ -72,7 +72,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
   try {
     data = await checkInteractions(checkItems);
   } catch (e) {
-    error = e instanceof Error ? e.message : "상호작용 확인 중 오류가 발생했습니다.";
+    error = "상호작용 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
   }
 
   if (error || !data) {
@@ -107,7 +107,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
 
           {data.results.length > 0 && (
             <div className="space-y-3">
-              <h2 className="text-lg font-semibold text-gray-900">상세 결과</h2>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">상세 결과</h2>
               {data.results.map((r, i) => (
                 <InteractionCard key={`${r.item_a_name}-${r.item_b_name}-${i}`} interaction={r} />
               ))}

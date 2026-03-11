@@ -67,8 +67,9 @@ export function markHelpful(reviewId: number): Promise<ReviewResponse> {
 }
 
 /** 리뷰 삭제. */
-export function deleteReview(reviewId: number): Promise<boolean> {
-  return fetchApi<boolean>(`/api/v1/reviews/${reviewId}`, {
+export function deleteReview(reviewId: number): Promise<void> {
+  return fetchApi<null>(`/api/v1/reviews/${reviewId}`, {
     method: "DELETE",
-  });
+    allowNullData: true,
+  }).then(() => undefined);
 }

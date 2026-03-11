@@ -21,7 +21,7 @@ export function useRecentSearches() {
   }, []);
 
   const addSearch = useCallback((query: string) => {
-    const trimmed = query.trim();
+    const trimmed = query.trim().slice(0, 200);
     if (!trimmed) return;
     setRecentSearches((prev) => {
       const filtered = prev.filter((s) => s !== trimmed);

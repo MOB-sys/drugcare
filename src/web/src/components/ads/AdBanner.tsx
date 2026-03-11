@@ -16,19 +16,19 @@ declare global {
 
 export function AdBanner({ slot, format = "auto", className = "" }: AdBannerProps) {
   const adsenseId = process.env.NEXT_PUBLIC_ADSENSE_ID;
-  const pushed = useRef(false);
+  const pushed = useRef<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [filled, setFilled] = useState(false);
 
   useEffect(() => {
-    if (!adsenseId || pushed.current) return;
+    if (!adsenseId || pushed.current === slot) return;
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});
-      pushed.current = true;
+      pushed.current = slot;
     } catch {
       /* AdSense not loaded */
     }
-  }, [adsenseId]);
+  }, [adsenseId, slot]);
 
   // 광고가 실제로 채워졌는지 감시 — 승인 전이면 숨김
   useEffect(() => {

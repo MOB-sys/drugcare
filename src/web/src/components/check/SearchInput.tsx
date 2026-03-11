@@ -71,6 +71,7 @@ export function SearchInput({
         aria-label="약물 또는 영양제 검색"
         role="combobox"
         aria-expanded={shouldShowDropdown}
+        aria-controls={shouldShowDropdown ? "search-dropdown" : undefined}
         autoComplete="off"
         maxLength={200}
         className="w-full pl-11 pr-10 py-3 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-base bg-white dark:bg-gray-800 dark:text-gray-100"
@@ -94,7 +95,7 @@ export function SearchInput({
 
       {/* 드롭다운: 최근 검색 + 인기 검색어 */}
       {shouldShowDropdown && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-20 overflow-hidden">
+        <div id="search-dropdown" role="listbox" className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-20 overflow-hidden">
           {/* 최근 검색 */}
           {recentSearches.length > 0 && (
             <div className="p-3 border-b border-gray-100 dark:border-gray-700">

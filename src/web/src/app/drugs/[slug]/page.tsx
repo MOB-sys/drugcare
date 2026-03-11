@@ -84,7 +84,12 @@ export default async function DrugDetailPage({ params }: PageProps) {
     notFound();
   }
 
-  const relatedDrugs = await getRelatedDrugs(drug.class_no, slug);
+  let relatedDrugs: Awaited<ReturnType<typeof getRelatedDrugs>> = [];
+  try {
+    relatedDrugs = await getRelatedDrugs(drug.class_no, slug);
+  } catch {
+    // 관련 약물 로드 실패 시 빈 배열로 대체 — 메인 콘텐츠 표시에 영향 없음
+  }
 
   const otcLabel =
     drug.etc_otc_code === "일반의약품"

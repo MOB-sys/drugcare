@@ -21,9 +21,11 @@ export function ReviewSection({ itemType, itemId }: ReviewSectionProps) {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(false);
 
   const fetchData = useCallback(async (p: number) => {
     setLoading(true);
+    setFetchError(false);
     try {
       const [summaryData, reviewData] = await Promise.all([
         getReviewSummary(itemType, itemId),
@@ -35,7 +37,7 @@ export function ReviewSection({ itemType, itemId }: ReviewSectionProps) {
       setTotalPages(reviewData.total_pages);
       setPage(p);
     } catch {
-      // 에러 시 빈 상태 유지
+      setFetchError(true);
     } finally {
       setLoading(false);
     }
@@ -60,7 +62,12 @@ export function ReviewSection({ itemType, itemId }: ReviewSectionProps) {
       </h2>
 
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm space-y-6">
-        {loading && !summary ? (
+        {fetchError ? (
+          <div className="text-center py-8 text-gray-400 text-sm">
+            리뷰를 불러오지 못했습니다.
+            <button onClick={() => fetchData(1)} className="ml-2 text-[var(--color-primary)] hover:underline">다시 시도</button>
+          </div>
+        ) : loading && !summary ? (
           <div className="text-center py-8 text-gray-400 text-sm">
             리뷰를 불러오는 중...
           </div>

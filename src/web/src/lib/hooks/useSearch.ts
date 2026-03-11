@@ -47,10 +47,11 @@ function parsePreselect(param: string | null): SelectedItem[] {
   try {
     return param.split(",").reduce<SelectedItem[]>((acc, part) => {
       const [type, id, ...nameParts] = part.split(":");
-      if ((type === "drug" || type === "supplement") && id && nameParts.length) {
+      const numId = Number(id);
+      if ((type === "drug" || type === "supplement") && id && nameParts.length && Number.isInteger(numId) && numId > 0) {
         acc.push({
           item_type: type,
-          item_id: Number(id),
+          item_id: numId,
           name: decodeURIComponent(nameParts.join(":")),
         });
       }
@@ -135,15 +136,16 @@ export function useSearch(): UseSearchReturn {
         const merged: SearchResultItem[] = [];
 
         const signal = controller.signal;
-        if (filter === "all" || filter === "drug") {
-          const drugs = await searchDrugs(trimmedQuery, 1, 10, { signal });
-          merged.push(...drugs.items.map(toDrugResult));
-        }
-        if (signal.aborted) return;
-        if (filter === "all" || filter === "supplement") {
-          const supps = await searchSupplements(trimmedQuery, 1, 10, { signal });
-          merged.push(...supps.items.map(toSupplementResult));
-        }
+        const searchDrug = (filter === "all" || filter === "drug")
+          ? searchDrugs(trimmedQuery, 1, 10, { signal })
+          : null;
+        const searchSupp = (filter === "all" || filter === "supplement")
+          ? searchSupplements(trimmedQuery, 1, 10, { signal })
+          : null;
+
+        const [drugs, supps] = await Promise.all([searchDrug, searchSupp]);
+        if (drugs) merged.push(...drugs.items.map(toDrugResult));
+        if (supps) merged.push(...supps.items.map(toSupplementResult));
 
         if (!controller.signal.aborted && currentRequestId === requestIdRef.current) {
           setResults(merged);

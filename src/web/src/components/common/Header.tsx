@@ -44,17 +44,23 @@ export function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isDark, toggle } = useDarkMode();
 
-  // 외부 클릭 시 드롭다운 닫기
+  // 외부 클릭 또는 Escape 키로 드롭다운 닫기
   useEffect(() => {
+    if (!dropdownOpen) return;
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
       }
     }
-    if (dropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setDropdownOpen(false);
     }
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [dropdownOpen]);
 
   function isActive(href: string) {

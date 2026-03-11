@@ -38,6 +38,8 @@ export function SearchResultItem({
     } catch (err) {
       if (err instanceof ApiError && err.status === 409) {
         setCabinetStatus("duplicate");
+      } else {
+        setCabinetStatus("idle");
       }
     }
   }
@@ -59,15 +61,15 @@ export function SearchResultItem({
     <div
       role="button"
       tabIndex={0}
-      onClick={onToggle}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onToggle(); }}
+      onClick={() => { if (!(disabled && !selected)) onToggle(); }}
+      onKeyDown={(e) => { if ((e.key === "Enter" || e.key === " ") && !(disabled && !selected)) onToggle(); }}
       aria-disabled={disabled && !selected}
       className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors cursor-pointer ${
         selected
           ? "bg-[var(--color-primary-50)] border-l-4 border-[var(--color-primary)]"
           : disabled
             ? "opacity-50 cursor-not-allowed"
-            : "hover:bg-gray-50"
+            : "hover:bg-gray-50 dark:hover:bg-gray-700"
       }`}
     >
       <span
@@ -80,8 +82,8 @@ export function SearchResultItem({
         {itemType === "drug" ? "약물" : "영양제"}
       </span>
       <div className="min-w-0 flex-1">
-        <p className="font-medium text-gray-900 truncate">{name}</p>
-        {sub && <p className="text-sm text-gray-500 truncate">{sub}</p>}
+        <p className="font-medium text-gray-900 dark:text-gray-100 truncate">{name}</p>
+        {sub && <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{sub}</p>}
       </div>
       {showCabinetAdd && itemId && (
         cabinetStatus === "added" ? (
