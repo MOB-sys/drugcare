@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
 
-        <!-- AdMob App ID (test) -->
+        <!-- AdMob App ID -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="${admobAppId}"/>

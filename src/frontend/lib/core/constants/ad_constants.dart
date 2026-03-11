@@ -15,7 +15,7 @@ class AdConstants {
   /// AdMob 배너 광고 ID (Android).
   static const String androidBannerId = String.fromEnvironment(
     'ADMOB_ANDROID_BANNER',
-    defaultValue: 'ca-app-pub-3940256099942544/6300978111',
+    defaultValue: 'ca-app-pub-4091950246368818/8420353670',
   );
 
   /// AdMob 배너 광고 ID (iOS).
