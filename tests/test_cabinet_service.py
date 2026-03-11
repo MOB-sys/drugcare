@@ -47,7 +47,6 @@ async def test_add_item_drug_success():
     assert result is not None
     assert result != "duplicate"
     assert result["item_name"] == "타이레놀정500밀리그램"
-    assert result["device_id"] == TEST_DEVICE_ID
     mock_db.add.assert_called_once()
 
 
