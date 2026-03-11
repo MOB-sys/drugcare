@@ -26,8 +26,14 @@ async def _route_health():
 
 @_test_app.get("/api/v1/drugs/search")
 async def _route_search():
-    """검색 엔드포인트."""
+    """검색 엔드포인트 (레이트 리밋 면제)."""
     return {"results": []}
+
+
+@_test_app.get("/api/v1/cabinet")
+async def _route_cabinet():
+    """캐비넷 엔드포인트 (레이트 리밋 적용)."""
+    return {"items": []}
 
 
 @_test_app.post("/api/v1/interactions/check")
@@ -77,12 +83,12 @@ async def test_under_limit_passes(mock_get_redis, rate_client: httpx.AsyncClient
 async def test_search_over_limit_returns_429(
     mock_get_redis, rate_client: httpx.AsyncClient
 ):
-    """검색 API 61번째 요청은 429를 반환한다."""
+    """레이트 리밋 초과 시 429를 반환한다."""
     mock_redis = AsyncMock()
     mock_redis.incr.return_value = 61
     mock_get_redis.return_value = mock_redis
 
-    resp = await rate_client.get("/api/v1/drugs/search")
+    resp = await rate_client.get("/api/v1/cabinet")
     assert resp.status_code == 429
 
     body = resp.json()
@@ -153,7 +159,7 @@ async def test_first_request_sets_ttl(mock_get_redis, rate_client: httpx.AsyncCl
     mock_redis.incr.return_value = 1
     mock_get_redis.return_value = mock_redis
 
-    await rate_client.get("/api/v1/drugs/search")
+    await rate_client.get("/api/v1/cabinet")
 
     mock_redis.expire.assert_called_once()
     args = mock_redis.expire.call_args[0]

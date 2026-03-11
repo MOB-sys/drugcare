@@ -14,7 +14,7 @@ from src.backend.main import app
 from src.backend.models.interaction import ItemType, Severity
 
 
-TEST_DEVICE_ID = "test-device-550e8400-e29b-41d4-a716-446655440000"
+TEST_DEVICE_ID = "550e8400-e29b-41d4-a716-446655440000"
 
 
 @pytest.fixture

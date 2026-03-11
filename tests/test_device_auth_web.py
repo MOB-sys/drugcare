@@ -56,7 +56,7 @@ async def test_web_session_cookie_reused(client):
     ):
         resp = await client.get(
             "/api/v1/drugs/search?q=test",
-            cookies={"session_id": "web-existing-session"},
+            cookies={"session_id": "web-550e8400-e29b-41d4-a716-446655440000"},
         )
     assert resp.status_code == 200
     # 기존 쿠키 사용 시 새 쿠키 미생성
@@ -75,7 +75,7 @@ async def test_header_device_id_takes_precedence(client, auth_headers):
         resp = await client.get(
             "/api/v1/drugs/search?q=test",
             headers=auth_headers,
-            cookies={"session_id": "web-should-not-use"},
+            cookies={"session_id": "web-550e8400-e29b-41d4-a716-446655440000"},
         )
     assert resp.status_code == 200
     # 헤더 사용 시 새 쿠키 미생성

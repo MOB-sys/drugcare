@@ -31,6 +31,8 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   { href: "/supplements", label: "건강기능식품" },
+  { href: "/foods", label: "식품" },
+  { href: "/herbal-medicines", label: "한약재" },
   { href: "/symptoms", label: "증상검색" },
   { href: "/news", label: "소식" },
   { href: "/tips", label: "건강팁" },

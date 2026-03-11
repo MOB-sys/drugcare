@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { getAllDrugSlugs } from "@/lib/api/drugs";
 import { getAllSupplementSlugs } from "@/lib/api/supplements";
+import { getAllFoodSlugs } from "@/lib/api/foods";
+import { getAllHerbalMedicineSlugs } from "@/lib/api/herbal";
 import { getAllTipSlugs } from "@/lib/data/tips";
 import { ALL_LETTERS } from "@/lib/utils/korean";
 import { SITE_URL } from "@/lib/constants/site";
@@ -13,6 +15,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/check`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
     { url: `${BASE_URL}/drugs`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/supplements`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/foods`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE_URL}/herbal-medicines`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE_URL}/compare`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
     { url: `${BASE_URL}/privacy`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/terms`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
@@ -44,6 +48,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     /* 빌드 시 API 미연결이면 빈 배열 */
   }
 
+  let foodEntries: MetadataRoute.Sitemap = [];
+  let herbalEntries: MetadataRoute.Sitemap = [];
+
+  try {
+    const foodSlugs = await getAllFoodSlugs();
+    foodEntries = foodSlugs.map((slug) => ({
+      url: `${BASE_URL}/foods/${slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+  } catch {
+    /* 빌드 시 API 미연결이면 빈 배열 */
+  }
+
+  try {
+    const herbalSlugs = await getAllHerbalMedicineSlugs();
+    herbalEntries = herbalSlugs.map((slug) => ({
+      url: `${BASE_URL}/herbal-medicines/${slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+  } catch {
+    /* 빌드 시 API 미연결이면 빈 배열 */
+  }
+
   const tipEntries: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/tips`, changeFrequency: "weekly" as const, priority: 0.8 },
     ...getAllTipSlugs().map((slug) => ({
@@ -59,5 +88,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/supplements/browse/${encodeURIComponent(letter)}`, changeFrequency: "weekly" as const, priority: 0.6 },
   ]);
 
-  return [...staticPages, ...browseEntries, ...tipEntries, ...drugEntries, ...suppEntries];
+  return [...staticPages, ...browseEntries, ...tipEntries, ...drugEntries, ...suppEntries, ...foodEntries, ...herbalEntries];
 }

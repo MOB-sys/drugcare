@@ -1,12 +1,19 @@
 """미들웨어 테스트 — 디바이스 인증 + 에러 핸들러."""
 
+from unittest.mock import AsyncMock, patch
+
 import pytest
 
 
 @pytest.mark.asyncio
 async def test_device_auth_missing_header_creates_web_session(client):
     """X-Device-ID 헤더 없이 요청 시 웹 세션 쿠키가 생성되는지 확인한다."""
-    response = await client.get("/api/v1/drugs/search")
+    with patch(
+        "src.backend.services.drug_service.search_drugs",
+        new_callable=AsyncMock,
+        return_value={"items": [], "total": 0, "page": 1, "page_size": 20, "total_pages": 0},
+    ):
+        response = await client.get("/api/v1/drugs/search?q=test")
 
     # 웹 세션 쿠키 자동 생성으로 요청 통과
     assert response.status_code == 200
@@ -17,7 +24,12 @@ async def test_device_auth_missing_header_creates_web_session(client):
 @pytest.mark.asyncio
 async def test_device_auth_with_header(client, auth_headers):
     """X-Device-ID 헤더가 있으면 정상적으로 요청이 처리되는지 확인한다."""
-    response = await client.get("/api/v1/drugs/search", headers=auth_headers)
+    with patch(
+        "src.backend.services.drug_service.search_drugs",
+        new_callable=AsyncMock,
+        return_value={"items": [], "total": 0, "page": 1, "page_size": 20, "total_pages": 0},
+    ):
+        response = await client.get("/api/v1/drugs/search?q=test", headers=auth_headers)
 
     assert response.status_code == 200
 
@@ -65,6 +77,7 @@ async def test_device_auth_post_without_header_creates_web_session(client):
     response = await client.post(
         "/api/v1/interactions/check",
         json={"items": [{"item_type": "drug", "item_id": 1}, {"item_type": "drug", "item_id": 2}]},
+        headers={"origin": "http://localhost:3000"},
     )
 
     # 웹 세션 쿠키 자동 생성으로 요청 통과

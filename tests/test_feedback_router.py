@@ -142,6 +142,7 @@ async def test_submit_feedback_no_device_id_creates_web_session(client):
                 "category": "bug",
                 "content": "디바이스 ID 없는 요청입니다.",
             },
+            headers={"origin": "http://localhost:3000"},
         )
 
     assert resp.status_code == 200

@@ -187,6 +187,7 @@ async def test_check_interactions_no_auth_creates_web_session(client):
                     {"item_type": "drug", "item_id": 2},
                 ],
             },
+            headers={"origin": "http://localhost:3000"},
         )
 
     assert resp.status_code == 200

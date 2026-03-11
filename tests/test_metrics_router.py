@@ -92,6 +92,7 @@ async def test_record_event_no_device_id_creates_web_session(client):
             json={
                 "event_type": "app_open",
             },
+            headers={"origin": "http://localhost:3000"},
         )
 
     assert resp.status_code == 200

@@ -16,16 +16,24 @@ from src.backend.services.drug_service import search_drugs, get_drug_detail
 
 @pytest.mark.asyncio
 async def test_search_drugs_empty_query():
-    """빈 검색어는 DB를 호출하지 않고 빈 페이지네이션 결과를 반환한다."""
+    """빈 검색어는 전체 목록을 반환한다 (조건 없이 DB 조회)."""
     mock_db = AsyncMock()
     mock_redis = AsyncMock()
+    mock_redis.get.return_value = None
+
+    mock_count_result = MagicMock()
+    mock_count_result.scalar_one.return_value = 0
+
+    mock_search_result = MagicMock()
+    mock_search_result.scalars.return_value.all.return_value = []
+
+    mock_db.execute = AsyncMock(side_effect=[mock_count_result, mock_search_result])
 
     result = await search_drugs(mock_db, mock_redis, q="", page=1, page_size=20)
 
     assert result["items"] == []
     assert result["total"] == 0
     assert result["total_pages"] == 0
-    mock_db.execute.assert_not_called()
 
 
 @pytest.mark.asyncio

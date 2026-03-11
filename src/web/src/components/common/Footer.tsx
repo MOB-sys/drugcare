@@ -10,6 +10,8 @@ const SERVICE_LINKS = [
 const TOOL_LINKS = [
   { href: "/drugs", label: "의약품 목록" },
   { href: "/supplements", label: "건강기능식품 목록" },
+  { href: "/foods", label: "식품 목록" },
+  { href: "/herbal-medicines", label: "한약재 목록" },
   { href: "/drugs/side-effects", label: "부작용 역검색" },
   { href: "/drugs/conditions", label: "질환별 주의사항" },
   { href: "/drugs/identify", label: "약 식별" },

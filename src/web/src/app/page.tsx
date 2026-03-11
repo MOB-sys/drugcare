@@ -205,9 +205,27 @@ export default function HomePage() {
               <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">건강기능식품</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400">44,000여 건강기능식품의 성분, 기능성, 섭취방법을 확인하세요.</p>
             </Link>
-            <Link href="/tips" className="group block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
+            <Link href="/foods" className="group block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
+              <div className="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-orange-100 transition-colors">
+                <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">식품 정보</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">자몽, 우유, 커피 등 약물과 상호작용하는 식품을 확인하세요.</p>
+            </Link>
+            <Link href="/herbal-medicines" className="group block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
               <div className="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-emerald-100 transition-colors">
                 <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+              </div>
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">한약재 정보</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">인삼, 당귀 등 한약재의 효능과 약물 상호작용을 확인하세요.</p>
+            </Link>
+            <Link href="/tips" className="group block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
+              <div className="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center mb-2 sm:mb-3 group-hover:bg-teal-100 transition-colors">
+                <svg className="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
