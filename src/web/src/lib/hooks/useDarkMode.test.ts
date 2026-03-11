@@ -28,9 +28,9 @@ afterEach(() => {
 });
 
 describe("useDarkMode", () => {
-  it("defaults to light theme", () => {
+  it("defaults to system theme", () => {
     const { result } = renderHook(() => useDarkMode());
-    expect(result.current.theme).toBe("light");
+    expect(result.current.theme).toBe("system");
     expect(result.current.isDark).toBe(false);
   });
 

@@ -17,9 +17,10 @@ describe("EmptyState", () => {
     expect(checkLink).toBeDefined();
   });
 
-  it("renders app store download links", () => {
+  it("renders app coming soon notice", () => {
     render(<EmptyState />);
-    expect(screen.getByText("App Store")).toBeDefined();
-    expect(screen.getByText("Google Play")).toBeDefined();
+    expect(
+      screen.getAllByText(/앱 출시 예정/).length,
+    ).toBeGreaterThanOrEqual(1);
   });
 });

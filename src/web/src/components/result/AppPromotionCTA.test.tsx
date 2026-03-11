@@ -12,11 +12,9 @@ describe("AppPromotionCTA", () => {
     ).toBeGreaterThanOrEqual(1);
   });
 
-  it("renders download link", () => {
+  it("renders coming soon badge", () => {
     render(<AppPromotionCTA />);
-    const link = screen.getByRole("link", { name: "앱 다운로드" });
-    expect(link).toBeDefined();
-    expect(link.getAttribute("target")).toBe("_blank");
+    expect(screen.getAllByText("앱 출시 예정").length).toBeGreaterThanOrEqual(1);
   });
 
   it("has correct test id", () => {

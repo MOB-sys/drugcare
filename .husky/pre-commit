@@ -1,0 +1,50 @@
+#!/usr/bin/env sh
+
+# Review Agent — Pre-commit Hook
+# 변경된 영역만 검사하여 빠르게 실행 (목표 < 10초)
+
+# Web (Next.js) 변경 감지
+WEB_CHANGED=$(git diff --cached --name-only -- 'src/web/' | head -1)
+if [ -n "$WEB_CHANGED" ]; then
+    echo "[Review Agent] 웹 코드 검증 중..."
+
+    # TypeScript 타입 체크
+    echo "  tsc --noEmit..."
+    (cd src/web && npx tsc --noEmit) || exit 1
+
+    # 단위 테스트
+    echo "  vitest run..."
+    (cd src/web && npx vitest run --reporter=dot) || exit 1
+
+    echo "[Review Agent] 웹 검증 통과"
+fi
+
+# Backend (FastAPI) 변경 감지
+BACKEND_CHANGED=$(git diff --cached --name-only -- 'src/backend/' | head -1)
+if [ -n "$BACKEND_CHANGED" ]; then
+    echo "[Review Agent] 백엔드 코드 검증 중..."
+    (cd src/backend && ruff check .) || exit 1
+    (cd src/backend && ruff format --check .) || exit 1
+    echo "[Review Agent] 백엔드 검증 통과"
+fi
+
+# 시크릿 키 스캔 (전체 — 가장 빠른 검사)
+SECRETS=$(git diff --cached --diff-filter=ACM -U0 \
+  | grep -iE '(api[_-]?key|secret|password|token)\s*[:=]\s*["'"'"'][A-Za-z0-9+/]{16,}' \
+  | grep -v 'process\.env' \
+  | grep -v 'NEXT_PUBLIC_' \
+  | grep -v '\.test\.' \
+  || true)
+if [ -n "$SECRETS" ]; then
+    echo "[Review Agent] 시크릿 키 하드코딩 의심:"
+    echo "$SECRETS"
+    exit 1
+fi
+
+# next.config.ts 변경 시 CSP 경고
+CONFIG_CHANGED=$(git diff --cached --name-only -- 'src/web/next.config.ts' | head -1)
+if [ -n "$CONFIG_CHANGED" ]; then
+    echo ""
+    echo "[Review Agent] next.config.ts 변경됨 — CSP/헤더 검토 필요"
+    echo "  배포 후 실행: bash scripts/review/check-headers.sh"
+fi
