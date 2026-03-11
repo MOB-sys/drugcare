@@ -4,6 +4,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 import { getAllFoods } from "@/lib/api/foods";
 import type { FoodSearchItem } from "@/types/food";
 import { FoodListClient } from "./FoodListClient";
+import { SITE_URL } from "@/lib/constants/site";
 
 export const metadata: Metadata = {
   title: "식품 목록 — 약물 상호작용이 있는 식품",
@@ -52,8 +53,22 @@ export default async function FoodsIndexPage() {
   }
   const categories = Array.from(categoryMap.keys());
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "약물 상호작용이 있는 식품 목록",
+    description: `약물과 상호작용이 알려진 ${items.length}종의 식품 카테고리별 목록`,
+    url: `${SITE_URL}/foods`,
+    isPartOf: { "@type": "WebSite", name: "약잘알", url: SITE_URL },
+    numberOfItems: items.length,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Breadcrumbs
         items={[
           { label: "홈", href: "/" },

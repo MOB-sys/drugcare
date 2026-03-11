@@ -6,43 +6,15 @@ export const revalidate = 86400; // ISR: 24시간마다 재생성
 
 import { SITE_URL } from "@/lib/constants/site";
 
-/** 인기 조합 — DB에서 검증된 아이템 ID를 하드코딩 (빌드 시 API 의존성 제거). */
+/** 인기 조합 — 검색 키워드 기반으로 /check 페이지로 이동 (DB ID 의존 없음). */
 const POPULAR_COMBOS = [
-  {
-    items: ["타이레놀", "오메가3"],
-    label: "타이레놀 + 오메가3",
-    url: `/check/result?items=drug:4443:${encodeURIComponent("타이레놀정500밀리그람(아세트아미노펜)")},supplement:9683:${encodeURIComponent("식물성츄어블오메가3")}`,
-  },
-  {
-    items: ["아스피린", "오메가3"],
-    label: "아스피린 + 오메가3",
-    url: `/check/result?items=drug:1210:${encodeURIComponent("바이엘아스피린정500밀리그람")},supplement:9683:${encodeURIComponent("식물성츄어블오메가3")}`,
-  },
-  {
-    items: ["비타민D", "칼슘"],
-    label: "비타민D + 칼슘",
-    url: `/check/result?items=supplement:10240:${encodeURIComponent("키즈비타D-드롭 500IU")},supplement:15579:${encodeURIComponent("프리솔라 칼마디케이")}`,
-  },
-  {
-    items: ["철분", "칼슘"],
-    label: "철분 + 칼슘",
-    url: `/check/result?items=supplement:30333:${encodeURIComponent("비:너지 리프철분")},supplement:15579:${encodeURIComponent("프리솔라 칼마디케이")}`,
-  },
-  {
-    items: ["마그네슘", "비타민D"],
-    label: "마그네슘 + 비타민D",
-    url: `/check/result?items=supplement:35804:${encodeURIComponent("일동 액상마그네슘")},supplement:10240:${encodeURIComponent("키즈비타D-드롭 500IU")}`,
-  },
-  {
-    items: ["아스피린", "이부프로펜"],
-    label: "아스피린 + 이부프로펜",
-    url: `/check/result?items=drug:1210:${encodeURIComponent("바이엘아스피린정500밀리그람")},drug:2558:${encodeURIComponent("이부로엔연질캡슐(이부프로펜)")}`,
-  },
-  {
-    items: ["밀크씨슬", "비타민C"],
-    label: "밀크씨슬 + 비타민C",
-    url: `/check/result?items=supplement:23124:${encodeURIComponent("프라코루 디티엑스 골드")},supplement:33005:${encodeURIComponent("프롬바이오 비타민C 1000")}`,
-  },
+  { label: "타이레놀 + 오메가3", keywords: ["타이레놀", "오메가3"] },
+  { label: "아스피린 + 오메가3", keywords: ["아스피린", "오메가3"] },
+  { label: "비타민D + 칼슘", keywords: ["비타민D", "칼슘"] },
+  { label: "철분 + 칼슘", keywords: ["철분", "칼슘"] },
+  { label: "마그네슘 + 비타민D", keywords: ["마그네슘", "비타민D"] },
+  { label: "아스피린 + 이부프로펜", keywords: ["아스피린", "이부프로펜"] },
+  { label: "밀크씨슬 + 비타민C", keywords: ["밀크씨슬", "비타민C"] },
 ];
 
 const websiteJsonLd = {
@@ -263,16 +235,16 @@ export default function HomePage() {
             {POPULAR_COMBOS.map((combo) => (
               <Link
                 key={combo.label}
-                href={combo.url}
+                href={`/check?q=${encodeURIComponent(combo.keywords[0])}`}
                 className="group flex-shrink-0 w-44 sm:w-auto snap-start bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all"
               >
                 <div className="flex items-center gap-1.5 mb-2">
                   <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 break-keep">
-                    {combo.items[0]}
+                    {combo.keywords[0]}
                   </span>
                   <span className="text-[var(--color-text-muted)] text-xs">+</span>
                   <span className="inline-block px-2 py-0.5 text-xs font-medium rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 break-keep">
-                    {combo.items[1]}
+                    {combo.keywords[1]}
                   </span>
                 </div>
                 <p className="text-xs text-[var(--color-primary)] dark:text-[var(--color-accent)] font-medium group-hover:underline">

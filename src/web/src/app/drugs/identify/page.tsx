@@ -277,9 +277,20 @@ export default function IdentifyPage() {
           </>
         )}
 
+        {/* 앱 안내 */}
+        <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+          <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+            카메라로 약 식별하기
+          </p>
+          <p className="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">
+            카메라를 이용한 실시간 약 식별 기능은 모바일 앱에서 이용할 수 있습니다.
+            웹에서는 색상, 모양, 각인으로 검색해보세요.
+          </p>
+        </div>
+
         {/* 면책조항 */}
-        <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-          <p className="text-xs text-amber-700 leading-relaxed">
+        <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+          <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
             약 식별 결과는 참고용이며 정확한 확인은 약사에게 문의하세요.
             이 서비스는 의사/약사의 전문적 판단을 대체하지 않습니다.
           </p>

@@ -7,6 +7,7 @@ import { searchSupplements } from "@/lib/api/supplements";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { useDebounce } from "@/lib/hooks/useDebounce";
+import { SITE_URL } from "@/lib/constants/site";
 import type { DrugSearchItem, DrugDetail } from "@/types/drug";
 import type { SupplementSearchItem, SupplementDetail } from "@/types/supplement";
 

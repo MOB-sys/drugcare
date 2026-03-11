@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { Pagination } from "@/components/common/Pagination";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { ALL_LETTERS, CHOSUNG } from "@/lib/utils/korean";
+import { SITE_URL } from "@/lib/constants/site";
 
 export const revalidate = 86400; // 24시간 ISR
 
@@ -62,8 +63,21 @@ export default async function DrugBrowsePage({ params, searchParams }: PageProps
 
   const encodedLetter = encodeURIComponent(letter);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `${letter}${particle} 시작하는 의약품 목록`,
+    description: `${letter}${particle} 시작하는 의약품 ${total.toLocaleString()}개의 목록`,
+    url: `${SITE_URL}/drugs/browse/${encodedLetter}`,
+    isPartOf: { "@type": "WebSite", name: "약잘알", url: SITE_URL },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Breadcrumbs
         items={[
           { label: "홈", href: "/" },

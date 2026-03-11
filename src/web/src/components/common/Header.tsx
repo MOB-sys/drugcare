@@ -46,16 +46,32 @@ export function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { isDark, toggle } = useDarkMode();
 
-  // 외부 클릭 또는 Escape 키로 드롭다운 닫기
+  const [focusIndex, setFocusIndex] = useState(-1);
+  const dropdownItemsRef = useRef<(HTMLAnchorElement | null)[]>([]);
+
+  // 외부 클릭 또는 Escape 키로 드롭다운 닫기 + 키보드 내비게이션
   useEffect(() => {
-    if (!dropdownOpen) return;
+    if (!dropdownOpen) { setFocusIndex(-1); return; }
     function handleClickOutside(e: MouseEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setDropdownOpen(false);
       }
     }
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setDropdownOpen(false);
+      if (e.key === "Escape") { setDropdownOpen(false); return; }
+      if (!dropdownRef.current) return;
+      const items = dropdownItemsRef.current.filter(Boolean);
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const next = focusIndex < items.length - 1 ? focusIndex + 1 : 0;
+        setFocusIndex(next);
+        items[next]?.focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prev = focusIndex > 0 ? focusIndex - 1 : items.length - 1;
+        setFocusIndex(prev);
+        items[prev]?.focus();
+      }
     }
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleKeyDown);
@@ -63,7 +79,7 @@ export function Header() {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [dropdownOpen]);
+  }, [dropdownOpen, focusIndex]);
 
   function isActive(href: string) {
     return pathname === href || pathname?.startsWith(href + "/");
@@ -91,6 +107,8 @@ export function Header() {
               <div key={item.href} className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
+                  aria-expanded={dropdownOpen}
+                  aria-haspopup="true"
                   className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-1 ${
                     isGroupActive(item)
                       ? "text-[var(--color-primary)] bg-[var(--color-primary-50)]"
@@ -103,11 +121,14 @@ export function Header() {
                   </svg>
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute top-full left-0 mt-1 w-44 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-lg py-1 z-50">
-                    {item.children.map((child) => (
+                  <div className="absolute top-full left-0 mt-1 w-44 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-lg py-1 z-50" role="menu">
+                    {item.children.map((child, idx) => (
                       <Link
                         key={child.href}
                         href={child.href}
+                        ref={(el) => { dropdownItemsRef.current[idx] = el; }}
+                        role="menuitem"
+                        tabIndex={-1}
                         onClick={() => setDropdownOpen(false)}
                         className={`block px-4 py-2.5 text-sm transition-colors ${
                           isActive(child.href)

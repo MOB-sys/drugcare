@@ -4,6 +4,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 import { getAllHerbalMedicines } from "@/lib/api/herbal";
 import type { HerbalMedicineSearchItem } from "@/types/herbal";
 import { HerbalListClient } from "./HerbalListClient";
+import { SITE_URL } from "@/lib/constants/site";
 
 export const metadata: Metadata = {
   title: "한약재 목록 — 대한약전 기반 생약 정보",
@@ -52,8 +53,22 @@ export default async function HerbalMedicinesIndexPage() {
   }
   const categories = Array.from(categoryMap.keys());
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "대한약전 기반 한약재 목록",
+    description: `대한약전 기반 ${items.length}종의 한약재 분류별 목록`,
+    url: `${SITE_URL}/herbal-medicines`,
+    isPartOf: { "@type": "WebSite", name: "약잘알", url: SITE_URL },
+    numberOfItems: items.length,
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Breadcrumbs
         items={[
           { label: "홈", href: "/" },
