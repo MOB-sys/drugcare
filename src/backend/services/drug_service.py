@@ -263,7 +263,11 @@ async def search_by_symptom(
     if not symptom_stripped:
         return {"items": [], "total": 0, "page": page, "page_size": page_size, "total_pages": 0}
 
-    condition = Drug.efcy_qesitm.ilike(f"%{symptom_stripped}%")
+    keywords = [kw for kw in symptom_stripped.split() if kw][:5]  # max 5 keywords
+    if len(keywords) <= 1:
+        condition = Drug.efcy_qesitm.ilike(f"%{symptom_stripped}%")
+    else:
+        condition = and_(*(Drug.efcy_qesitm.ilike(f"%{kw}%") for kw in keywords))
 
     count_stmt = select(func.count()).select_from(Drug).where(condition)
     total: int = (await db.execute(count_stmt)).scalar_one()
@@ -528,7 +532,11 @@ async def search_by_side_effect(
     if not q_stripped:
         return {"items": [], "total": 0, "page": page, "page_size": page_size, "total_pages": 0}
 
-    condition = Drug.se_qesitm.ilike(f"%{q_stripped}%")
+    keywords = [kw for kw in q_stripped.split() if kw][:5]  # max 5 keywords
+    if len(keywords) <= 1:
+        condition = Drug.se_qesitm.ilike(f"%{q_stripped}%")
+    else:
+        condition = and_(*(Drug.se_qesitm.ilike(f"%{kw}%") for kw in keywords))
 
     count_stmt = select(func.count()).select_from(Drug).where(condition)
     total: int = (await db.execute(count_stmt)).scalar_one()
@@ -664,11 +672,23 @@ async def search_by_condition(
     if not q_stripped:
         return {"items": [], "total": 0, "page": page, "page_size": page_size, "total_pages": 0}
 
-    like_pattern = f"%{q_stripped}%"
-    condition = or_(
-        Drug.atpn_qesitm.ilike(like_pattern),
-        Drug.atpn_warn_qesitm.ilike(like_pattern),
-    )
+    keywords = [kw for kw in q_stripped.split() if kw][:5]  # max 5 keywords
+    if len(keywords) <= 1:
+        like_pattern = f"%{q_stripped}%"
+        condition = or_(
+            Drug.atpn_qesitm.ilike(like_pattern),
+            Drug.atpn_warn_qesitm.ilike(like_pattern),
+        )
+    else:
+        condition = and_(
+            *(
+                or_(
+                    Drug.atpn_qesitm.ilike(f"%{kw}%"),
+                    Drug.atpn_warn_qesitm.ilike(f"%{kw}%"),
+                )
+                for kw in keywords
+            )
+        )
 
     count_stmt = select(func.count()).select_from(Drug).where(condition)
     total: int = (await db.execute(count_stmt)).scalar_one()

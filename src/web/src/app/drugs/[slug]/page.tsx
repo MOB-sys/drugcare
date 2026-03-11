@@ -207,9 +207,46 @@ export default async function DrugDetailPage({ params }: PageProps) {
               <InfoSection id="interactions" title="상호작용" content={drug.intrc_qesitm} />
               <FoodInteractionSection intrcText={drug.intrc_qesitm} />
               <InfoSection id="side-effects" title="부작용" content={drug.se_qesitm} />
+              {drug.se_qesitm && (
+                <div className="px-0 pb-2 -mt-2">
+                  <Link
+                    href={`/drugs/${slug}/side-effects`}
+                    className="inline-flex items-center gap-1 text-sm text-[var(--color-primary)] hover:underline"
+                  >
+                    부작용 자세히 보기
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
+              )}
 
               {drug.dur_safety && drug.dur_safety.length > 0 && (
                 <DURSafetySection items={drug.dur_safety} />
+              )}
+
+              {/* 임신·수유 안전정보 링크 — DUR pregnancy 데이터 또는 텍스트에 임부/수유 키워드가 있을 때 */}
+              {(drug.dur_safety?.some((d) => d.dur_type === "pregnancy") ||
+                /임부|임산부|임신|수유/.test(`${drug.atpn_qesitm ?? ""}${drug.atpn_warn_qesitm ?? ""}`)) && (
+                <div className="py-4">
+                  <Link
+                    href={`/drugs/${slug}/pregnancy`}
+                    className="flex items-center gap-3 p-4 rounded-lg border border-pink-200 dark:border-pink-800 bg-pink-50 dark:bg-pink-900/20 hover:border-pink-300 dark:hover:border-pink-700 hover:shadow-sm transition-all group"
+                  >
+                    <span className="flex items-center justify-center w-9 h-9 rounded-full bg-pink-100 dark:bg-pink-800 text-pink-600 dark:text-pink-300 shrink-0">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                      </svg>
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-pink-800 dark:text-pink-200">임신·수유 안전정보</p>
+                      <p className="text-xs text-pink-600 dark:text-pink-400">임부 금기, 수유부 주의사항을 확인하세요</p>
+                    </div>
+                    <svg className="w-5 h-5 text-pink-400 dark:text-pink-500 group-hover:translate-x-0.5 transition-transform shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </Link>
+                </div>
               )}
 
               <InfoSection id="storage" title="보관방법" content={drug.deposit_method_qesitm} />

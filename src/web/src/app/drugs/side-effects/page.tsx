@@ -27,27 +27,60 @@ const INITIAL_STATE: SearchState = {
   searched: false,
 };
 
-/** 텍스트에서 키워드 주변을 잘라내어 반환한다. */
-function extractSnippet(text: string, keyword: string, radius = 40): string {
-  const idx = text.indexOf(keyword);
-  if (idx < 0) return text.slice(0, radius * 2);
-  const start = Math.max(0, idx - radius);
-  const end = Math.min(text.length, idx + keyword.length + radius);
+/** 텍스트에서 키워드들 중 가장 많이 포함된 구간을 잘라내어 반환한다. */
+function extractSnippet(text: string, keywords: string[], radius = 40): string {
+  if (keywords.length === 0) return text.slice(0, radius * 2);
+  // Find the position that covers the most keywords
+  let bestIdx = -1;
+  let bestCount = 0;
+  for (const kw of keywords) {
+    const idx = text.indexOf(kw);
+    if (idx < 0) continue;
+    const windowStart = Math.max(0, idx - radius);
+    const windowEnd = Math.min(text.length, idx + kw.length + radius);
+    const window = text.slice(windowStart, windowEnd);
+    const count = keywords.filter((k) => window.includes(k)).length;
+    if (count > bestCount) {
+      bestCount = count;
+      bestIdx = idx;
+    }
+  }
+  if (bestIdx < 0) return text.slice(0, radius * 2);
+  const start = Math.max(0, bestIdx - radius);
+  const end = Math.min(text.length, bestIdx + radius * 2);
   const prefix = start > 0 ? "..." : "";
   const suffix = end < text.length ? "..." : "";
   return `${prefix}${text.slice(start, end)}${suffix}`;
 }
 
+/** 텍스트에서 여러 키워드를 하이라이트하여 ReactNode 배열로 반환한다. */
+function highlightKeywords(text: string, keywords: string[]) {
+  if (keywords.length === 0) return [text];
+  const escaped = keywords.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const regex = new RegExp(`(${escaped.join("|")})`, "g");
+  const parts = text.split(regex);
+  return parts.map((part, i) =>
+    keywords.includes(part) ? (
+      <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 text-gray-900 dark:text-yellow-100 rounded px-0.5">
+        {part}
+      </mark>
+    ) : (
+      <span key={i}>{part}</span>
+    ),
+  );
+}
+
 export default function SideEffectsPage() {
   const [query, setQuery] = useState("");
-  const [activeKeyword, setActiveKeyword] = useState("");
+  const [activeKeywords, setActiveKeywords] = useState<string[]>([]);
   const [state, setState] = useState<SearchState>(INITIAL_STATE);
 
-  const doSearch = useCallback(async (q: string, page = 1) => {
-    if (!q.trim()) return;
+  const doSearch = useCallback(async (keywords: string[], page = 1) => {
+    const q = keywords.join(" ").trim();
+    if (!q) return;
     setState((prev) => ({ ...prev, isLoading: true, error: null }));
     try {
-      const res = await searchDrugsBySideEffect(q.trim(), page);
+      const res = await searchDrugsBySideEffect(q, page);
       setState({
         items: res.items,
         total: res.total,
@@ -69,18 +102,39 @@ export default function SideEffectsPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setActiveKeyword(query.trim());
-    doSearch(query);
+    const inputKeywords = query.trim().split(/\s+/).filter(Boolean);
+    if (inputKeywords.length === 0) return;
+    // Merge with existing keywords (deduplicate)
+    const merged = [...new Set([...activeKeywords, ...inputKeywords])];
+    setActiveKeywords(merged);
+    setQuery("");
+    doSearch(merged);
   }
 
   function handleChipClick(keyword: string) {
-    setQuery(keyword);
-    setActiveKeyword(keyword);
-    doSearch(keyword);
+    const newKeywords = activeKeywords.includes(keyword)
+      ? activeKeywords.filter((k) => k !== keyword)
+      : [...activeKeywords, keyword];
+    setActiveKeywords(newKeywords);
+    if (newKeywords.length > 0) {
+      doSearch(newKeywords);
+    } else {
+      setState(INITIAL_STATE);
+    }
+  }
+
+  function handleRemoveTag(keyword: string) {
+    const newKeywords = activeKeywords.filter((k) => k !== keyword);
+    setActiveKeywords(newKeywords);
+    if (newKeywords.length > 0) {
+      doSearch(newKeywords);
+    } else {
+      setState(INITIAL_STATE);
+    }
   }
 
   function handlePageChange(newPage: number) {
-    doSearch(activeKeyword, newPage);
+    doSearch(activeKeywords, newPage);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -109,7 +163,7 @@ export default function SideEffectsPage() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="부작용 키워드 (예: 두통, 어지러움)"
+              placeholder="키워드를 입력하세요 (여러 개는 공백으로 구분)"
               className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-sm"
             />
             <button
@@ -122,6 +176,33 @@ export default function SideEffectsPage() {
           </div>
         </form>
 
+        {/* 키워드 태그 */}
+        {activeKeywords.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {activeKeywords.length}개 키워드로 검색 중
+            </span>
+            {activeKeywords.map((kw) => (
+              <span
+                key={kw}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[var(--color-primary)] text-white"
+              >
+                {kw}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveTag(kw)}
+                  className="ml-0.5 hover:bg-white/20 rounded-full p-0.5 transition-colors"
+                  aria-label={`${kw} 제거`}
+                >
+                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* 빠른 필터 칩 */}
         <div className="flex flex-wrap gap-2 mb-6">
           {COMMON_SIDE_EFFECTS.map((se) => (
@@ -129,7 +210,7 @@ export default function SideEffectsPage() {
               key={se.keyword}
               onClick={() => handleChipClick(se.keyword)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
-                activeKeyword === se.keyword
+                activeKeywords.includes(se.keyword)
                   ? "bg-[var(--color-primary)] text-white"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
               }`}
@@ -153,7 +234,7 @@ export default function SideEffectsPage() {
         {!state.isLoading && !state.error && state.searched && (
           <>
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              <span className="font-semibold text-[var(--color-primary)]">{activeKeyword}</span>
+              <span className="font-semibold text-[var(--color-primary)]">{activeKeywords.join(" ")}</span>
               {" "}관련 의약품 {state.total.toLocaleString()}건
             </p>
 
@@ -187,18 +268,7 @@ export default function SideEffectsPage() {
                           )}
                           {drug.se_qesitm && (
                             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
-                              {extractSnippet(drug.se_qesitm, activeKeyword).split(activeKeyword).map((part, i, arr) =>
-                                i < arr.length - 1 ? (
-                                  <span key={i}>
-                                    {part}
-                                    <mark className="bg-yellow-200 dark:bg-yellow-800 text-gray-900 dark:text-yellow-100 rounded px-0.5">
-                                      {activeKeyword}
-                                    </mark>
-                                  </span>
-                                ) : (
-                                  <span key={i}>{part}</span>
-                                ),
-                              )}
+                              {highlightKeywords(extractSnippet(drug.se_qesitm, activeKeywords), activeKeywords)}
                             </p>
                           )}
                         </div>

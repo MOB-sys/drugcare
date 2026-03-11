@@ -37,7 +37,7 @@ const CATEGORY_ICONS: Record<string, ReactNode> = {
 /** 증상 체커 클라이언트 컴포넌트. */
 export function SymptomChecker() {
   const [expandedCat, setExpandedCat] = useState<string | null>(null);
-  const [selectedSymptom, setSelectedSymptom] = useState<string>("");
+  const [activeKeywords, setActiveKeywords] = useState<string[]>([]);
   const [customQuery, setCustomQuery] = useState("");
   const [results, setResults] = useState<DrugSearchItem[]>([]);
   const [total, setTotal] = useState(0);
@@ -46,8 +46,9 @@ export function SymptomChecker() {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
-  const doSearch = useCallback(async (q: string, p: number) => {
-    if (!q.trim()) return;
+  const doSearch = useCallback(async (keywords: string[], p: number) => {
+    const q = keywords.join(" ").trim();
+    if (!q) return;
     setLoading(true);
     setSearched(true);
     try {
@@ -65,21 +66,43 @@ export function SymptomChecker() {
   }, []);
 
   const handleSymptomClick = (symptom: string) => {
-    setSelectedSymptom(symptom);
-    setCustomQuery(symptom);
-    doSearch(symptom, 1);
+    const newKeywords = activeKeywords.includes(symptom)
+      ? activeKeywords.filter((k) => k !== symptom)
+      : [...activeKeywords, symptom];
+    setActiveKeywords(newKeywords);
+    if (newKeywords.length > 0) {
+      doSearch(newKeywords, 1);
+    } else {
+      setSearched(false);
+      setResults([]);
+      setTotal(0);
+    }
   };
 
   const handleCustomSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (customQuery.trim()) {
-      setSelectedSymptom(customQuery.trim());
-      doSearch(customQuery.trim(), 1);
+    const inputKeywords = customQuery.trim().split(/\s+/).filter(Boolean);
+    if (inputKeywords.length === 0) return;
+    const merged = [...new Set([...activeKeywords, ...inputKeywords])];
+    setActiveKeywords(merged);
+    setCustomQuery("");
+    doSearch(merged, 1);
+  };
+
+  const handleRemoveTag = (keyword: string) => {
+    const newKeywords = activeKeywords.filter((k) => k !== keyword);
+    setActiveKeywords(newKeywords);
+    if (newKeywords.length > 0) {
+      doSearch(newKeywords, 1);
+    } else {
+      setSearched(false);
+      setResults([]);
+      setTotal(0);
     }
   };
 
   const handlePageChange = (newPage: number) => {
-    doSearch(selectedSymptom, newPage);
+    doSearch(activeKeywords, newPage);
   };
 
   return (
@@ -90,7 +113,7 @@ export function SymptomChecker() {
           type="text"
           value={customQuery}
           onChange={(e) => setCustomQuery(e.target.value)}
-          placeholder="증상을 직접 입력하세요 (예: 두통, 소화불량)"
+          placeholder="키워드를 입력하세요 (여러 개는 공백으로 구분)"
           aria-label="증상 검색"
           className="flex-1 px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)]"
         />
@@ -101,6 +124,33 @@ export function SymptomChecker() {
           검색
         </button>
       </form>
+
+      {/* 키워드 태그 */}
+      {activeKeywords.length > 0 && (
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            {activeKeywords.length}개 키워드로 검색 중
+          </span>
+          {activeKeywords.map((kw) => (
+            <span
+              key={kw}
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-[var(--color-primary)] text-white"
+            >
+              {kw}
+              <button
+                type="button"
+                onClick={() => handleRemoveTag(kw)}
+                className="ml-0.5 hover:bg-white/20 rounded-full p-0.5 transition-colors"
+                aria-label={`${kw} 제거`}
+              >
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
 
       {/* 카테고리 그리드 */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
@@ -135,7 +185,7 @@ export function SymptomChecker() {
                   type="button"
                   onClick={() => handleSymptomClick(s.value)}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
-                    selectedSymptom === s.value
+                    activeKeywords.includes(s.value)
                       ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
                       : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-[var(--color-primary-100)] hover:text-[var(--color-primary)]"
                   }`}
@@ -158,7 +208,7 @@ export function SymptomChecker() {
       {!loading && searched && (
         <div>
           <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">
-            &quot;{selectedSymptom}&quot; 관련 의약품
+            &quot;{activeKeywords.join(" ")}&quot; 관련 의약품
             <span className="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">
               {total.toLocaleString()}건
             </span>
