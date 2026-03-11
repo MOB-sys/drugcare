@@ -1,0 +1,96 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/backend/**'
+      - 'src/data/migrations/**'
+      - 'scripts/data-import/**'
+      - 'Dockerfile'
+      - 'docker-compose.prod.yml'
+      - 'pyproject.toml'
+
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-backend
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Backend Test
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: yakmeogeo
+          POSTGRES_PASSWORD: testpass
+          POSTGRES_DB: yakmeogeo_test
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      DATABASE_URL: postgresql+asyncpg://yakmeogeo:testpass@localhost:5432/yakmeogeo_test
+      REDIS_URL: redis://localhost:6379/0
+      TESTING: 'true'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: pip install -e ".[dev]"
+      - run: pytest --tb=short -q
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    environment: production
+    steps:
+      - name: SSH Deploy
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script_stop: true
+          script: |
+            cd ${{ secrets.SERVER_PROJECT_DIR || '/opt/drugcare' }}
+
+            echo "=== 코드 업데이트 ==="
+            git pull origin main
+
+            echo "=== Docker 이미지 빌드 ==="
+            docker compose -f docker-compose.prod.yml build backend
+
+            echo "=== DB 서비스 확인 ==="
+            docker compose -f docker-compose.prod.yml up -d postgres redis
+            sleep 5
+
+            echo "=== Alembic 마이그레이션 ==="
+            docker compose -f docker-compose.prod.yml run --rm backend alembic upgrade head
+
+            echo "=== 서비스 재시작 ==="
+            docker compose -f docker-compose.prod.yml up -d
+
+            echo "=== 헬스체크 ==="
+            for i in $(seq 1 20); do
+              if curl -sf http://localhost:8000/api/v1/health > /dev/null 2>&1; then
+                echo "헬스체크 성공!"
+                docker compose -f docker-compose.prod.yml ps
+                exit 0
+              fi
+              echo "대기 중... ($i/20)"
+              sleep 3
+            done
+            echo "ERROR: 헬스체크 실패"
+            docker compose -f docker-compose.prod.yml logs --tail=30 backend
+            exit 1
