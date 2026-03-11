@@ -13,6 +13,8 @@ import 'package:pillright/features/detail/widgets/ingredients_table.dart';
 import 'package:pillright/features/search/models/drug_detail.dart';
 import 'package:pillright/features/search/models/selected_search_item.dart';
 import 'package:pillright/shared/models/item_type.dart';
+import 'package:pillright/core/providers/service_providers.dart';
+import 'package:pillright/shared/services/share_service.dart';
 import 'package:pillright/shared/widgets/ads/ad_banner_widget.dart';
 import 'package:pillright/shared/widgets/common/disclaimer_banner.dart';
 
@@ -50,9 +52,31 @@ class _DrugDetailScreenState extends ConsumerState<DrugDetailScreen> {
           loading: () => const Text('약물 상세'),
           error: (_, __) => const Text('약물 상세'),
         ),
+        actions: [
+          if (asyncDetail.hasValue)
+            IconButton(
+              icon: const Icon(Icons.share),
+              tooltip: '공유',
+              onPressed: () {
+                final drug = asyncDetail.value!;
+                ShareService.shareDrugInfo(
+                  name: drug.itemName,
+                  type: 'drug',
+                  id: drug.id,
+                );
+              },
+            ),
+        ],
       ),
       body: asyncDetail.when(
-        data: (drug) => _buildContent(drug),
+        data: (drug) {
+          // 약물 상세 조회 메트릭스 이벤트 추적 (fire-and-forget).
+          ref.read(metricsServiceProvider).trackEvent(
+            'detail_view',
+            eventData: {'type': 'drug', 'id': widget.drugId},
+          );
+          return _buildContent(drug);
+        },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => _buildError(error),
       ),

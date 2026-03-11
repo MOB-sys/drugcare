@@ -12,6 +12,8 @@ import 'package:pillright/features/detail/widgets/ingredients_table.dart';
 import 'package:pillright/features/search/models/selected_search_item.dart';
 import 'package:pillright/features/search/models/supplement_detail.dart';
 import 'package:pillright/shared/models/item_type.dart';
+import 'package:pillright/core/providers/service_providers.dart';
+import 'package:pillright/shared/services/share_service.dart';
 import 'package:pillright/shared/widgets/ads/ad_banner_widget.dart';
 import 'package:pillright/shared/widgets/common/disclaimer_banner.dart';
 
@@ -51,9 +53,31 @@ class _SupplementDetailScreenState
           loading: () => const Text('영양제 상세'),
           error: (_, __) => const Text('영양제 상세'),
         ),
+        actions: [
+          if (asyncDetail.hasValue)
+            IconButton(
+              icon: const Icon(Icons.share),
+              tooltip: '공유',
+              onPressed: () {
+                final supplement = asyncDetail.value!;
+                ShareService.shareDrugInfo(
+                  name: supplement.productName,
+                  type: 'supplement',
+                  id: supplement.id,
+                );
+              },
+            ),
+        ],
       ),
       body: asyncDetail.when(
-        data: (supplement) => _buildContent(supplement),
+        data: (supplement) {
+          // 영양제 상세 조회 메트릭스 이벤트 추적 (fire-and-forget).
+          ref.read(metricsServiceProvider).trackEvent(
+            'detail_view',
+            eventData: {'type': 'supplement', 'id': widget.supplementId},
+          );
+          return _buildContent(supplement);
+        },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => _buildError(error),
       ),

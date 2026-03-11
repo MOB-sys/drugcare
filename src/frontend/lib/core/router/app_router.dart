@@ -7,6 +7,7 @@ import 'package:pillright/features/cabinet/screens/cabinet_screen.dart';
 import 'package:pillright/features/detail/screens/drug_detail_screen.dart';
 import 'package:pillright/features/detail/screens/supplement_detail_screen.dart';
 import 'package:pillright/features/explore/screens/condition_search_screen.dart';
+import 'package:pillright/features/explore/screens/pill_identify_screen.dart';
 import 'package:pillright/features/explore/screens/side_effect_search_screen.dart';
 import 'package:pillright/features/explore/screens/symptom_search_screen.dart';
 import 'package:pillright/features/home/screens/home_screen.dart';
@@ -159,6 +160,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         parentNavigatorKey: _rootNavigatorKey,
         path: '/explore/conditions',
         builder: (context, state) => const ConditionSearchScreen(),
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/explore/identify',
+        builder: (context, state) => const PillIdentifyScreen(),
       ),
     ],
   );

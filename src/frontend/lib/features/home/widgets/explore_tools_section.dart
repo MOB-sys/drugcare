@@ -29,6 +29,12 @@ class ExploreToolsSection extends StatelessWidget {
       route: '/explore/conditions',
       color: AppColors.danger,
     ),
+    _ToolItem(
+      icon: Icons.search,
+      label: '알약\n식별',
+      route: '/explore/identify',
+      color: AppColors.accent,
+    ),
   ];
 
   @override
@@ -43,17 +49,14 @@ class ExploreToolsSection extends StatelessWidget {
               ),
         ),
         const SizedBox(height: 12),
-        Row(
-          children: _tools.map((tool) {
-            return Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  right: tool == _tools.last ? 0 : 8,
-                ),
-                child: _ToolCard(tool: tool),
-              ),
-            );
-          }).toList(),
+        GridView.count(
+          crossAxisCount: 4,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          childAspectRatio: 0.85,
+          children: _tools.map((tool) => _ToolCard(tool: tool)).toList(),
         ),
       ],
     );

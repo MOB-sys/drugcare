@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:pillright/core/constants/api_constants.dart';
 import 'package:pillright/core/utils/api_response_parser.dart';
 import 'package:pillright/features/explore/models/condition_search_item.dart';
+import 'package:pillright/features/explore/models/pill_identify_item.dart';
 import 'package:pillright/features/explore/models/side_effect_search_item.dart';
 import 'package:pillright/features/explore/models/symptom_search_item.dart';
 import 'package:pillright/features/search/models/drug_detail.dart';
@@ -95,6 +96,36 @@ class DrugService {
       (data) => PaginatedResult.fromJson(
         data as Map<String, dynamic>,
         SideEffectSearchItem.fromJson,
+      ),
+    );
+  }
+
+  /// 알약 외형으로 약물을 식별한다.
+  ///
+  /// [color] 색상, [shape] 모양, [imprint] 각인 문자.
+  Future<PaginatedResult<PillIdentifyItem>> identifyPill({
+    String? color,
+    String? shape,
+    String? imprint,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    final response = await _dio.get(
+      ApiConstants.drugIdentify,
+      queryParameters: {
+        if (color != null && color.isNotEmpty) 'color': color,
+        if (shape != null && shape.isNotEmpty) 'shape': shape,
+        if (imprint != null && imprint.isNotEmpty) 'imprint': imprint,
+        'page': page,
+        'page_size': pageSize,
+      },
+    );
+
+    return ApiResponseParser.parse(
+      response.data as Map<String, dynamic>,
+      (data) => PaginatedResult.fromJson(
+        data as Map<String, dynamic>,
+        PillIdentifyItem.fromJson,
       ),
     );
   }

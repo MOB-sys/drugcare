@@ -7,6 +7,7 @@ import 'package:pillright/shared/services/interaction_service.dart';
 import 'package:pillright/shared/services/reminder_service.dart';
 import 'package:pillright/shared/services/feedback_service.dart';
 import 'package:pillright/shared/services/review_service.dart';
+import 'package:pillright/shared/services/metrics_service.dart';
 import 'package:pillright/shared/services/supplement_service.dart';
 
 /// 약물 검색/상세 API 서비스 프로바이더.
@@ -42,4 +43,9 @@ final feedbackServiceProvider = Provider<FeedbackService>((ref) {
 /// 리뷰 API 서비스 프로바이더.
 final reviewServiceProvider = Provider<ReviewService>((ref) {
   return ReviewService(ref.read(dioProvider));
+});
+
+/// 메트릭스 서비스 프로바이더.
+final metricsServiceProvider = Provider<MetricsService>((ref) {
+  return MetricsService(ref.read(dioProvider));
 });

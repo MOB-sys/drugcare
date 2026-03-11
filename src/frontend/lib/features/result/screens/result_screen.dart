@@ -9,6 +9,8 @@ import 'package:pillright/shared/widgets/ads/ad_banner_widget.dart';
 import 'package:pillright/shared/widgets/ads/interstitial_ad_manager.dart';
 import 'package:pillright/shared/widgets/common/disclaimer_banner.dart';
 import 'package:pillright/shared/widgets/common/error_widget.dart';
+import 'package:pillright/core/providers/service_providers.dart';
+import 'package:pillright/shared/services/share_service.dart';
 import 'package:pillright/shared/widgets/common/loading_widget.dart';
 
 /// 상호작용 결과 화면.
@@ -46,6 +48,24 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('상호작용 결과'),
+        actions: [
+          if (resultAsync.hasValue)
+            IconButton(
+              icon: const Icon(Icons.share),
+              tooltip: '결과 공유',
+              onPressed: () {
+                final response = resultAsync.value!;
+                final itemNames = widget.selectedItems
+                    .map((item) => item.name)
+                    .toList();
+                ShareService.shareInteractionResult(
+                  itemNames: itemNames,
+                  interactionsFound: response.interactionsFound,
+                  hasDanger: response.hasDanger,
+                );
+              },
+            ),
+        ],
       ),
       body: resultAsync.when(
         loading: () =>
@@ -56,6 +76,12 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               interactionResultProvider(widget.selectedItems)),
         ),
         data: (response) {
+          // 결과 로드 시 메트릭스 이벤트 추적 (fire-and-forget).
+          ref.read(metricsServiceProvider).trackEvent(
+            'interaction_check',
+            eventData: {'item_count': widget.selectedItems.length},
+          );
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
