@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   title: "주요 성분 가이드",
   description:
     "아세트아미노펜, 이부프로펜, 비타민D 등 자주 접하는 약물·영양제 성분의 효과, 부작용, 주의사항을 알기 쉽게 설명합니다.",
+  alternates: { canonical: "/ingredients" },
   openGraph: {
     title: "주요 성분 가이드 — 약잘알",
     description:

@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return {
       title,
       description: desc || `${drug.item_name} 전문가용 약물 상세 정보`,
+      alternates: { canonical: `/professional/drugs/${slug}` },
       openGraph: { title, description: desc },
     };
   } catch {

@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "의료 전문가용 약물 정보 | 약잘알",
   description:
     "의사, 약사, 간호사를 위한 상세 약물 정보를 제공합니다. 성분, DUR 안전성, 상호작용 정보를 밀도 높은 형태로 확인하세요.",
+  alternates: { canonical: "/professional" },
   openGraph: {
     title: "의료 전문가용 약물 정보 | 약잘알",
     description:

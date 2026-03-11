@@ -33,6 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
+    alternates: { canonical: `/ingredients/${slug}` },
     keywords: [
       ingredient.name,
       ingredient.nameEn,

@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "건강기능식품 목록 — A-Z 인덱스",
   description:
     "약잘알에 등록된 건강기능식품을 가나다순으로 찾아보세요. 기능성, 성분, 섭취방법 정보를 확인할 수 있습니다.",
+  alternates: { canonical: "/supplements" },
   openGraph: {
     title: "건강기능식품 목록 — 약잘알",
     description: "건강기능식품 가나다순 인덱스",

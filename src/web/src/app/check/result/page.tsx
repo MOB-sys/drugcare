@@ -43,6 +43,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   return {
     title,
     description: `${nameList.join(", ")} 복약 상호작용 체크 결과 — 약잘알에서 확인하세요.`,
+    robots: { index: false, follow: true },
     openGraph: { title, type: "article" },
   };
 }

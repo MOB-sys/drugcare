@@ -2,9 +2,15 @@ import Link from "next/link";
 import { PillRightLogo } from "@/components/common/PillRightLogo";
 import { AdBanner } from "@/components/ads/AdBanner";
 
+import type { Metadata } from "next";
+
 export const revalidate = 86400; // ISR: 24시간마다 재생성
 
 import { SITE_URL } from "@/lib/constants/site";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 /** 인기 조합 — 검색 키워드 기반으로 /check 페이지로 이동 (DB ID 의존 없음). */
 const POPULAR_COMBOS = [

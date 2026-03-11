@@ -30,6 +30,7 @@ export async function generateMetadata({
   return {
     title: `${cat.name} — 대표 약물과 복용 주의사항`,
     description: cat.description,
+    alternates: { canonical: `/categories/${slug}` },
     keywords: [cat.name, "약물 분류", "복용 주의사항", ...cat.examples.slice(0, 3)],
     openGraph: {
       title: `${cat.name} — 약잘알`,

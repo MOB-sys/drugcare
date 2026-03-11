@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     "임산부 약",
     "복용 주의사항",
   ],
+  alternates: { canonical: "/conditions" },
   openGraph: {
     title: "질환별 주의 약물 목록 — 약잘알",
     description:

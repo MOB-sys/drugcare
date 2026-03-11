@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "식품 목록 — 약물 상호작용이 있는 식품",
   description:
     "약물과 상호작용이 알려진 주요 식품을 카테고리별로 찾아보세요. 자몽, 우유, 커피 등 복약 시 주의해야 할 식품 정보를 확인할 수 있습니다.",
+  alternates: { canonical: "/foods" },
   openGraph: {
     title: "식품 목록 — 약잘알",
     description: "약물 상호작용이 있는 식품 카테고리별 인덱스",

@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "한약재 목록 — 대한약전 기반 생약 정보",
   description:
     "대한약전 기반 주요 한약재를 분류별로 찾아보세요. 인삼, 당귀, 황기 등 한약재의 효능, 주의사항, 약물 상호작용 정보를 확인할 수 있습니다.",
+  alternates: { canonical: "/herbal-medicines" },
   openGraph: {
     title: "한약재 목록 — 약잘알",
     description: "대한약전 기반 한약재 분류별 인덱스",

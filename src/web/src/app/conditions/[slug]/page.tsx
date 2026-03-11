@@ -37,6 +37,7 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: { canonical: `/conditions/${slug}` },
     keywords: [
       condition.label,
       `${condition.label} 약물`,

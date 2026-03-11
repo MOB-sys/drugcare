@@ -26,6 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title: tip.title,
     description: tip.description,
     keywords: tip.tags,
+    alternates: { canonical: `/tips/${slug}` },
     openGraph: {
       title: tip.title,
       description: tip.description,

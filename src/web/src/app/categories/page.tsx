@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     "당뇨약",
     "복용 주의사항",
   ],
+  alternates: { canonical: "/categories" },
   openGraph: {
     title: "약물 분류별 가이드 — 약잘알",
     description:

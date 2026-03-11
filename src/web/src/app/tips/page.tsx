@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "건강팁 — 약과 영양제, 똑똑하게 복용하기",
   description:
     "약물 상호작용, 영양제 복용법, 복약 타이밍 등 꼭 알아야 할 건강 정보를 쉽게 정리했습니다.",
+  alternates: { canonical: "/tips" },
   openGraph: {
     title: "건강팁 — 약잘알",
     description: "약과 영양제, 똑똑하게 복용하는 방법",

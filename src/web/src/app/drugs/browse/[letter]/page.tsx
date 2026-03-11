@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description: `${letter}${particle} 시작하는 의약품을 찾아보세요. 효능, 용법, 상호작용 정보를 확인할 수 있습니다.`,
+    alternates: { canonical: `/drugs/browse/${encodeURIComponent(letter)}` },
   };
 }
 

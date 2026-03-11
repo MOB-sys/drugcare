@@ -27,6 +27,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description: `${letter}${particle} 시작하는 건강기능식품을 찾아보세요. 기능성, 성분, 섭취방법 정보를 확인할 수 있습니다.`,
+    alternates: { canonical: `/supplements/browse/${encodeURIComponent(letter)}` },
   };
 }
 

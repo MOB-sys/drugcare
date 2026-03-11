@@ -5,6 +5,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 export const metadata: Metadata = {
   title: "이용약관",
   description: "약잘알 서비스 이용약관. 서비스 이용 조건, 면책사항, 약물 정보 제공 범위를 안내합니다.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

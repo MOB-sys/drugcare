@@ -6,6 +6,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 export const metadata: Metadata = {
   title: "문의하기",
   description: "약잘알 서비스에 대한 문의, 오류 신고, 데이터 수정 요청 등을 보내주세요.",
+  alternates: { canonical: "/contact" },
 };
 
 const faqJsonLd = {
