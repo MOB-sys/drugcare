@@ -92,7 +92,7 @@ export function SymptomChecker() {
           onChange={(e) => setCustomQuery(e.target.value)}
           placeholder="증상을 직접 입력하세요 (예: 두통, 소화불량)"
           aria-label="증상 검색"
-          className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)]"
+          className="flex-1 px-4 py-2.5 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)]"
         />
         <button
           type="submit"
@@ -112,7 +112,7 @@ export function SymptomChecker() {
             className={`flex flex-col items-center gap-2 p-4 rounded-xl border transition-all ${
               expandedCat === cat.key
                 ? "border-[var(--color-primary)] bg-[var(--color-primary-50)] text-[var(--color-primary)]"
-                : "border-gray-200 bg-white text-gray-600 hover:border-[var(--color-primary-100)] hover:shadow-sm"
+                : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-[var(--color-primary-100)] hover:shadow-sm"
             }`}
           >
             {CATEGORY_ICONS[cat.key]}
@@ -123,8 +123,8 @@ export function SymptomChecker() {
 
       {/* 확장된 카테고리의 증상 칩 */}
       {expandedCat && (
-        <div className="bg-gray-50 rounded-xl p-4">
-          <p className="text-sm font-medium text-gray-600 mb-3">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4">
+          <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-3">
             {SYMPTOM_CATEGORIES.find((c) => c.key === expandedCat)?.label} 관련 증상
           </p>
           <div className="flex flex-wrap gap-2">
@@ -137,7 +137,7 @@ export function SymptomChecker() {
                   className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
                     selectedSymptom === s.value
                       ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
-                      : "border-gray-200 bg-white text-gray-600 hover:border-[var(--color-primary-100)] hover:text-[var(--color-primary)]"
+                      : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-[var(--color-primary-100)] hover:text-[var(--color-primary)]"
                   }`}
                 >
                   {s.label}
@@ -150,22 +150,22 @@ export function SymptomChecker() {
 
       {/* 검색 결과 */}
       {loading && (
-        <div className="text-center py-8 text-gray-400 text-sm">
+        <div className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">
           검색 중...
         </div>
       )}
 
       {!loading && searched && (
         <div>
-          <h2 className="text-lg font-semibold text-gray-800 mb-3">
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-3">
             &quot;{selectedSymptom}&quot; 관련 의약품
-            <span className="text-sm font-normal text-gray-400 ml-2">
+            <span className="text-sm font-normal text-gray-400 dark:text-gray-500 ml-2">
               {total.toLocaleString()}건
             </span>
           </h2>
 
           {results.length === 0 ? (
-            <p className="text-center py-8 text-gray-400 text-sm">
+            <p className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">
               검색 결과가 없습니다.
             </p>
           ) : (
@@ -174,15 +174,15 @@ export function SymptomChecker() {
                 <Link
                   key={drug.id}
                   href={`/drugs/${drug.slug}`}
-                  className="block p-4 bg-white rounded-xl border border-gray-200 hover:border-[var(--color-primary-100)] hover:shadow-sm transition-all"
+                  className="block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-[var(--color-primary-100)] hover:shadow-sm transition-all"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-medium text-gray-900 truncate">
+                      <p className="font-medium text-gray-900 dark:text-white truncate">
                         {drug.item_name}
                       </p>
                       {drug.entp_name && (
-                        <p className="text-sm text-gray-500">{drug.entp_name}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{drug.entp_name}</p>
                       )}
                     </div>
                     {drug.etc_otc_code && (
@@ -203,18 +203,18 @@ export function SymptomChecker() {
                 type="button"
                 onClick={() => handlePageChange(page - 1)}
                 disabled={page <= 1}
-                className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-30 hover:bg-gray-50"
+                className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-30 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 이전
               </button>
-              <span className="px-3 py-1.5 text-sm text-gray-500">
+              <span className="px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400">
                 {page} / {totalPages}
               </span>
               <button
                 type="button"
                 onClick={() => handlePageChange(page + 1)}
                 disabled={page >= totalPages}
-                className="px-3 py-1.5 text-sm border border-gray-200 rounded-lg disabled:opacity-30 hover:bg-gray-50"
+                className="px-3 py-1.5 text-sm border border-gray-200 dark:border-gray-700 rounded-lg disabled:opacity-30 hover:bg-gray-50 dark:hover:bg-gray-800"
               >
                 다음
               </button>

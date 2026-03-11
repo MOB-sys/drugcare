@@ -87,7 +87,7 @@ export function ReviewForm({ itemType, itemId, onSubmitted }: ReviewFormProps) {
           maxLength={500}
           className="w-full px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/30 focus:border-[var(--color-primary)] resize-none bg-white dark:bg-gray-800 dark:text-gray-100"
         />
-        <p className="text-xs text-gray-400 text-right">{comment.length}/500</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500 text-right">{comment.length}/500</p>
       </div>
 
       {error && <p className="text-sm text-red-500">{error}</p>}

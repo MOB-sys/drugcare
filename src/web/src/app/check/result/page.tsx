@@ -55,7 +55,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
   if (checkItems.length < 2) {
     return (
       <section className="max-w-2xl mx-auto px-4 py-16 text-center">
-        <p className="text-gray-500 mb-4">확인할 항목이 부족합니다. 2개 이상 선택해주세요.</p>
+        <p className="text-gray-500 dark:text-gray-400 mb-4">확인할 항목이 부족합니다. 2개 이상 선택해주세요.</p>
         <Link
           href="/check"
           className="inline-block px-6 py-2 rounded-xl text-white font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]"
@@ -140,7 +140,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
           <div className="flex gap-3">
             <Link
               href="/check"
-              className="flex-1 py-3 rounded-xl text-center font-semibold border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex-1 py-3 rounded-xl text-center font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             >
               다시 체크하기
             </Link>

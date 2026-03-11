@@ -82,7 +82,7 @@ export default function HomePage() {
           </p>
           <Link
             href="/check"
-            className="inline-block px-6 sm:px-8 py-3.5 rounded-xl text-[var(--color-primary)] font-semibold bg-white hover:bg-gray-100 shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
+            className="inline-block px-6 sm:px-8 py-3.5 rounded-xl text-[var(--color-primary)] font-semibold bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 shadow-lg hover:shadow-xl transition-all active:scale-[0.98]"
           >
             상호작용 확인하기
           </Link>
@@ -323,8 +323,8 @@ export default function HomePage() {
               <p className="text-xs text-gray-500 dark:text-gray-400">최근 등록 의약품 및 안전 정보</p>
             </Link>
             <Link href="/professional" className="group block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-3 sm:p-5 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all">
-              <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center mb-2 group-hover:bg-slate-200 transition-colors">
-                <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-2 group-hover:bg-slate-200 dark:group-hover:bg-slate-700 transition-colors">
+                <svg className="w-5 h-5 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                 </svg>
               </div>

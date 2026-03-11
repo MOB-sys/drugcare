@@ -24,7 +24,7 @@ export function SearchResults({
 }: SearchResultsProps) {
   if (isLoading) {
     return (
-      <div className="py-12 text-center text-gray-400" role="status" aria-live="polite">
+      <div className="py-12 text-center text-gray-400 dark:text-gray-500" role="status" aria-live="polite">
         <div className="inline-block w-6 h-6 border-2 border-[var(--color-primary-100)] border-t-[var(--color-primary)] rounded-full animate-spin" aria-hidden="true" />
         <p className="mt-2 text-sm">검색 중...</p>
       </div>
@@ -33,7 +33,7 @@ export function SearchResults({
 
   if (!query.trim()) {
     return (
-      <div className="py-12 text-center text-gray-400">
+      <div className="py-12 text-center text-gray-400 dark:text-gray-500">
         <p className="text-sm">약물이나 영양제 이름을 검색해보세요</p>
       </div>
     );
@@ -54,7 +54,7 @@ export function SearchResults({
 
   if (results.length === 0) {
     return (
-      <div className="py-12 text-center text-gray-400" role="status" aria-live="polite">
+      <div className="py-12 text-center text-gray-400 dark:text-gray-500" role="status" aria-live="polite">
         <p className="text-sm">&quot;{query}&quot;에 대한 검색 결과가 없습니다</p>
       </div>
     );

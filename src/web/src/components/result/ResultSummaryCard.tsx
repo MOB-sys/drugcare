@@ -105,7 +105,7 @@ export function ResultSummaryCard({ data }: ResultSummaryCardProps) {
       {/* Severity Breakdown Bar */}
       {hasInteractions && (
         <div className="mt-4">
-          <div className="flex h-2.5 w-full rounded-full overflow-hidden bg-gray-200">
+          <div className="flex h-2.5 w-full rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
             {SEVERITY_ORDER.map((sev) => {
               const count = counts[sev];
               if (count === 0) return null;
@@ -127,7 +127,7 @@ export function ResultSummaryCard({ data }: ResultSummaryCardProps) {
               if (count === 0) return null;
               const config = SEVERITY_CONFIG[sev];
               return (
-                <span key={sev} className="inline-flex items-center gap-1.5 text-xs text-gray-600">
+                <span key={sev} className="inline-flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300">
                   <span className={`w-2 h-2 rounded-full ${config.dotColor}`} />
                   {config.label} {count}건
                 </span>

@@ -19,7 +19,7 @@ export function CheckButton({ items, isLoading, onClick }: CheckButtonProps) {
       className={`w-full py-3 rounded-xl text-white font-semibold text-base transition-all ${
         canCheck
           ? "bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] shadow-md hover:shadow-lg active:scale-[0.98]"
-          : "bg-gray-300 cursor-not-allowed"
+          : "bg-gray-300 dark:bg-gray-600 cursor-not-allowed"
       }`}
     >
       {isLoading

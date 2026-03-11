@@ -97,7 +97,7 @@ export default async function NewsPage() {
 
         {/* 최근 등록 의약품 */}
         <section className="mb-12">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
             <svg className="w-5 h-5 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -105,7 +105,7 @@ export default async function NewsPage() {
           </h2>
 
           {recentDrugs.length === 0 ? (
-            <p className="text-center py-8 text-gray-400 text-sm">
+            <p className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">
               최근 30일 이내 등록된 의약품이 없습니다.
             </p>
           ) : (
@@ -122,11 +122,11 @@ export default async function NewsPage() {
                     </svg>
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
                       {drug.item_name}
                     </p>
                     {drug.entp_name && (
-                      <p className="text-xs text-gray-500 truncate">{drug.entp_name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{drug.entp_name}</p>
                     )}
                   </div>
                   {drug.etc_otc_code && (
@@ -144,7 +144,7 @@ export default async function NewsPage() {
 
         {/* 약물 안전 정보 */}
         <section className="mt-8">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
             <svg className="w-5 h-5 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
@@ -173,7 +173,7 @@ export default async function NewsPage() {
         </section>
 
         {/* 면책조항 */}
-        <p className="text-xs text-gray-400 text-center mt-8">
+        <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-8">
           이 정보는 식약처 공공데이터를 기반으로 하며, 의사/약사의 전문적 판단을 대체하지 않습니다.
         </p>
       </div>

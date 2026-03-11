@@ -38,7 +38,7 @@ export function TableOfContents({ items }: TableOfContentsProps) {
 
   return (
     <nav className="sticky top-20 space-y-1" aria-label="목차">
-      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">목차</p>
+      <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">목차</p>
       {items.map((item) => (
         <a
           key={item.id}
@@ -50,7 +50,7 @@ export function TableOfContents({ items }: TableOfContentsProps) {
           className={`block text-sm py-1 px-2 rounded transition-colors ${
             activeId === item.id
               ? "text-[var(--color-primary)] font-medium bg-[var(--color-primary-50)]"
-              : "text-gray-500 hover:text-gray-900"
+              : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
           }`}
         >
           {item.label}

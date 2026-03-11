@@ -14,7 +14,7 @@ export function ReviewSummaryDisplay({ summary }: ReviewSummaryProps) {
 
   if (total_count === 0) {
     return (
-      <div className="text-center py-6 text-gray-400 text-sm">
+      <div className="text-center py-6 text-gray-400 dark:text-gray-500 text-sm">
         아직 리뷰가 없습니다. 첫 번째 리뷰를 작성해보세요!
       </div>
     );

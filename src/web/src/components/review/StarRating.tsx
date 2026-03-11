@@ -49,7 +49,7 @@ export function StarRating({
           aria-label={isInteractive ? `${star}점` : undefined}
         >
           <svg
-            className={`${sizeClass} ${star <= displayValue ? "text-amber-400" : "text-gray-200"} transition-colors`}
+            className={`${sizeClass} ${star <= displayValue ? "text-amber-400" : "text-gray-200 dark:text-gray-700"} transition-colors`}
             fill="currentColor"
             viewBox="0 0 20 20"
           >

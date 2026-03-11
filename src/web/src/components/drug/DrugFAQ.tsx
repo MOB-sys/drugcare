@@ -16,7 +16,7 @@ function FAQAccordionItem({ item }: { item: FAQItem }) {
       >
         <span className="flex-1">{item.question}</span>
         <svg
-          className={`w-4 h-4 shrink-0 text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-4 h-4 shrink-0 text-gray-400 dark:text-gray-500 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

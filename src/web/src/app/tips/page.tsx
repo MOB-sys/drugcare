@@ -37,7 +37,7 @@ export default function TipsPage() {
 
       <section className="max-w-3xl mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2">건강팁</h1>
-        <p className="text-gray-500 mb-6">
+        <p className="text-gray-500 dark:text-gray-400 mb-6">
           약과 영양제를 안전하고 효과적으로 복용하기 위한 정보를 모았습니다.
         </p>
 

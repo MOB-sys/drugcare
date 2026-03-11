@@ -26,16 +26,16 @@ export function CabinetItemCard({ item, isDeleting, onDelete }: CabinetItemCardP
         <p className="font-medium text-gray-900 dark:text-gray-100 truncate">
           {item.nickname || item.item_name}
         </p>
-        <p className="text-xs text-gray-400">{dateStr} 추가</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500">{dateStr} 추가</p>
       </div>
       <button
         onClick={() => onDelete(item.id)}
         disabled={isDeleting}
-        className="shrink-0 p-2.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
+        className="shrink-0 p-2.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
         aria-label={`${item.nickname || item.item_name} 삭제`}
       >
         {isDeleting ? (
-          <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-gray-300 dark:border-gray-600 border-t-gray-500 rounded-full animate-spin" />
         ) : (
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

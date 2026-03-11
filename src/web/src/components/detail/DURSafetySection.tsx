@@ -80,12 +80,12 @@ export function DURSafetySection({ items }: DURSafetySectionProps) {
 
   return (
     <div id="dur-safety" className="py-5 scroll-mt-24">
-      <h3 className="text-base font-semibold text-gray-900 mb-3">DUR 안전성 정보</h3>
+      <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3">DUR 안전성 정보</h3>
       <div className="space-y-3">
         {Array.from(grouped.entries()).map(([type, durItems]) => {
           const config = DUR_TYPE_CONFIG[type] || {
             label: durItems[0]?.type_name || type,
-            color: "text-gray-700 bg-gray-50 border-gray-200",
+            color: "text-gray-700 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700",
             Icon: WarningIcon,
           };
 

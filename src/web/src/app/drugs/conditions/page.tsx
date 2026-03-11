@@ -120,7 +120,7 @@ function ConditionsContent() {
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2">
           질환별 약물 주의사항
         </h1>
-        <p className="text-gray-500 mb-6">
+        <p className="text-gray-500 dark:text-gray-400 mb-6">
           질환이나 상태를 선택하면 해당 조건에서 주의가 필요한 의약품을 확인할 수 있습니다.
         </p>
 
@@ -132,7 +132,7 @@ function ConditionsContent() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="질환 키워드 (예: 당뇨, 고혈압, 임산부)"
-              className="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-sm"
+              className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-sm"
             />
             <button
               type="submit"
@@ -151,10 +151,10 @@ function ConditionsContent() {
               <button
                 key={cond.keyword}
                 onClick={() => handleCardClick(cond.keyword)}
-                className="text-left p-4 border border-gray-200 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 transition-colors"
+                className="text-left p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 transition-colors"
               >
-                <h3 className="text-sm font-semibold text-gray-900 mb-1">{cond.label}</h3>
-                <p className="text-xs text-gray-400 leading-snug">{cond.description}</p>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">{cond.label}</h3>
+                <p className="text-xs text-gray-400 dark:text-gray-500 leading-snug">{cond.description}</p>
               </button>
             ))}
           </div>
@@ -164,7 +164,7 @@ function ConditionsContent() {
         {showResults && (
           <>
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
                 <span className="font-semibold text-[var(--color-primary)]">{activeKeyword}</span>
                 {" "}관련 주의 의약품 {state.total.toLocaleString()}건
               </p>
@@ -178,7 +178,7 @@ function ConditionsContent() {
 
             {/* 로딩 */}
             {state.isLoading && (
-              <div className="text-center py-12 text-gray-400">검색 중...</div>
+              <div className="text-center py-12 text-gray-400 dark:text-gray-500">검색 중...</div>
             )}
 
             {/* 에러 */}
@@ -189,7 +189,7 @@ function ConditionsContent() {
             {!state.isLoading && !state.error && (
               <>
                 {state.items.length === 0 ? (
-                  <div className="text-center py-12 text-gray-400">
+                  <div className="text-center py-12 text-gray-400 dark:text-gray-500">
                     검색 결과가 없습니다. 다른 키워드로 검색해보세요.
                   </div>
                 ) : (
@@ -200,26 +200,26 @@ function ConditionsContent() {
                         <li key={drug.id}>
                           <Link
                             href={`/drugs/${drug.slug}`}
-                            className="block p-4 border border-gray-200 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 transition-colors"
+                            className="block p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 transition-colors"
                           >
                             <div className="flex items-start gap-3">
                               {drug.item_image && (
                                 <img
                                   src={drug.item_image}
                                   alt={drug.item_name}
-                                  className="w-12 h-12 object-contain rounded-lg bg-gray-50 shrink-0"
+                                  className="w-12 h-12 object-contain rounded-lg bg-gray-50 dark:bg-gray-800 shrink-0"
                                   onError={(e) => { e.currentTarget.style.display = "none"; }}
                                 />
                               )}
                               <div className="min-w-0 flex-1">
-                                <h3 className="text-sm font-semibold text-gray-900 truncate">
+                                <h3 className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                                   {drug.item_name}
                                 </h3>
                                 {drug.entp_name && (
-                                  <p className="text-xs text-gray-400 mt-0.5">{drug.entp_name}</p>
+                                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{drug.entp_name}</p>
                                 )}
                                 {cautionText && (
-                                  <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+                                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
                                     {extractSnippet(cautionText, activeKeyword).split(activeKeyword).map((part, i, arr) =>
                                       i < arr.length - 1 ? (
                                         <span key={i}>
@@ -250,18 +250,18 @@ function ConditionsContent() {
                       onClick={() => handlePageChange(state.page - 1)}
                       disabled={state.page <= 1}
                       aria-label="이전 페이지"
-                      className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+                      className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-30 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       이전
                     </button>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
                       {state.page} / {state.totalPages}
                     </span>
                     <button
                       onClick={() => handlePageChange(state.page + 1)}
                       disabled={state.page >= state.totalPages}
                       aria-label="다음 페이지"
-                      className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+                      className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-30 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                     >
                       다음
                     </button>

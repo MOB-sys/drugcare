@@ -267,7 +267,7 @@ export default async function IngredientDetailPage({ params }: PageProps) {
         {/* ── 면책조항 배너 ── */}
         <div className="mb-8 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
           <div className="flex items-start gap-3">
-            <svg className="w-5 h-5 text-gray-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-gray-400 dark:text-gray-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
@@ -336,7 +336,7 @@ export default async function IngredientDetailPage({ params }: PageProps) {
         <AdBanner slot="ingredient-detail-bottom" format="auto" />
 
         {/* 면책조항 하단 */}
-        <p className="text-xs text-gray-400 text-center mt-6">
+        <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-6">
           이 정보는 일반적인 건강 정보이며, 의사/약사의 전문적 판단을 대체하지
           않습니다.
         </p>

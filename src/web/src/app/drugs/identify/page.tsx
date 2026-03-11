@@ -93,13 +93,13 @@ export default function IdentifyPage() {
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2">
           약 식별
         </h1>
-        <p className="text-gray-500 mb-6">
+        <p className="text-gray-500 dark:text-gray-400 mb-6">
           약의 색상, 모양, 각인을 선택하면 해당하는 의약품을 찾아드립니다.
         </p>
 
         {/* 색상 선택 */}
         <div className="mb-5">
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">색상</h2>
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">색상</h2>
           <div className="flex flex-wrap gap-2">
             {PILL_COLORS.map((color) => (
               <button
@@ -110,15 +110,15 @@ export default function IdentifyPage() {
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                   selectedColor === color.value
                     ? "ring-2 ring-[var(--color-primary)] bg-[var(--color-primary-50)]"
-                    : "bg-gray-50 hover:bg-gray-100"
+                    : "bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
                 title={color.label}
               >
                 <span
-                  className="w-4 h-4 rounded-full border border-gray-300 shrink-0"
+                  className="w-4 h-4 rounded-full border border-gray-300 dark:border-gray-600 shrink-0"
                   style={{ backgroundColor: color.hex }}
                 />
-                <span className="text-gray-700">{color.label}</span>
+                <span className="text-gray-700 dark:text-gray-200">{color.label}</span>
               </button>
             ))}
           </div>
@@ -126,7 +126,7 @@ export default function IdentifyPage() {
 
         {/* 모양 선택 */}
         <div className="mb-5">
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">모양</h2>
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">모양</h2>
           <div className="flex flex-wrap gap-2">
             {PILL_SHAPES.map((shape) => (
               <button
@@ -137,7 +137,7 @@ export default function IdentifyPage() {
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
                   selectedShape === shape.value
                     ? "bg-[var(--color-primary)] text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
                 }`}
               >
                 {shape.label}
@@ -148,13 +148,13 @@ export default function IdentifyPage() {
 
         {/* 각인 입력 */}
         <div className="mb-5">
-          <h2 className="text-sm font-semibold text-gray-700 mb-2">각인 문자</h2>
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">각인 문자</h2>
           <input
             type="text"
             value={imprint}
             onChange={(e) => setImprint(e.target.value)}
             placeholder="약에 새겨진 문자를 입력하세요"
-            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-sm"
+            className="w-full px-4 py-2.5 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-sm"
           />
         </div>
 
@@ -169,7 +169,7 @@ export default function IdentifyPage() {
           </button>
           <button
             onClick={handleReset}
-            className="px-5 py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
+            className="px-5 py-2.5 border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 rounded-xl text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             초기화
           </button>
@@ -198,7 +198,7 @@ export default function IdentifyPage() {
 
         {/* 로딩 */}
         {state.isLoading && (
-          <div className="text-center py-12 text-gray-400">검색 중...</div>
+          <div className="text-center py-12 text-gray-400 dark:text-gray-500">검색 중...</div>
         )}
 
         {/* 에러 */}
@@ -209,12 +209,12 @@ export default function IdentifyPage() {
         {/* 결과 */}
         {!state.isLoading && !state.error && state.searched && (
           <>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               검색 결과 {state.total.toLocaleString()}건
             </p>
 
             {state.items.length === 0 ? (
-              <div className="text-center py-12 text-gray-400">
+              <div className="text-center py-12 text-gray-400 dark:text-gray-500">
                 일치하는 의약품이 없습니다. 조건을 변경해보세요.
               </div>
             ) : (
@@ -223,27 +223,27 @@ export default function IdentifyPage() {
                   <Link
                     key={drug.id}
                     href={`/drugs/${drug.slug}`}
-                    className="block p-3 border border-gray-200 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 transition-colors"
+                    className="block p-3 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 transition-colors"
                   >
                     {drug.item_image && !failedImages.has(drug.id) ? (
                       <img
                         src={drug.item_image}
                         alt={drug.item_name}
-                        className="w-full h-24 object-contain rounded-lg bg-gray-50 mb-2"
+                        className="w-full h-24 object-contain rounded-lg bg-gray-50 dark:bg-gray-800 mb-2"
                         onError={() => {
                           setFailedImages((prev) => new Set(prev).add(drug.id));
                         }}
                       />
                     ) : (
-                      <div className="w-full h-24 bg-gray-100 rounded-lg mb-2 flex items-center justify-center">
-                        <span className="text-gray-300 text-xs">이미지 없음</span>
+                      <div className="w-full h-24 bg-gray-100 dark:bg-gray-800 rounded-lg mb-2 flex items-center justify-center">
+                        <span className="text-gray-300 dark:text-gray-600 text-xs">이미지 없음</span>
                       </div>
                     )}
-                    <h3 className="text-xs font-semibold text-gray-900 truncate">
+                    <h3 className="text-xs font-semibold text-gray-900 dark:text-white truncate">
                       {drug.item_name}
                     </h3>
                     {drug.chart && (
-                      <p className="text-xs text-gray-400 mt-0.5 truncate">
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 truncate">
                         {drug.chart}
                       </p>
                     )}
@@ -258,17 +258,17 @@ export default function IdentifyPage() {
                 <button
                   onClick={() => handlePageChange(state.page - 1)}
                   disabled={state.page <= 1}
-                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-30 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 >
                   이전
                 </button>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-gray-500 dark:text-gray-400">
                   {state.page} / {state.totalPages}
                 </span>
                 <button
                   onClick={() => handlePageChange(state.page + 1)}
                   disabled={state.page >= state.totalPages}
-                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+                  className="px-3 py-1.5 text-sm rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-30 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                 >
                   다음
                 </button>

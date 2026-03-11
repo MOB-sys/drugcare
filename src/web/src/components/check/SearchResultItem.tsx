@@ -75,8 +75,8 @@ export function SearchResultItem({
       <span
         className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-medium ${
           itemType === "drug"
-            ? "bg-blue-50 text-blue-700"
-            : "bg-emerald-50 text-emerald-700"
+            ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+            : "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
         }`}
       >
         {itemType === "drug" ? "약물" : "영양제"}
@@ -100,9 +100,9 @@ export function SearchResultItem({
             disabled={cabinetStatus !== "idle"}
             className={`shrink-0 px-2 py-1 rounded-lg text-xs font-medium transition-colors ${
               cabinetStatus === "duplicate"
-                ? "bg-gray-100 text-gray-400"
+                ? "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500"
                 : cabinetStatus === "removing"
-                  ? "bg-gray-50 text-gray-400"
+                  ? "bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-500"
                   : "bg-[var(--color-primary-50)] text-[var(--color-primary)] hover:bg-[var(--color-primary-100)]"
             }`}
             aria-label={`${name} 복약함에 추가`}

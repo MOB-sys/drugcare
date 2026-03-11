@@ -69,7 +69,7 @@ export function AddToCabinetButton({
           </span>
           <button
             onClick={handleRemove}
-            className="inline-flex items-center gap-1 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 border border-red-200 bg-white hover:bg-red-50 active:scale-[0.98] transition-all"
+            className="inline-flex items-center gap-1 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 border border-red-200 bg-white dark:bg-gray-900 hover:bg-red-50 active:scale-[0.98] transition-all"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -83,10 +83,10 @@ export function AddToCabinetButton({
           disabled={status !== "idle"}
           className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
             status === "duplicate"
-              ? "bg-gray-100 text-gray-500 border border-gray-200"
+              ? "bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700"
               : status === "loading" || status === "removing"
-                ? "bg-gray-50 text-gray-400 border border-gray-200"
-                : "bg-white text-[var(--color-primary)] border border-[var(--color-primary)] hover:bg-[var(--color-primary-50)] active:scale-[0.98]"
+                ? "bg-gray-50 dark:bg-gray-800 text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-gray-700"
+                : "bg-white dark:bg-gray-900 text-[var(--color-primary)] border border-[var(--color-primary)] hover:bg-[var(--color-primary-50)] active:scale-[0.98]"
           }`}
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

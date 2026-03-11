@@ -119,7 +119,7 @@ export default function IngredientsPage() {
         </div>
 
         {/* 면책조항 */}
-        <p className="text-xs text-gray-400 text-center mt-6">
+        <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-6">
           이 정보는 일반적인 건강 정보이며, 의사/약사의 전문적 판단을 대체하지
           않습니다.
         </p>

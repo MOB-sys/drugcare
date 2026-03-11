@@ -19,7 +19,7 @@ export function SelectedItemsBar({ items, onRemove, onClearAll }: SelectedItemsB
         </span>
         <button
           onClick={onClearAll}
-          className="text-xs text-gray-400 hover:text-gray-600"
+          className="text-xs text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
         >
           전체 해제
         </button>
@@ -38,7 +38,7 @@ export function SelectedItemsBar({ items, onRemove, onClearAll }: SelectedItemsB
             <span className="truncate max-w-[100px] sm:max-w-[150px]">{item.name}</span>
             <button
               onClick={() => onRemove(item.item_id, item.item_type)}
-              className="ml-1 text-gray-400 hover:text-gray-600"
+              className="ml-1 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
               aria-label={`${item.name} 제거`}
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

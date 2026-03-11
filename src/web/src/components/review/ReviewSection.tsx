@@ -63,19 +63,19 @@ export function ReviewSection({ itemType, itemId }: ReviewSectionProps) {
 
       <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm space-y-6">
         {fetchError ? (
-          <div className="text-center py-8 text-gray-400 text-sm">
+          <div className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">
             리뷰를 불러오지 못했습니다.
             <button onClick={() => fetchData(1)} className="ml-2 text-[var(--color-primary)] hover:underline">다시 시도</button>
           </div>
         ) : loading && !summary ? (
-          <div className="text-center py-8 text-gray-400 text-sm">
+          <div className="text-center py-8 text-gray-400 dark:text-gray-500 text-sm">
             리뷰를 불러오는 중...
           </div>
         ) : (
           <>
             {summary && <ReviewSummaryDisplay summary={summary} />}
 
-            <hr className="border-gray-100" />
+            <hr className="border-gray-100 dark:border-gray-700" />
 
             <ReviewForm
               itemType={itemType}
@@ -85,7 +85,7 @@ export function ReviewSection({ itemType, itemId }: ReviewSectionProps) {
 
             {reviews.length > 0 && (
               <>
-                <hr className="border-gray-100" />
+                <hr className="border-gray-100 dark:border-gray-700" />
                 <ReviewList
                   reviews={reviews}
                   total={total}

@@ -90,7 +90,7 @@ export default async function SupplementBrowsePage({ params, searchParams }: Pag
               className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-medium transition-colors ${
                 l === letter
                   ? "bg-[var(--color-primary)] text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-[var(--color-primary-50)]"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-[var(--color-primary-50)]"
               }`}
             >
               {l}

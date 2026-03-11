@@ -54,7 +54,7 @@ export function Pagination({ currentPage, totalPages, basePath }: PaginationProp
           &laquo; 이전
         </Link>
       ) : (
-        <span className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 cursor-default">
+        <span className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 dark:text-gray-600 cursor-default">
           &laquo; 이전
         </span>
       )}
@@ -64,7 +64,7 @@ export function Pagination({ currentPage, totalPages, basePath }: PaginationProp
         p === "..." ? (
           <span
             key={`ellipsis-${idx}`}
-            className="w-10 h-10 flex items-center justify-center text-sm text-gray-400"
+            className="w-10 h-10 flex items-center justify-center text-sm text-gray-400 dark:text-gray-500"
             aria-hidden="true"
           >
             ...
@@ -81,7 +81,7 @@ export function Pagination({ currentPage, totalPages, basePath }: PaginationProp
           <Link
             key={p}
             href={buildHref(basePath, p)}
-            className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium text-gray-700 hover:bg-[var(--color-primary-50)] transition-colors"
+            className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-[var(--color-primary-50)] transition-colors"
           >
             {p}
           </Link>
@@ -98,7 +98,7 @@ export function Pagination({ currentPage, totalPages, basePath }: PaginationProp
           다음 &raquo;
         </Link>
       ) : (
-        <span className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 cursor-default">
+        <span className="px-3 py-2 rounded-lg text-sm font-medium text-gray-300 dark:text-gray-600 cursor-default">
           다음 &raquo;
         </span>
       )}

@@ -68,7 +68,7 @@ export function TipsList({ tips }: { tips: Tip[] }) {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="py-12 text-center text-gray-400">
+        <div className="py-12 text-center text-gray-400 dark:text-gray-500">
           <p className="text-sm">해당 카테고리의 건강팁이 없습니다.</p>
         </div>
       ) : (
@@ -98,12 +98,12 @@ function TipCard({ tip }: { tip: Tip }) {
   return (
     <Link
       href={`/tips/${tip.slug}`}
-      className="group block bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all"
+      className="group block bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 shadow-sm hover:shadow-md hover:border-[var(--color-primary-100)] transition-all"
     >
-      <h2 className="text-lg font-semibold text-gray-900 mb-2 break-keep group-hover:text-[var(--color-primary)] transition-colors">
+      <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 break-keep group-hover:text-[var(--color-primary)] transition-colors">
         {tip.title}
       </h2>
-      <p className="text-sm text-gray-500 line-clamp-2">
+      <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
         {tip.description}
       </p>
       <div className="flex flex-wrap gap-1.5 mt-3">
