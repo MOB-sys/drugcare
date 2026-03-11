@@ -299,9 +299,7 @@ async def get_supplement_counts_by_letter(
     for letter in all_keys:
         cond = _build_letter_condition(letter, Supplement.product_name)
         if cond is not None:
-            case_whens.append(
-                func.count(case((cond, 1))).label(letter)
-            )
+            case_whens.append(func.count(case((cond, 1))).label(letter))
 
     if not case_whens:
         counts = {letter: 0 for letter in all_keys}

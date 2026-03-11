@@ -181,11 +181,7 @@ async def get_review_summary(
     total_count = int(agg_row[1])
 
     # 분포 (1~5별 건수)
-    dist_stmt = (
-        select(DrugReview.rating, func.count())
-        .where(condition)
-        .group_by(DrugReview.rating)
-    )
+    dist_stmt = select(DrugReview.rating, func.count()).where(condition).group_by(DrugReview.rating)
     dist_rows = (await db.execute(dist_stmt)).all()
     distribution = {str(i): 0 for i in range(1, 6)}
     for rating_val, cnt in dist_rows:

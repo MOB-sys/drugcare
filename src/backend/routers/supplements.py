@@ -103,7 +103,11 @@ async def browse_supplements(
 ) -> dict:
     """초성/알파벳별 영양제 조회 엔드포인트."""
     result = await supplement_service.browse_supplements_by_letter(
-        db, redis, letter, page, page_size,
+        db,
+        redis,
+        letter,
+        page,
+        page_size,
     )
     return success_response(result)
 

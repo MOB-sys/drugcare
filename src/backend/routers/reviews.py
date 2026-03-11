@@ -47,9 +47,7 @@ async def create_review(
     device_id = getattr(request.state, "device_id", None)
     if not device_id:
         raise HTTPException(status_code=401, detail="Device ID is required")
-    result = await review_service.create_review(
-        db, redis, device_id, item_type, item_id, body
-    )
+    result = await review_service.create_review(db, redis, device_id, item_type, item_id, body)
     return success_response(result)
 
 

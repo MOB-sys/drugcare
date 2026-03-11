@@ -15,6 +15,16 @@ from src.backend.schemas.drug import (
     DrugSearchItem,
     IngredientInfo,
 )
+from src.backend.schemas.food import (
+    FoodDetail,
+    FoodSearchItem,
+    FoodSearchResponse,
+)
+from src.backend.schemas.herbal_medicine import (
+    HerbalMedicineDetail,
+    HerbalMedicineSearchItem,
+    HerbalMedicineSearchResponse,
+)
 from src.backend.schemas.interaction import (
     InteractionCheckRequest,
     InteractionCheckResponse,
@@ -42,6 +52,12 @@ __all__ = [
     "CabinetItemResponse",
     "DrugDetail",
     "DrugSearchItem",
+    "FoodDetail",
+    "FoodSearchItem",
+    "FoodSearchResponse",
+    "HerbalMedicineDetail",
+    "HerbalMedicineSearchItem",
+    "HerbalMedicineSearchResponse",
     "HealthStatus",
     "IngredientInfo",
     "InteractionCheckRequest",

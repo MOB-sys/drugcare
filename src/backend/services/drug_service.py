@@ -11,12 +11,12 @@ from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
 from src.backend.models.drug import Drug
 from src.backend.models.drug_dur_info import DrugDURInfo
 from src.backend.schemas.drug import (
-    DURSafetyItem,
     DrugConditionItem,
     DrugDetail,
     DrugIdentifyItem,
     DrugSearchItem,
     DrugSideEffectItem,
+    DURSafetyItem,
 )
 from src.backend.utils.cache import cache_get, cache_set, hash_query, make_cache_key
 
@@ -273,11 +273,7 @@ async def search_by_symptom(
 
     offset = (page - 1) * page_size
     query_stmt = (
-        select(Drug)
-        .where(condition)
-        .order_by(Drug.item_name)
-        .offset(offset)
-        .limit(page_size)
+        select(Drug).where(condition).order_by(Drug.item_name).offset(offset).limit(page_size)
     )
     rows = await db.execute(query_stmt)
     drugs = rows.scalars().all()
@@ -334,21 +330,38 @@ async def get_recent_drugs(
 
 # 한글 초성 → 유니코드 범위 매핑 (19개 초성 인덱스)
 _CHOSUNG_LABELS = [
-    "ㄱ", "ㄲ", "ㄴ", "ㄷ", "ㄸ", "ㄹ", "ㅁ", "ㅂ", "ㅃ",
-    "ㅅ", "ㅆ", "ㅇ", "ㅈ", "ㅉ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ",
+    "ㄱ",
+    "ㄲ",
+    "ㄴ",
+    "ㄷ",
+    "ㄸ",
+    "ㄹ",
+    "ㅁ",
+    "ㅂ",
+    "ㅃ",
+    "ㅅ",
+    "ㅆ",
+    "ㅇ",
+    "ㅈ",
+    "ㅉ",
+    "ㅊ",
+    "ㅋ",
+    "ㅌ",
+    "ㅍ",
+    "ㅎ",
 ]
 
 # 프론트에서 쓰는 14자 초성 → 실제 19자 초성 인덱스 매핑
 _CHOSUNG_INDEX_MAP: dict[str, list[int]] = {
-    "ㄱ": [0, 1],   # ㄱ, ㄲ
+    "ㄱ": [0, 1],  # ㄱ, ㄲ
     "ㄴ": [2],
-    "ㄷ": [3, 4],   # ㄷ, ㄸ
+    "ㄷ": [3, 4],  # ㄷ, ㄸ
     "ㄹ": [5],
     "ㅁ": [6],
-    "ㅂ": [7, 8],   # ㅂ, ㅃ
+    "ㅂ": [7, 8],  # ㅂ, ㅃ
     "ㅅ": [9, 10],  # ㅅ, ㅆ
     "ㅇ": [11],
-    "ㅈ": [12, 13], # ㅈ, ㅉ
+    "ㅈ": [12, 13],  # ㅈ, ㅉ
     "ㅊ": [14],
     "ㅋ": [15],
     "ㅌ": [16],
@@ -368,9 +381,7 @@ def _build_chosung_condition(letter: str, column):
     for idx in indices:
         start = chr(0xAC00 + idx * 588)
         end = chr(0xAC00 + (idx + 1) * 588 - 1)
-        conditions.append(
-            and_(column >= start, column <= end)
-        )
+        conditions.append(and_(column >= start, column <= end))
     return or_(*conditions) if conditions else None
 
 
@@ -423,11 +434,7 @@ async def browse_drugs_by_letter(
 
     offset = (page - 1) * page_size
     query_stmt = (
-        select(Drug)
-        .where(condition)
-        .order_by(Drug.item_name)
-        .offset(offset)
-        .limit(page_size)
+        select(Drug).where(condition).order_by(Drug.item_name).offset(offset).limit(page_size)
     )
     rows = await db.execute(query_stmt)
     drugs = rows.scalars().all()
@@ -470,9 +477,7 @@ async def get_drug_counts_by_letter(
     for letter in all_keys:
         cond = _build_letter_condition(letter, Drug.item_name)
         if cond is not None:
-            case_whens.append(
-                func.count(case((cond, 1))).label(letter)
-            )
+            case_whens.append(func.count(case((cond, 1))).label(letter))
 
     if not case_whens:
         counts = {letter: 0 for letter in all_keys}
@@ -575,7 +580,13 @@ async def identify_drug(
         PaginatedData 구조의 dict.
     """
     parts = [color or "", shape or "", imprint or ""]
-    cache_key = make_cache_key("drug", "identify", *[hash_query(p) for p in parts], str(page), str(page_size))
+    cache_key = make_cache_key(
+        "drug",
+        "identify",
+        *[hash_query(p) for p in parts],
+        str(page),
+        str(page_size),
+    )
     cached = await cache_get(redis, cache_key)
     if cached is not None:
         return cached
@@ -638,7 +649,13 @@ async def search_by_condition(
     Returns:
         PaginatedData 구조의 dict.
     """
-    cache_key = make_cache_key("drug", "condition", hash_query(condition_q), str(page), str(page_size))
+    cache_key = make_cache_key(
+        "drug",
+        "condition",
+        hash_query(condition_q),
+        str(page),
+        str(page_size),
+    )
     cached = await cache_get(redis, cache_key)
     if cached is not None:
         return cached

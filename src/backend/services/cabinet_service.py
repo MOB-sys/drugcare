@@ -5,6 +5,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.models.drug import Drug
+from src.backend.models.food import Food
+from src.backend.models.herbal_medicine import HerbalMedicine
 from src.backend.models.supplement import Supplement
 from src.backend.models.user_cabinet import CabinetItemType, UserCabinet
 from src.backend.schemas.cabinet import CabinetItemCreate, CabinetItemResponse
@@ -114,7 +116,7 @@ async def _resolve_item_name(
 
     Args:
         db: 비동기 DB 세션.
-        item_type: 아이템 유형 (drug/supplement).
+        item_type: 아이템 유형 (drug/supplement/food/herbal).
         item_id: 아이템 PK.
 
     Returns:
@@ -126,7 +128,22 @@ async def _resolve_item_name(
         drug = row.scalar_one_or_none()
         return drug.item_name if drug else None
 
-    stmt = select(Supplement).where(Supplement.id == item_id)
-    row = await db.execute(stmt)
-    supplement = row.scalar_one_or_none()
-    return supplement.product_name if supplement else None
+    if item_type == CabinetItemType.SUPPLEMENT:
+        stmt = select(Supplement).where(Supplement.id == item_id)
+        row = await db.execute(stmt)
+        supplement = row.scalar_one_or_none()
+        return supplement.product_name if supplement else None
+
+    if item_type == CabinetItemType.FOOD:
+        stmt = select(Food).where(Food.id == item_id)
+        row = await db.execute(stmt)
+        food = row.scalar_one_or_none()
+        return food.name if food else None
+
+    if item_type == CabinetItemType.HERBAL:
+        stmt = select(HerbalMedicine).where(HerbalMedicine.id == item_id)
+        row = await db.execute(stmt)
+        herbal = row.scalar_one_or_none()
+        return herbal.name if herbal else None
+
+    return None

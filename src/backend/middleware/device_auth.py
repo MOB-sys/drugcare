@@ -8,8 +8,6 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.requests import Request
 from starlette.responses import Response
 
-from src.backend.core.config import get_settings
-
 logger = logging.getLogger(__name__)
 
 _UUID_RE = re.compile(
@@ -75,10 +73,7 @@ class DeviceAuthMiddleware(BaseHTTPMiddleware):
                     "https://www.pillright.com",
                     "http://localhost:3000",
                 }
-                if not any(
-                    origin.startswith(o) or referer.startswith(o)
-                    for o in allowed_origins
-                ):
+                if not any(origin.startswith(o) or referer.startswith(o) for o in allowed_origins):
                     # X-Device-ID가 있으므로 모바일 앱 — 통과
                     pass
 
@@ -98,10 +93,7 @@ class DeviceAuthMiddleware(BaseHTTPMiddleware):
                     "https://www.pillright.com",
                     "http://localhost:3000",
                 }
-                if not any(
-                    origin.startswith(o) or referer.startswith(o)
-                    for o in allowed_origins
-                ):
+                if not any(origin.startswith(o) or referer.startswith(o) for o in allowed_origins):
                     from starlette.responses import JSONResponse
 
                     return JSONResponse(
@@ -121,10 +113,7 @@ class DeviceAuthMiddleware(BaseHTTPMiddleware):
                 "https://www.pillright.com",
                 "http://localhost:3000",
             }
-            if not any(
-                origin.startswith(o) or referer.startswith(o)
-                for o in allowed_origins
-            ):
+            if not any(origin.startswith(o) or referer.startswith(o) for o in allowed_origins):
                 if not request.headers.get("X-Device-ID"):
                     from starlette.responses import JSONResponse
 
@@ -136,7 +125,6 @@ class DeviceAuthMiddleware(BaseHTTPMiddleware):
         new_session_id = f"web-{uuid4()}"
         request.state.device_id = new_session_id
         response = await call_next(request)
-        settings = get_settings()
         response.set_cookie(
             key="session_id",
             value=new_session_id,

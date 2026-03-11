@@ -42,7 +42,9 @@ from src.backend.routers import (
     cabinet,
     drugs,
     feedback,
+    foods,
     health,
+    herbal_medicines,
     interactions,
     metrics,
     reminders,
@@ -138,6 +140,8 @@ app.include_router(health.router, prefix=api_prefix)
 # 기능별 라우터
 app.include_router(drugs.router, prefix=api_prefix)
 app.include_router(supplements.router, prefix=api_prefix)
+app.include_router(foods.router, prefix=api_prefix)
+app.include_router(herbal_medicines.router, prefix=api_prefix)
 app.include_router(interactions.router, prefix=api_prefix)
 app.include_router(cabinet.router, prefix=api_prefix)
 app.include_router(reminders.router, prefix=api_prefix)
