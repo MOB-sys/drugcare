@@ -499,8 +499,6 @@ async def generate_interactions(dry_run: bool = False) -> dict[str, int]:
                 :severity, :description, :mechanism, :recommendation,
                 'evidence_based', :source_id, :evidence_level
             )
-            ON CONFLICT (item_a_type, item_a_id, item_b_type, item_b_id, severity, source)
-            DO NOTHING
         """)
 
         # 식품-약물 상호작용 생성
