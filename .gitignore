@@ -62,3 +62,4 @@ yakmeogeo.egg-info/
 # Next.js
 .next/
 out/
+.vercel

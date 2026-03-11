@@ -18,6 +18,7 @@ import 'package:pillright/shared/widgets/common/loading_widget.dart';
 ///
 /// 사용자가 증상 키워드를 입력하거나 빠른 칩을 선택하여
 /// 해당 증상에 효과가 있는 약물을 검색한다.
+/// 복수 키워드를 선택하면 AND 조건으로 검색한다.
 class SymptomSearchScreen extends ConsumerStatefulWidget {
   /// [SymptomSearchScreen] 생성자.
   const SymptomSearchScreen({super.key});
@@ -35,11 +36,8 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
   /// 디바운스 타이머.
   Timer? _debounceTimer;
 
-  /// 현재 검색어.
-  String _query = '';
-
-  /// 선택된 칩 키워드.
-  String? _selectedChip;
+  /// 선택된 키워드 목록 (복수 AND 검색).
+  final List<String> _selectedKeywords = [];
 
   /// 현재 페이지.
   int _currentPage = 1;
@@ -53,6 +51,9 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
   /// 에러 메시지.
   String? _error;
 
+  /// 현재 검색어 (선택된 키워드를 공백으로 합친 값).
+  String get _query => _selectedKeywords.join(' ');
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -60,30 +61,82 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
     super.dispose();
   }
 
+  /// 검색어 입력 후 제출 시 키워드를 추가한다.
+  void _onSearchSubmitted(String value) {
+    final newKeywords = value
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((k) => k.isNotEmpty)
+        .toList();
+    if (newKeywords.isEmpty) return;
+
+    setState(() {
+      for (final keyword in newKeywords) {
+        if (!_selectedKeywords.contains(keyword)) {
+          _selectedKeywords.add(keyword);
+        }
+      }
+      _currentPage = 1;
+    });
+    _searchController.clear();
+    _performSearch();
+  }
+
   /// 검색어 변경 시 디바운스 처리한다.
   void _onQueryChanged(String value) {
     _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
       if (value.trim().isNotEmpty) {
-        setState(() {
-          _query = value.trim();
-          _selectedChip = null;
-          _currentPage = 1;
-        });
-        _performSearch();
+        _onSearchSubmitted(value);
       }
     });
   }
 
-  /// 칩 선택 시 즉시 검색한다.
+  /// 칩 선택 시 키워드를 토글한다.
   void _onChipSelected(String keyword) {
-    _searchController.text = keyword;
     setState(() {
-      _query = keyword;
-      _selectedChip = keyword;
+      if (_selectedKeywords.contains(keyword)) {
+        _selectedKeywords.remove(keyword);
+      } else {
+        _selectedKeywords.add(keyword);
+      }
       _currentPage = 1;
     });
-    _performSearch();
+    _searchController.clear();
+    if (_selectedKeywords.isNotEmpty) {
+      _performSearch();
+    } else {
+      setState(() {
+        _result = null;
+        _error = null;
+      });
+    }
+  }
+
+  /// 개별 키워드를 제거한다.
+  void _removeKeyword(String keyword) {
+    setState(() {
+      _selectedKeywords.remove(keyword);
+      _currentPage = 1;
+    });
+    if (_selectedKeywords.isNotEmpty) {
+      _performSearch();
+    } else {
+      setState(() {
+        _result = null;
+        _error = null;
+      });
+    }
+  }
+
+  /// 전체 초기화한다.
+  void _clearAll() {
+    _searchController.clear();
+    setState(() {
+      _selectedKeywords.clear();
+      _result = null;
+      _error = null;
+    });
   }
 
   /// API 호출을 수행한다.
@@ -133,9 +186,10 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
           const SizedBox(height: 8),
           KeywordChipBar(
             keywords: commonSymptoms,
-            selected: _selectedChip,
+            selectedKeywords: _selectedKeywords,
             onSelected: _onChipSelected,
           ),
+          if (_selectedKeywords.isNotEmpty) _buildSelectedKeywordTags(),
           const SizedBox(height: 12),
           Expanded(child: _buildBody()),
         ],
@@ -152,6 +206,8 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
       child: TextField(
         controller: _searchController,
         onChanged: _onQueryChanged,
+        onSubmitted: _onSearchSubmitted,
+        textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: '증상을 입력하세요 (예: 두통, 소화불량)',
           hintStyle: const TextStyle(
@@ -160,19 +216,11 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
           ),
           prefixIcon:
               const Icon(Icons.search, color: AppColors.textSecondary),
-          suffixIcon: _query.isNotEmpty
+          suffixIcon: _selectedKeywords.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.clear,
                       color: AppColors.textSecondary),
-                  onPressed: () {
-                    _searchController.clear();
-                    setState(() {
-                      _query = '';
-                      _selectedChip = null;
-                      _result = null;
-                      _error = null;
-                    });
-                  },
+                  onPressed: _clearAll,
                 )
               : null,
           filled: true,
@@ -196,6 +244,48 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
                 const BorderSide(color: AppColors.primary, width: 1.5),
           ),
         ),
+      ),
+    );
+  }
+
+  /// 선택된 키워드 태그 목록을 구성한다.
+  Widget _buildSelectedKeywordTags() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${_selectedKeywords.length}개 키워드로 검색',
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            children: _selectedKeywords.map((keyword) {
+              return Chip(
+                label: Text(
+                  keyword,
+                  style: const TextStyle(fontSize: 12, color: Colors.white),
+                ),
+                deleteIcon: const Icon(Icons.close, size: 16),
+                deleteIconColor: Colors.white70,
+                onDeleted: () => _removeKeyword(keyword),
+                backgroundColor: AppColors.primary,
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
@@ -228,7 +318,7 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
       );
     }
 
-    if (_query.isEmpty) {
+    if (_selectedKeywords.isEmpty) {
       return const EmptyStateWidget(
         message: '증상을 입력하면\n관련 약물을 찾아 드려요.',
         icon: Icons.healing_outlined,

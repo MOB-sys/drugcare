@@ -10,6 +10,8 @@ import 'package:pillright/features/detail/widgets/detail_cta_buttons.dart';
 import 'package:pillright/features/detail/widgets/dur_safety_section.dart';
 import 'package:pillright/features/detail/widgets/info_section.dart';
 import 'package:pillright/features/detail/widgets/ingredients_table.dart';
+import 'package:pillright/features/detail/widgets/pregnancy_safety_section.dart';
+import 'package:pillright/features/detail/widgets/structured_side_effects.dart';
 import 'package:pillright/features/search/models/drug_detail.dart';
 import 'package:pillright/features/search/models/selected_search_item.dart';
 import 'package:pillright/shared/models/item_type.dart';
@@ -128,13 +130,28 @@ class _DrugDetailScreenState extends ConsumerState<DrugDetailScreen> {
             if (drug.durSafety != null && drug.durSafety!.isNotEmpty)
               DURSafetySection(items: drug.durSafety!),
 
-            // 부작용
+            // 임신·수유 안전정보
+            if (PregnancySafetySection.shouldShow(
+              durSafety: drug.durSafety,
+              atpnQesitm: drug.atpnQesitm,
+              atpnWarnQesitm: drug.atpnWarnQesitm,
+            ))
+              Builder(builder: (_) {
+                final data = PregnancySafetySection.extractData(
+                  durSafety: drug.durSafety,
+                  atpnQesitm: drug.atpnQesitm,
+                  atpnWarnQesitm: drug.atpnWarnQesitm,
+                );
+                return PregnancySafetySection(
+                  pregnancyItems: data.pregnancyItems,
+                  breastfeedingSentences: data.breastfeedingSentences,
+                  pregnancyCautionSentences: data.pregnancyCautionSentences,
+                );
+              }),
+
+            // 부작용 (구조화)
             if (_hasContent(drug.seQesitm))
-              _buildTextSection(
-                title: '부작용',
-                icon: Icons.report_problem_outlined,
-                content: drug.seQesitm!,
-              ),
+              StructuredSideEffects(sideEffectsText: drug.seQesitm!),
 
             // 주의사항 경고
             if (_hasContent(drug.atpnWarnQesitm))

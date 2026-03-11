@@ -17,6 +17,7 @@ import 'package:pillright/shared/widgets/common/loading_widget.dart';
 ///
 /// 초기에는 질환 카테고리 카드 그리드를 표시하고,
 /// 카테고리 선택 또는 직접 검색 시 해당 질환의 주의 약물 목록을 보여준다.
+/// 복수 키워드를 선택하면 AND 조건으로 검색한다.
 class ConditionSearchScreen extends ConsumerStatefulWidget {
   /// [ConditionSearchScreen] 생성자.
   const ConditionSearchScreen({super.key});
@@ -35,14 +36,11 @@ class _ConditionSearchScreenState
   /// 디바운스 타이머.
   Timer? _debounceTimer;
 
-  /// 현재 검색어.
-  String _query = '';
+  /// 선택된 키워드 목록 (복수 AND 검색).
+  final List<String> _selectedKeywords = [];
 
   /// 카드 그리드 모드 여부.
   bool _showGrid = true;
-
-  /// 선택된 카테고리 라벨 (UI 표시용).
-  String? _selectedCategory;
 
   /// 현재 페이지.
   int _currentPage = 1;
@@ -56,6 +54,9 @@ class _ConditionSearchScreenState
   /// 에러 메시지.
   String? _error;
 
+  /// 현재 검색어 (선택된 키워드를 공백으로 합친 값).
+  String get _query => _selectedKeywords.join(' ');
+
   @override
   void dispose() {
     _searchController.dispose();
@@ -63,40 +64,73 @@ class _ConditionSearchScreenState
     super.dispose();
   }
 
+  /// 검색어 입력 후 제출 시 키워드를 추가한다.
+  void _onSearchSubmitted(String value) {
+    final newKeywords = value
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((k) => k.isNotEmpty)
+        .toList();
+    if (newKeywords.isEmpty) return;
+
+    setState(() {
+      for (final keyword in newKeywords) {
+        if (!_selectedKeywords.contains(keyword)) {
+          _selectedKeywords.add(keyword);
+        }
+      }
+      _showGrid = false;
+      _currentPage = 1;
+    });
+    _searchController.clear();
+    _performSearch();
+  }
+
   /// 검색어 변경 시 디바운스 처리한다.
   void _onQueryChanged(String value) {
     _debounceTimer?.cancel();
     _debounceTimer = Timer(const Duration(milliseconds: 500), () {
       if (value.trim().isNotEmpty) {
-        setState(() {
-          _query = value.trim();
-          _selectedCategory = null;
-          _showGrid = false;
-          _currentPage = 1;
-        });
-        _performSearch();
+        _onSearchSubmitted(value);
       }
     });
   }
 
   /// 카테고리 카드를 선택한다.
   void _onCategorySelected(ConditionCategory category) {
-    _searchController.text = category.keyword;
     setState(() {
-      _query = category.keyword;
-      _selectedCategory = category.label;
+      if (!_selectedKeywords.contains(category.keyword)) {
+        _selectedKeywords.add(category.keyword);
+      }
       _showGrid = false;
       _currentPage = 1;
     });
+    _searchController.clear();
     _performSearch();
+  }
+
+  /// 개별 키워드를 제거한다.
+  void _removeKeyword(String keyword) {
+    setState(() {
+      _selectedKeywords.remove(keyword);
+      _currentPage = 1;
+    });
+    if (_selectedKeywords.isNotEmpty) {
+      _performSearch();
+    } else {
+      setState(() {
+        _showGrid = true;
+        _result = null;
+        _error = null;
+      });
+    }
   }
 
   /// 카드 그리드로 돌아간다.
   void _backToGrid() {
     _searchController.clear();
     setState(() {
-      _query = '';
-      _selectedCategory = null;
+      _selectedKeywords.clear();
       _showGrid = true;
       _result = null;
       _error = null;
@@ -147,6 +181,8 @@ class _ConditionSearchScreenState
       body: Column(
         children: [
           _buildSearchField(),
+          if (!_showGrid && _selectedKeywords.isNotEmpty)
+            _buildSelectedKeywordTags(),
           const SizedBox(height: 12),
           Expanded(child: _showGrid ? _buildCategoryGrid() : _buildBody()),
         ],
@@ -163,6 +199,8 @@ class _ConditionSearchScreenState
       child: TextField(
         controller: _searchController,
         onChanged: _onQueryChanged,
+        onSubmitted: _onSearchSubmitted,
+        textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           hintText: '질환명을 입력하세요 (예: 고혈압, 당뇨)',
           hintStyle: const TextStyle(
@@ -171,7 +209,7 @@ class _ConditionSearchScreenState
           ),
           prefixIcon:
               const Icon(Icons.search, color: AppColors.textSecondary),
-          suffixIcon: _query.isNotEmpty
+          suffixIcon: _selectedKeywords.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.clear,
                       color: AppColors.textSecondary),
@@ -199,6 +237,48 @@ class _ConditionSearchScreenState
                 const BorderSide(color: AppColors.primary, width: 1.5),
           ),
         ),
+      ),
+    );
+  }
+
+  /// 선택된 키워드 태그 목록을 구성한다.
+  Widget _buildSelectedKeywordTags() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${_selectedKeywords.length}개 키워드로 검색',
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            children: _selectedKeywords.map((keyword) {
+              return Chip(
+                label: Text(
+                  keyword,
+                  style: const TextStyle(fontSize: 12, color: Colors.white),
+                ),
+                deleteIcon: const Icon(Icons.close, size: 16),
+                deleteIconColor: Colors.white70,
+                onDeleted: () => _removeKeyword(keyword),
+                backgroundColor: AppColors.primary,
+                side: BorderSide.none,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+              );
+            }).toList(),
+          ),
+        ],
       ),
     );
   }
@@ -312,32 +392,33 @@ class _ConditionSearchScreenState
 
     return Column(
       children: [
-        if (_selectedCategory != null)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                Text(
-                  '$_selectedCategory 관련 주의 약물',
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  '${_selectedKeywords.join(', ')} 관련 주의 약물',
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: AppColors.textPrimary,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const Spacer(),
-                TextButton.icon(
-                  onPressed: _backToGrid,
-                  icon: const Icon(Icons.grid_view, size: 16),
-                  label: const Text('질환 목록으로'),
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.textSecondary,
-                    textStyle: const TextStyle(fontSize: 12),
-                  ),
+              ),
+              TextButton.icon(
+                onPressed: _backToGrid,
+                icon: const Icon(Icons.grid_view, size: 16),
+                label: const Text('질환 목록으로'),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.textSecondary,
+                  textStyle: const TextStyle(fontSize: 12),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.only(bottom: 8),

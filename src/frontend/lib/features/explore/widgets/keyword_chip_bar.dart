@@ -2,24 +2,29 @@ import 'package:flutter/material.dart';
 
 import 'package:pillright/core/theme/app_colors.dart';
 
-/// 키워드 칩 바 — 가로 스크롤 키워드 선택.
+/// 키워드 칩 바 — 가로 스크롤 키워드 선택 (복수 선택 지원).
 ///
 /// 자주 찾는 증상·부작용 등의 키워드를 가로 스크롤로 표시하며,
 /// 선택 시 [onSelected] 콜백을 호출한다.
+/// [selectedKeywords]로 복수 선택을, [selected]로 단일 선택을 지원한다.
 class KeywordChipBar extends StatelessWidget {
   /// [KeywordChipBar] 생성자.
   const KeywordChipBar({
     super.key,
     required this.keywords,
-    this.selected,
+    @Deprecated('Use selectedKeywords instead') this.selected,
+    this.selectedKeywords = const [],
     required this.onSelected,
   });
 
   /// 키워드 목록.
   final List<String> keywords;
 
-  /// 현재 선택된 키워드.
+  /// 현재 선택된 키워드 (단일 — 하위 호환용).
   final String? selected;
+
+  /// 현재 선택된 키워드 목록 (복수 선택).
+  final List<String> selectedKeywords;
 
   /// 키워드 선택 콜백.
   final ValueChanged<String> onSelected;
@@ -31,7 +36,8 @@ class KeywordChipBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: keywords.map((keyword) {
-          final isSelected = keyword == selected;
+          final isSelected = selectedKeywords.contains(keyword) ||
+              keyword == selected;
           return Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ChoiceChip(
