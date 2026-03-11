@@ -1,0 +1,135 @@
+name: Seed Data (Foods & Herbal Medicines)
+
+on:
+  workflow_dispatch:
+    inputs:
+      steps:
+        description: '실행할 단계 (all / migrate / seed-foods / seed-herbal / gen-food-interactions / gen-herbal-interactions)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - migrate
+          - seed-foods
+          - seed-herbal
+          - gen-food-interactions
+          - gen-herbal-interactions
+      dry_run:
+        description: 'Dry run (시뮬레이션만)'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: seed-data
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    name: Seed Production Data
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: SSH Seed Data
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -e
+            cd ${{ secrets.SERVER_PROJECT_DIR || '/opt/drugcare' }}
+
+            echo "=== 코드 최신화 ==="
+            git pull origin main
+
+            echo "=== Docker 이미지 빌드 ==="
+            docker compose -f docker-compose.prod.yml build backend
+
+            echo "=== DB 서비스 확인 ==="
+            docker compose -f docker-compose.prod.yml up -d postgres redis
+            sleep 5
+
+            STEP="${{ inputs.steps }}"
+            DRY_RUN="${{ inputs.dry_run }}"
+            DRY_FLAG=""
+            if [ "$DRY_RUN" = "true" ]; then
+              DRY_FLAG="--dry-run"
+              echo "⚠️  DRY RUN 모드 — 실제 DB 변경 없음"
+            fi
+
+            # --- 1) Alembic 마이그레이션 ---
+            if [ "$STEP" = "all" ] || [ "$STEP" = "migrate" ]; then
+              echo ""
+              echo "=========================================="
+              echo "  1/5  Alembic 마이그레이션"
+              echo "=========================================="
+              docker compose -f docker-compose.prod.yml run --rm backend alembic upgrade head
+            fi
+
+            # --- 2) 식품 시드 ---
+            if [ "$STEP" = "all" ] || [ "$STEP" = "seed-foods" ]; then
+              echo ""
+              echo "=========================================="
+              echo "  2/5  식품 시드 데이터 (~80종)"
+              echo "=========================================="
+              docker compose -f docker-compose.prod.yml run --rm backend \
+                python -m scripts.data-import.seed_foods $DRY_FLAG
+            fi
+
+            # --- 3) 한약재 시드 ---
+            if [ "$STEP" = "all" ] || [ "$STEP" = "seed-herbal" ]; then
+              echo ""
+              echo "=========================================="
+              echo "  3/5  한약재 시드 데이터 (~100종)"
+              echo "=========================================="
+              docker compose -f docker-compose.prod.yml run --rm backend \
+                python -m scripts.data-import.seed_herbal_medicines $DRY_FLAG
+            fi
+
+            # --- 4) 식품-약물 상호작용 생성 ---
+            if [ "$STEP" = "all" ] || [ "$STEP" = "gen-food-interactions" ]; then
+              echo ""
+              echo "=========================================="
+              echo "  4/5  식품-약물 상호작용 생성"
+              echo "=========================================="
+              docker compose -f docker-compose.prod.yml run --rm backend \
+                python -m scripts.data-import.generate_food_interactions $DRY_FLAG
+            fi
+
+            # --- 5) 한약재-약물 상호작용 생성 ---
+            if [ "$STEP" = "all" ] || [ "$STEP" = "gen-herbal-interactions" ]; then
+              echo ""
+              echo "=========================================="
+              echo "  5/5  한약재-약물 상호작용 생성"
+              echo "=========================================="
+              docker compose -f docker-compose.prod.yml run --rm backend \
+                python -m scripts.data-import.generate_herbal_interactions $DRY_FLAG
+            fi
+
+            # --- 서비스 재시작 ---
+            if [ "$STEP" = "all" ]; then
+              echo ""
+              echo "=== 서비스 재시작 ==="
+              docker compose -f docker-compose.prod.yml up -d
+
+              echo "=== 헬스체크 ==="
+              for i in $(seq 1 20); do
+                if curl -sf http://localhost:8000/api/v1/health > /dev/null 2>&1; then
+                  echo "헬스체크 성공!"
+                  docker compose -f docker-compose.prod.yml ps
+                  exit 0
+                fi
+                echo "대기 중... ($i/20)"
+                sleep 3
+              done
+              echo "ERROR: 헬스체크 실패"
+              docker compose -f docker-compose.prod.yml logs --tail=30 backend
+              exit 1
+            fi
+
+            echo ""
+            echo "=== 완료 ==="
