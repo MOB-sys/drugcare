@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pillright/core/constants/app_constants.dart';
 import 'package:pillright/core/providers/service_providers.dart';
 import 'package:pillright/features/search/models/drug_search_item.dart';
+import 'package:pillright/features/search/models/food_search_item.dart';
+import 'package:pillright/features/search/models/herbal_medicine_search_item.dart';
 import 'package:pillright/features/search/models/selected_search_item.dart';
 import 'package:pillright/features/search/models/supplement_search_item.dart';
 import 'package:pillright/shared/models/item_type.dart';
@@ -15,7 +17,7 @@ class SearchState {
   /// 검색어.
   final String query;
 
-  /// 필터 (null=전체, drug=약물만, supplement=영양제만).
+  /// 필터 (null=전체, drug=약물만, supplement=영양제만, food=식품만, herbal=한약재만).
   final ItemType? filter;
 
   /// 약물 검색 결과.
@@ -23,6 +25,12 @@ class SearchState {
 
   /// 영양제 검색 결과.
   final AsyncValue<PaginatedResult<SupplementSearchItem>?> supplementResults;
+
+  /// 식품 검색 결과.
+  final AsyncValue<PaginatedResult<FoodSearchItem>?> foodResults;
+
+  /// 한약재 검색 결과.
+  final AsyncValue<PaginatedResult<HerbalMedicineSearchItem>?> herbalResults;
 
   /// 선택된 아이템 목록.
   final List<SelectedSearchItem> selectedItems;
@@ -36,6 +44,8 @@ class SearchState {
     this.filter,
     this.drugResults = const AsyncValue.data(null),
     this.supplementResults = const AsyncValue.data(null),
+    this.foodResults = const AsyncValue.data(null),
+    this.herbalResults = const AsyncValue.data(null),
     this.selectedItems = const [],
     this.currentPage = 1,
   });
@@ -46,6 +56,8 @@ class SearchState {
     ItemType? Function()? filter,
     AsyncValue<PaginatedResult<DrugSearchItem>?>? drugResults,
     AsyncValue<PaginatedResult<SupplementSearchItem>?>? supplementResults,
+    AsyncValue<PaginatedResult<FoodSearchItem>?>? foodResults,
+    AsyncValue<PaginatedResult<HerbalMedicineSearchItem>?>? herbalResults,
     List<SelectedSearchItem>? selectedItems,
     int? currentPage,
   }) {
@@ -54,6 +66,8 @@ class SearchState {
       filter: filter != null ? filter() : this.filter,
       drugResults: drugResults ?? this.drugResults,
       supplementResults: supplementResults ?? this.supplementResults,
+      foodResults: foodResults ?? this.foodResults,
+      herbalResults: herbalResults ?? this.herbalResults,
       selectedItems: selectedItems ?? this.selectedItems,
       currentPage: currentPage ?? this.currentPage,
     );
@@ -80,6 +94,8 @@ class SearchNotifier extends StateNotifier<SearchState> {
       state = state.copyWith(
         drugResults: const AsyncValue.data(null),
         supplementResults: const AsyncValue.data(null),
+        foodResults: const AsyncValue.data(null),
+        herbalResults: const AsyncValue.data(null),
       );
       return;
     }
@@ -90,7 +106,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
     );
   }
 
-  /// 필터를 변경한다 (null=전체, drug=약물만, supplement=영양제만).
+  /// 필터를 변경한다 (null=전체, drug=약물만, supplement=영양제만, food=식품만, herbal=한약재만).
   void setFilter(ItemType? filter) {
     state = state.copyWith(filter: () => filter, currentPage: 1);
     if (state.query.isNotEmpty) {
@@ -109,6 +125,8 @@ class SearchNotifier extends StateNotifier<SearchState> {
 
     final searchDrug = filter == null || filter == ItemType.drug;
     final searchSupplement = filter == null || filter == ItemType.supplement;
+    final searchFood = filter == null || filter == ItemType.food;
+    final searchHerbal = filter == null || filter == ItemType.herbal;
 
     // 로딩 상태 설정
     if (searchDrug) {
@@ -121,6 +139,16 @@ class SearchNotifier extends StateNotifier<SearchState> {
     } else {
       state = state.copyWith(supplementResults: const AsyncValue.data(null));
     }
+    if (searchFood) {
+      state = state.copyWith(foodResults: const AsyncValue.loading());
+    } else {
+      state = state.copyWith(foodResults: const AsyncValue.data(null));
+    }
+    if (searchHerbal) {
+      state = state.copyWith(herbalResults: const AsyncValue.loading());
+    } else {
+      state = state.copyWith(herbalResults: const AsyncValue.data(null));
+    }
 
     // 병렬 검색 실행
     final futures = <Future<void>>[];
@@ -130,6 +158,12 @@ class SearchNotifier extends StateNotifier<SearchState> {
     }
     if (searchSupplement) {
       futures.add(_searchSupplements(query, page, pageSize));
+    }
+    if (searchFood) {
+      futures.add(_searchFoods(query, page, pageSize));
+    }
+    if (searchHerbal) {
+      futures.add(_searchHerbalMedicines(query, page, pageSize));
     }
 
     await Future.wait(futures);
@@ -167,6 +201,46 @@ class SearchNotifier extends StateNotifier<SearchState> {
     } catch (e, st) {
       if (mounted) {
         state = state.copyWith(supplementResults: AsyncValue.error(e, st));
+      }
+    }
+  }
+
+  Future<void> _searchFoods(String query, int page, int pageSize) async {
+    try {
+      final foodService = _ref.read(foodServiceProvider);
+      final result = await foodService.searchFoods(
+        query,
+        page: page,
+        pageSize: pageSize,
+      );
+      if (mounted) {
+        state = state.copyWith(foodResults: AsyncValue.data(result));
+      }
+    } catch (e, st) {
+      if (mounted) {
+        state = state.copyWith(foodResults: AsyncValue.error(e, st));
+      }
+    }
+  }
+
+  Future<void> _searchHerbalMedicines(
+    String query,
+    int page,
+    int pageSize,
+  ) async {
+    try {
+      final herbalService = _ref.read(herbalMedicineServiceProvider);
+      final result = await herbalService.searchHerbalMedicines(
+        query,
+        page: page,
+        pageSize: pageSize,
+      );
+      if (mounted) {
+        state = state.copyWith(herbalResults: AsyncValue.data(result));
+      }
+    } catch (e, st) {
+      if (mounted) {
+        state = state.copyWith(herbalResults: AsyncValue.error(e, st));
       }
     }
   }

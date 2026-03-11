@@ -15,7 +15,7 @@ interface UseCabinetReturn {
   error: string | null;
   deletingIds: Set<number>;
   addItem: (
-    itemType: "drug" | "supplement",
+    itemType: "drug" | "supplement" | "food" | "herbal",
     itemId: number,
     itemName: string,
   ) => Promise<{ success: boolean; duplicate?: boolean }>;
@@ -48,7 +48,7 @@ export function useCabinet(): UseCabinetReturn {
 
   const addItem = useCallback(
     async (
-      itemType: "drug" | "supplement",
+      itemType: "drug" | "supplement" | "food" | "herbal",
       itemId: number,
       itemName: string,
     ): Promise<{ success: boolean; duplicate?: boolean }> => {

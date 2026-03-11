@@ -45,6 +45,29 @@ class ApiConstants {
   static String supplementDetail(int supplementId) =>
       '$apiPrefix/supplements/$supplementId';
 
+  // ── 식품 (Foods) ──
+  /// 식품 검색.
+  static const String foodSearch = '$apiPrefix/foods/search';
+
+  /// 식품 상세 (food_id 치환 필요).
+  static String foodDetail(int foodId) => '$apiPrefix/foods/$foodId';
+
+  /// 식품 슬러그 조회.
+  static String foodBySlug(String slug) => '$apiPrefix/foods/by-slug/$slug';
+
+  // ── 한약재 (Herbal Medicines) ──
+  /// 한약재 검색.
+  static const String herbalMedicineSearch =
+      '$apiPrefix/herbal-medicines/search';
+
+  /// 한약재 상세 (herbal_medicine_id 치환 필요).
+  static String herbalMedicineDetail(int herbalMedicineId) =>
+      '$apiPrefix/herbal-medicines/$herbalMedicineId';
+
+  /// 한약재 슬러그 조회.
+  static String herbalMedicineBySlug(String slug) =>
+      '$apiPrefix/herbal-medicines/by-slug/$slug';
+
   // ── 상호작용 (Interactions) ──
   /// 상호작용 체크.
   static const String interactionCheck = '$apiPrefix/interactions/check';

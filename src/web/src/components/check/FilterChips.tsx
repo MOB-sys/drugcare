@@ -11,6 +11,8 @@ const FILTERS: { value: SearchFilter; label: string }[] = [
   { value: "all", label: "전체" },
   { value: "drug", label: "약물" },
   { value: "supplement", label: "영양제" },
+  { value: "food", label: "식품" },
+  { value: "herbal", label: "한약재" },
 ];
 
 export function FilterChips({ current, onChange }: FilterChipsProps) {

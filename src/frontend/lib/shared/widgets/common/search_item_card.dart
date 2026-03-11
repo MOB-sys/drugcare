@@ -41,9 +41,22 @@ class SearchItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDrug = itemType == ItemType.drug;
-    final Color tagColor = isDrug ? AppColors.drugTag : AppColors.supplementTag;
-    final String tagLabel = isDrug ? '약물' : '영양제';
+    final Color tagColor;
+    final String tagLabel;
+    switch (itemType) {
+      case ItemType.drug:
+        tagColor = AppColors.drugTag;
+        tagLabel = '약물';
+      case ItemType.supplement:
+        tagColor = AppColors.supplementTag;
+        tagLabel = '영양제';
+      case ItemType.food:
+        tagColor = AppColors.foodTag;
+        tagLabel = '식품';
+      case ItemType.herbal:
+        tagColor = AppColors.herbalTag;
+        tagLabel = '한약재';
+    }
 
     return Card(
       elevation: isSelected ? 2 : 0.5,

@@ -6,7 +6,7 @@ import { ApiError } from "@/lib/api/client";
 import { useToastContext } from "@/components/common/ToastProvider";
 
 interface AddToCabinetButtonProps {
-  itemType: "drug" | "supplement";
+  itemType: "drug" | "supplement" | "food" | "herbal";
   itemId: number;
   itemName: string;
 }

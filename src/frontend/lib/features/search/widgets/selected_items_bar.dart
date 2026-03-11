@@ -74,9 +74,17 @@ class SelectedItemsBar extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: selectedItems.map((item) {
-                final isDrug = item.itemType == ItemType.drug;
-                final tagColor =
-                    isDrug ? AppColors.drugTag : AppColors.supplementTag;
+                final Color tagColor;
+                switch (item.itemType) {
+                  case ItemType.drug:
+                    tagColor = AppColors.drugTag;
+                  case ItemType.supplement:
+                    tagColor = AppColors.supplementTag;
+                  case ItemType.food:
+                    tagColor = AppColors.foodTag;
+                  case ItemType.herbal:
+                    tagColor = AppColors.herbalTag;
+                }
                 return Padding(
                   padding: const EdgeInsets.only(right: 6),
                   child: Chip(

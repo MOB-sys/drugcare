@@ -4,10 +4,12 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { searchDrugs } from "@/lib/api/drugs";
 import { searchSupplements } from "@/lib/api/supplements";
+import { searchFoods } from "@/lib/api/foods";
+import { searchHerbalMedicines } from "@/lib/api/herbal";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 
 interface QuickSearchProps {
-  type: "drug" | "supplement";
+  type: "drug" | "supplement" | "food" | "herbal";
   placeholder?: string;
 }
 
@@ -37,9 +39,15 @@ export function QuickSearch({ type, placeholder }: QuickSearchProps) {
         if (type === "drug") {
           const res = await searchDrugs(q, 1, 8);
           if (!controller.signal.aborted) setResults(res.items.map((d) => ({ slug: d.slug, name: d.item_name, sub: d.entp_name ?? null })));
-        } else {
+        } else if (type === "supplement") {
           const res = await searchSupplements(q, 1, 8);
           if (!controller.signal.aborted) setResults(res.items.map((s) => ({ slug: s.slug, name: s.product_name, sub: s.company ?? null })));
+        } else if (type === "food") {
+          const res = await searchFoods(q, 1, 8);
+          if (!controller.signal.aborted) setResults(res.items.map((f) => ({ slug: f.slug, name: f.name, sub: f.category ?? null })));
+        } else {
+          const res = await searchHerbalMedicines(q, 1, 8);
+          if (!controller.signal.aborted) setResults(res.items.map((h) => ({ slug: h.slug, name: h.name, sub: h.korean_name ?? null })));
         }
       } catch {
         if (!controller.signal.aborted) setResults([]);
@@ -51,8 +59,15 @@ export function QuickSearch({ type, placeholder }: QuickSearchProps) {
     return () => controller.abort();
   }, [debouncedQuery, type]);
 
-  const basePath = type === "drug" ? "/drugs" : "/supplements";
-  const defaultPlaceholder = type === "drug" ? "의약품 이름으로 검색 (예: 타이레놀)" : "건강기능식품 이름으로 검색 (예: 비타민D)";
+  const basePathMap: Record<string, string> = { drug: "/drugs", supplement: "/supplements", food: "/foods", herbal: "/herbal-medicines" };
+  const basePath = basePathMap[type] ?? "/drugs";
+  const placeholderMap: Record<string, string> = {
+    drug: "의약품 이름으로 검색 (예: 타이레놀)",
+    supplement: "건강기능식품 이름으로 검색 (예: 비타민D)",
+    food: "식품 이름으로 검색 (예: 자몽)",
+    herbal: "한약재 이름으로 검색 (예: 인삼)",
+  };
+  const defaultPlaceholder = placeholderMap[type] ?? "검색어를 입력하세요";
 
   return (
     <div className="mb-8">

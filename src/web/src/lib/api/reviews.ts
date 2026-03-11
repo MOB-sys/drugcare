@@ -8,8 +8,8 @@ import type {
   ReviewListResponse,
 } from "@/types/review";
 
-function validateItemType(itemType: string): asserts itemType is "drug" | "supplement" {
-  if (itemType !== "drug" && itemType !== "supplement") {
+function validateItemType(itemType: string): asserts itemType is "drug" | "supplement" | "food" | "herbal" {
+  if (itemType !== "drug" && itemType !== "supplement" && itemType !== "food" && itemType !== "herbal") {
     throw new Error(`Invalid item type: ${itemType}`);
   }
 }

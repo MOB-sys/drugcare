@@ -111,4 +111,10 @@ class AppColors {
 
   /// 영양제 태그 색상.
   static const Color supplementTag = Color(0xFF10B981);
+
+  /// 식품 태그 색상.
+  static const Color foodTag = Color(0xFFF59E0B);
+
+  /// 한약재 태그 색상.
+  static const Color herbalTag = Color(0xFF8B5CF6);
 }

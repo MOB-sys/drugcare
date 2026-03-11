@@ -31,7 +31,7 @@ describe("SearchResults", () => {
       />,
     );
     expect(
-      screen.getAllByText("약물이나 영양제 이름을 검색해보세요").length,
+      screen.getAllByText("약물, 영양제, 식품, 한약재 이름을 검색해보세요").length,
     ).toBeGreaterThanOrEqual(1);
   });
 

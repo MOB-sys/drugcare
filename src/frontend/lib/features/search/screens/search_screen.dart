@@ -44,7 +44,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('약/영양제 검색'),
+        title: const Text('통합 검색'),
       ),
       body: Column(
         children: [
@@ -61,6 +61,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 : SearchResultList(
                     drugResults: searchState.drugResults,
                     supplementResults: searchState.supplementResults,
+                    foodResults: searchState.foodResults,
+                    herbalResults: searchState.herbalResults,
                     selectedItems: searchState.selectedItems,
                     onItemTap: notifier.toggleItem,
                     onRetry: notifier.search,
@@ -86,7 +88,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         focusNode: _focusNode,
         onChanged: notifier.setQuery,
         decoration: InputDecoration(
-          hintText: '약물 또는 영양제 이름을 검색하세요',
+          hintText: '약물, 영양제, 식품, 한약재를 검색하세요',
           hintStyle: const TextStyle(
             color: AppColors.textDisabled, fontSize: 14,
           ),
@@ -126,7 +128,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   /// 현재 선택된 필터를 시각적으로 강조하며,
   /// 탭 시 [SearchNotifier.setFilter]를 호출하여 필터를 변경한다.
   Widget _buildFilterChips(SearchState searchState, SearchNotifier notifier) {
-    return Padding(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
@@ -146,6 +149,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             label: '영양제',
             isSelected: searchState.filter == ItemType.supplement,
             onTap: () => notifier.setFilter(ItemType.supplement),
+          ),
+          const SizedBox(width: 8),
+          _FilterChip(
+            label: '식품',
+            isSelected: searchState.filter == ItemType.food,
+            onTap: () => notifier.setFilter(ItemType.food),
+          ),
+          const SizedBox(width: 8),
+          _FilterChip(
+            label: '한약재',
+            isSelected: searchState.filter == ItemType.herbal,
+            onTap: () => notifier.setFilter(ItemType.herbal),
           ),
         ],
       ),

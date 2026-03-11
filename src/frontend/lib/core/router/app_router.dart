@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:pillright/core/router/navigation_shell.dart';
 import 'package:pillright/features/cabinet/screens/cabinet_screen.dart';
 import 'package:pillright/features/detail/screens/drug_detail_screen.dart';
+import 'package:pillright/features/detail/screens/food_detail_screen.dart';
+import 'package:pillright/features/detail/screens/herbal_medicine_detail_screen.dart';
 import 'package:pillright/features/detail/screens/supplement_detail_screen.dart';
 import 'package:pillright/features/explore/screens/condition_search_screen.dart';
 import 'package:pillright/features/explore/screens/pill_identify_screen.dart';
@@ -144,6 +146,25 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           final id = int.tryParse(state.pathParameters['id'] ?? '');
           if (id == null) return const HomeScreen();
           return SupplementDetailScreen(supplementId: id);
+        },
+      ),
+
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/foods/:id',
+        builder: (context, state) {
+          final id = int.tryParse(state.pathParameters['id'] ?? '');
+          if (id == null) return const HomeScreen();
+          return FoodDetailScreen(foodId: id);
+        },
+      ),
+      GoRoute(
+        parentNavigatorKey: _rootNavigatorKey,
+        path: '/herbal-medicines/:id',
+        builder: (context, state) {
+          final id = int.tryParse(state.pathParameters['id'] ?? '');
+          if (id == null) return const HomeScreen();
+          return HerbalMedicineDetailScreen(herbalMedicineId: id);
         },
       ),
 

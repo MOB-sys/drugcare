@@ -7,13 +7,36 @@ import { ApiError } from "@/lib/api/client";
 interface SearchResultItemProps {
   name: string;
   sub: string | null;
-  itemType: "drug" | "supplement";
+  itemType: "drug" | "supplement" | "food" | "herbal";
   itemId?: number;
   selected: boolean;
   disabled: boolean;
   onToggle: () => void;
   showCabinetAdd?: boolean;
 }
+
+const TYPE_STYLES: Record<string, { bg: string; text: string; label: string }> = {
+  drug: {
+    bg: "bg-blue-50 dark:bg-blue-900/30",
+    text: "text-blue-700 dark:text-blue-300",
+    label: "약물",
+  },
+  supplement: {
+    bg: "bg-emerald-50 dark:bg-emerald-900/30",
+    text: "text-emerald-700 dark:text-emerald-300",
+    label: "영양제",
+  },
+  food: {
+    bg: "bg-orange-50 dark:bg-orange-900/30",
+    text: "text-orange-700 dark:text-orange-300",
+    label: "식품",
+  },
+  herbal: {
+    bg: "bg-purple-50 dark:bg-purple-900/30",
+    text: "text-purple-700 dark:text-purple-300",
+    label: "한약재",
+  },
+};
 
 export function SearchResultItem({
   name,
@@ -73,13 +96,9 @@ export function SearchResultItem({
       }`}
     >
       <span
-        className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-medium ${
-          itemType === "drug"
-            ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
-            : "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
-        }`}
+        className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-medium ${TYPE_STYLES[itemType].bg} ${TYPE_STYLES[itemType].text}`}
       >
-        {itemType === "drug" ? "약물" : "영양제"}
+        {TYPE_STYLES[itemType].label}
       </span>
       <div className="min-w-0 flex-1">
         <p className="font-medium text-gray-900 dark:text-gray-100 truncate">{name}</p>

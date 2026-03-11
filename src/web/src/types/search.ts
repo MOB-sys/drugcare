@@ -1,6 +1,6 @@
 /** 검색 관련 타입 정의. */
 
-export type ItemType = "drug" | "supplement";
+export type ItemType = "drug" | "supplement" | "food" | "herbal";
 
 export type SearchFilter = "all" | ItemType;
 

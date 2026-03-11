@@ -3,7 +3,7 @@
 export interface CabinetItem {
   id: number;
   device_id: string;
-  item_type: "drug" | "supplement";
+  item_type: "drug" | "supplement" | "food" | "herbal";
   item_id: number;
   item_name: string;
   nickname: string | null;
@@ -11,7 +11,7 @@ export interface CabinetItem {
 }
 
 export interface CabinetItemCreate {
-  item_type: "drug" | "supplement";
+  item_type: "drug" | "supplement" | "food" | "herbal";
   item_id: number;
   nickname?: string;
 }

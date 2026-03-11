@@ -11,7 +11,7 @@ import type { DrugSearchItem, DrugDetail } from "@/types/drug";
 import type { SupplementSearchItem, SupplementDetail } from "@/types/supplement";
 
 type CompareItem = {
-  type: "drug" | "supplement";
+  type: "drug" | "supplement" | "food" | "herbal";
   id: number;
   name: string;
   sub: string | null;
@@ -19,7 +19,7 @@ type CompareItem = {
   details: Record<string, string | null>;
 };
 
-type SearchResult = { type: "drug" | "supplement"; id: number; name: string; sub: string | null; slug: string };
+type SearchResult = { type: "drug" | "supplement" | "food" | "herbal"; id: number; name: string; sub: string | null; slug: string };
 
 function DrugSearchBox({
   label,

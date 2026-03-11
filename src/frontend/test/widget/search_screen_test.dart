@@ -12,10 +12,10 @@ void main() {
     );
   }
 
-  testWidgets('앱바에 "약/영양제 검색"을 표시한다', (tester) async {
+  testWidgets('앱바에 "통합 검색"을 표시한다', (tester) async {
     await tester.pumpWidget(buildWidget());
 
-    expect(find.text('약/영양제 검색'), findsOneWidget);
+    expect(find.text('통합 검색'), findsOneWidget);
   });
 
   testWidgets('검색 텍스트 필드를 표시한다', (tester) async {

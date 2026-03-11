@@ -6,13 +6,17 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useDebounce } from "./useDebounce";
 import { searchDrugs } from "@/lib/api/drugs";
 import { searchSupplements } from "@/lib/api/supplements";
+import { searchFoods } from "@/lib/api/foods";
+import { searchHerbalMedicines } from "@/lib/api/herbal";
 import type { DrugSearchItem } from "@/types/drug";
 import type { SupplementSearchItem } from "@/types/supplement";
+import type { FoodSearchItem } from "@/types/food";
+import type { HerbalMedicineSearchItem } from "@/types/herbal";
 import type { SearchFilter, SelectedItem } from "@/types/search";
 import { MAX_INTERACTION_ITEMS } from "@/lib/constants/severity";
 
 export interface SearchResultItem {
-  item_type: "drug" | "supplement";
+  item_type: "drug" | "supplement" | "food" | "herbal";
   item_id: number;
   name: string;
   sub: string | null;
@@ -42,13 +46,21 @@ function toSupplementResult(s: SupplementSearchItem): SearchResultItem {
   return { item_type: "supplement", item_id: s.id, name: s.product_name, sub: s.company };
 }
 
+function toFoodResult(f: FoodSearchItem): SearchResultItem {
+  return { item_type: "food", item_id: f.id, name: f.name, sub: f.category };
+}
+
+function toHerbalResult(h: HerbalMedicineSearchItem): SearchResultItem {
+  return { item_type: "herbal", item_id: h.id, name: h.name, sub: h.korean_name };
+}
+
 function parsePreselect(param: string | null): SelectedItem[] {
   if (!param) return [];
   try {
     return param.split(",").reduce<SelectedItem[]>((acc, part) => {
       const [type, id, ...nameParts] = part.split(":");
       const numId = Number(id);
-      if ((type === "drug" || type === "supplement") && id && nameParts.length && Number.isInteger(numId) && numId > 0) {
+      if ((type === "drug" || type === "supplement" || type === "food" || type === "herbal") && id && nameParts.length && Number.isInteger(numId) && numId > 0) {
         acc.push({
           item_type: type,
           item_id: numId,
@@ -142,10 +154,18 @@ export function useSearch(): UseSearchReturn {
         const searchSupp = (filter === "all" || filter === "supplement")
           ? searchSupplements(trimmedQuery, 1, 10, { signal })
           : null;
+        const searchFood = (filter === "all" || filter === "food")
+          ? searchFoods(trimmedQuery, 1, 10, { signal })
+          : null;
+        const searchHerbal = (filter === "all" || filter === "herbal")
+          ? searchHerbalMedicines(trimmedQuery, 1, 10, { signal })
+          : null;
 
-        const [drugs, supps] = await Promise.all([searchDrug, searchSupp]);
+        const [drugs, supps, foods, herbals] = await Promise.all([searchDrug, searchSupp, searchFood, searchHerbal]);
         if (drugs) merged.push(...drugs.items.map(toDrugResult));
         if (supps) merged.push(...supps.items.map(toSupplementResult));
+        if (foods) merged.push(...foods.items.map(toFoodResult));
+        if (herbals) merged.push(...herbals.items.map(toHerbalResult));
 
         if (!controller.signal.aborted && currentRequestId === requestIdRef.current) {
           setResults(merged);

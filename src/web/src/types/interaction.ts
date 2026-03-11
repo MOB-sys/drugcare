@@ -1,7 +1,7 @@
 /** 상호작용 체크 관련 타입 정의 — 백엔드 스키마 1:1 매칭. */
 
 export interface InteractionCheckItem {
-  item_type: "drug" | "supplement";
+  item_type: "drug" | "supplement" | "food" | "herbal";
   item_id: number;
 }
 

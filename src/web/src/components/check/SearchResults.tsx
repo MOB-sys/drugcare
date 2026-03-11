@@ -10,7 +10,7 @@ interface SearchResultsProps {
   searchError?: string | null;
   isSelected: (id: number, type: string) => boolean;
   canAddMore: boolean;
-  onToggle: (item: { item_type: "drug" | "supplement"; item_id: number; name: string }) => void;
+  onToggle: (item: { item_type: "drug" | "supplement" | "food" | "herbal"; item_id: number; name: string }) => void;
 }
 
 export function SearchResults({
@@ -34,7 +34,7 @@ export function SearchResults({
   if (!query.trim()) {
     return (
       <div className="py-12 text-center text-gray-400 dark:text-gray-500">
-        <p className="text-sm">약물이나 영양제 이름을 검색해보세요</p>
+        <p className="text-sm">약물, 영양제, 식품, 한약재 이름을 검색해보세요</p>
       </div>
     );
   }

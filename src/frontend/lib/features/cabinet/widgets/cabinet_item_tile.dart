@@ -26,9 +26,22 @@ class CabinetItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDrug = item.itemType == ItemType.drug;
-    final tagColor = isDrug ? AppColors.drugTag : AppColors.supplementTag;
-    final tagLabel = isDrug ? '약물' : '영양제';
+    final Color tagColor;
+    final String tagLabel;
+    switch (item.itemType) {
+      case ItemType.drug:
+        tagColor = AppColors.drugTag;
+        tagLabel = '약물';
+      case ItemType.supplement:
+        tagColor = AppColors.supplementTag;
+        tagLabel = '영양제';
+      case ItemType.food:
+        tagColor = AppColors.foodTag;
+        tagLabel = '식품';
+      case ItemType.herbal:
+        tagColor = AppColors.herbalTag;
+        tagLabel = '한약재';
+    }
 
     return Card(
       elevation: 0.5,
