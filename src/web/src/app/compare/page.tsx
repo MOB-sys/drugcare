@@ -127,6 +127,7 @@ export default function ComparePage() {
   const [itemA, setItemA] = useState<CompareItem | null>(null);
   const [itemB, setItemB] = useState<CompareItem | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function loadDetails(item: SearchResult): Promise<CompareItem> {
     if (item.type === "drug") {
@@ -149,11 +150,14 @@ export default function ComparePage() {
 
   async function handleSelect(slot: "a" | "b", item: SearchResult) {
     setLoading(true);
+    setError(null);
     try {
       const detailed = await loadDetails(item);
       if (slot === "a") setItemA(detailed);
       else setItemB(detailed);
-    } catch { /* fallback */ }
+    } catch {
+      setError("상세 정보를 불러오지 못했습니다. 다시 시도해주세요.");
+    }
     setLoading(false);
   }
 
@@ -198,6 +202,12 @@ export default function ComparePage() {
           <div className="text-center py-8">
             <div className="inline-block w-6 h-6 border-2 border-[var(--color-primary-100)] border-t-[var(--color-primary)] rounded-full animate-spin" />
             <p className="mt-2 text-sm text-[var(--color-text-muted)]">정보를 불러오는 중...</p>
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-6 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-300">
+            {error}
           </div>
         )}
 
