@@ -34,6 +34,21 @@ export function getAllFoodSlugs(): Promise<string[]> {
   return fetchApi<string[]>("/api/v1/foods/slugs");
 }
 
+/** 전체 식품 목록 조회 (빈 쿼리로 전체 반환). */
+export function getAllFoods(
+  page = 1,
+  pageSize = 100,
+): Promise<PaginatedResponse<FoodSearchItem>> {
+  const params = new URLSearchParams({
+    q: "",
+    page: String(page),
+    page_size: String(pageSize),
+  });
+  return fetchApi<PaginatedResponse<FoodSearchItem>>(
+    `/api/v1/foods/search?${params}`,
+  );
+}
+
 /** 식품 총 건수 조회. */
 export function getFoodCount(): Promise<number> {
   return fetchApi<number>("/api/v1/foods/count");

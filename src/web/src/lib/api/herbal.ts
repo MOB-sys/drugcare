@@ -34,6 +34,21 @@ export function getAllHerbalMedicineSlugs(): Promise<string[]> {
   return fetchApi<string[]>("/api/v1/herbal-medicines/slugs");
 }
 
+/** 전체 한약재 목록 조회 (빈 쿼리로 전체 반환). */
+export function getAllHerbalMedicines(
+  page = 1,
+  pageSize = 100,
+): Promise<PaginatedResponse<HerbalMedicineSearchItem>> {
+  const params = new URLSearchParams({
+    q: "",
+    page: String(page),
+    page_size: String(pageSize),
+  });
+  return fetchApi<PaginatedResponse<HerbalMedicineSearchItem>>(
+    `/api/v1/herbal-medicines/search?${params}`,
+  );
+}
+
 /** 한약재 총 건수 조회. */
 export function getHerbalMedicineCount(): Promise<number> {
   return fetchApi<number>("/api/v1/herbal-medicines/count");
