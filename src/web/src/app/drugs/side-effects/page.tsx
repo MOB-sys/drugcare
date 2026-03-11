@@ -61,7 +61,7 @@ function highlightKeywords(text: string, keywords: string[]) {
   const parts = text.split(regex);
   return parts.map((part, i) =>
     keywords.includes(part) ? (
-      <mark key={i} className="bg-yellow-200 dark:bg-yellow-800 text-gray-900 dark:text-yellow-100 rounded px-0.5">
+      <mark key={i} className="bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded px-0.5">
         {part}
       </mark>
     ) : (

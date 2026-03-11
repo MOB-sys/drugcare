@@ -295,7 +295,7 @@ function ConditionsContent() {
                         <li key={drug.id}>
                           <Link
                             href={`/drugs/${drug.slug}`}
-                            className="block p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 transition-colors"
+                            className="block p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[var(--color-primary-100)] hover:bg-[var(--color-primary-50)]/30 dark:hover:bg-[var(--color-primary-900)]/30 transition-colors"
                           >
                             <div className="flex items-start gap-3">
                               {drug.item_image && (
@@ -357,8 +357,8 @@ function ConditionsContent() {
         )}
 
         {/* 면책조항 */}
-        <div className="mt-8 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-          <p className="text-xs text-amber-700 leading-relaxed">
+        <div className="mt-8 p-4 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-xl">
+          <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
             질환별 주의사항은 참고용이며, 복용 전 반드시 의사/약사와 상담하세요.
             이 서비스는 의사/약사의 전문적 판단을 대체하지 않습니다.
           </p>

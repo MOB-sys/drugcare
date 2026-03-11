@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { searchDrugsByCondition } from "@/lib/api/drugs";
-import {
-  getConditionBySlug,
-  getAllConditionSlugs,
-} from "@/lib/data/conditions";
+import { getConditionBySlug } from "@/lib/data/conditions";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { SITE_URL } from "@/lib/constants/site";
@@ -315,10 +312,6 @@ export default async function ConditionDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        <p className="text-xs text-gray-400 dark:text-gray-500 text-center mt-6">
-          이 정보는 일반적인 건강 정보이며, 의사/약사의 전문적 판단을 대체하지
-          않습니다.
-        </p>
       </article>
     </>
   );
