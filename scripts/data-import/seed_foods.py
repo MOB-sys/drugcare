@@ -695,12 +695,11 @@ async def seed_foods(dry_run: bool = False) -> dict[str, int]:
                     text("""
                         INSERT INTO foods (
                             name, slug, category, description,
-                            common_names, nutrients, source
+                            common_names, nutrients
                         ) VALUES (
                             :name, :slug, :category, :description,
                             CAST(:common_names AS jsonb),
-                            CAST(:nutrients AS jsonb),
-                            :source
+                            CAST(:nutrients AS jsonb)
                         )
                         ON CONFLICT (slug) DO NOTHING
                         RETURNING id
@@ -712,7 +711,6 @@ async def seed_foods(dry_run: bool = False) -> dict[str, int]:
                         "description": food["description"],
                         "common_names": json.dumps(food["common_names"], ensure_ascii=False),
                         "nutrients": json.dumps(food["nutrients"], ensure_ascii=False),
-                        "source": "seed_evidence_based",
                     },
                 )
                 row = result.first()

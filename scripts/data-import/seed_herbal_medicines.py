@@ -1012,11 +1012,11 @@ async def seed_herbal_medicines(dry_run: bool = False) -> dict[str, int]:
                         INSERT INTO herbal_medicines (
                             name, slug, korean_name, latin_name,
                             category, properties, description,
-                            efficacy, precautions, source
+                            efficacy, precautions
                         ) VALUES (
                             :name, :slug, :korean_name, :latin_name,
                             :category, CAST(:properties AS jsonb), :description,
-                            :efficacy, :precautions, :source
+                            :efficacy, :precautions
                         )
                         ON CONFLICT (slug) DO NOTHING
                         RETURNING id
@@ -1031,7 +1031,6 @@ async def seed_herbal_medicines(dry_run: bool = False) -> dict[str, int]:
                         "description": herb["description"],
                         "efficacy": herb["efficacy"],
                         "precautions": herb["precautions"],
-                        "source": "seed_pharmacopoeia",
                     },
                 )
                 row = result.first()
