@@ -33,6 +33,9 @@ class ResultScreen extends ConsumerStatefulWidget {
 
 /// [ResultScreen]의 상태 관리 클래스.
 class _ResultScreenState extends ConsumerState<ResultScreen> {
+  /// 메트릭스 이벤트 전송 여부.
+  bool _metricsTracked = false;
+
   @override
   void initState() {
     super.initState();
@@ -76,11 +79,14 @@ class _ResultScreenState extends ConsumerState<ResultScreen> {
               interactionResultProvider(widget.selectedItems)),
         ),
         data: (response) {
-          // 결과 로드 시 메트릭스 이벤트 추적 (fire-and-forget).
-          ref.read(metricsServiceProvider).trackEvent(
-            'interaction_check',
-            eventData: {'item_count': widget.selectedItems.length},
-          );
+          // 결과 로드 시 메트릭스 이벤트 추적 (1회만).
+          if (!_metricsTracked) {
+            _metricsTracked = true;
+            ref.read(metricsServiceProvider).trackEvent(
+              'interaction_check',
+              eventData: {'item_count': widget.selectedItems.length},
+            );
+          }
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),

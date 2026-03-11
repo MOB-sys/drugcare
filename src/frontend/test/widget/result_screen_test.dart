@@ -85,7 +85,7 @@ void main() {
     );
   });
 
-  testWidgets('interactionResultProvider returns data', (tester) async {
+  test('interactionResultProvider returns data', () async {
     // Provider 단위 테스트 — UI 없이 로직 검증
     final container = ProviderContainer(
       overrides: [
@@ -94,6 +94,12 @@ void main() {
       ],
     );
     addTearDown(container.dispose);
+
+    // autoDispose 프로바이더를 유지하기 위해 listen 호출.
+    container.listen(
+      interactionResultProvider(testItems),
+      (_, __) {},
+    );
 
     final result = await container.read(
       interactionResultProvider(testItems).future,
@@ -106,7 +112,7 @@ void main() {
     expect(result.results.first.severity, Severity.danger);
   });
 
-  testWidgets('interactionResultProvider handles error', (tester) async {
+  test('interactionResultProvider handles error', () async {
     final container = ProviderContainer(
       overrides: [
         interactionResultProvider(testItems).overrideWith(
@@ -117,6 +123,12 @@ void main() {
       ],
     );
     addTearDown(container.dispose);
+
+    // autoDispose 프로바이더를 유지하기 위해 listen 호출.
+    container.listen(
+      interactionResultProvider(testItems),
+      (_, __) {},
+    );
 
     expect(
       () => container.read(interactionResultProvider(testItems).future),

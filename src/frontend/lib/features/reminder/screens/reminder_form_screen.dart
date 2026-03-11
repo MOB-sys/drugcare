@@ -88,8 +88,8 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
       ),
       body: cabinetAsync.when(
         loading: () => const LoadingWidget(message: '복약함 목록 불러오는 중...'),
-        error: (err, _) => AppErrorWidget(
-          message: err.toString(),
+        error: (_, __) => AppErrorWidget(
+          message: '복약함 목록을 불러오지 못했습니다.\n네트워크 연결을 확인해 주세요.',
           onRetry: () => ref.invalidate(_cabinetItemsProvider),
         ),
         data: (cabinetItems) => _buildForm(cabinetItems),
@@ -268,9 +268,9 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
 
   /// 개별 요일 선택 칩을 빌드한다.
   ///
-  /// [index] — 요일 인덱스 (0=월 ~ 6=일, 백엔드 규격 일치).
+  /// [index] — UI 인덱스 (0~6). 백엔드 요일은 1=월 ~ 7=일.
   Widget _buildDayChip(int index) {
-    final day = index;
+    final day = index + 1; // 백엔드: 1=월 ~ 7=일
     final isSelected = _selectedDays.contains(day);
     final label = AppDateUtils.weekdayName(index);
 
@@ -399,8 +399,8 @@ class _ReminderFormScreenState extends ConsumerState<ReminderFormScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('저장 실패: $e'),
+          const SnackBar(
+            content: Text('저장에 실패했습니다. 다시 시도해 주세요.'),
             backgroundColor: AppColors.danger,
           ),
         );

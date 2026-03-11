@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:pillright/core/constants/app_constants.dart';
 import 'package:pillright/core/theme/app_colors.dart';
@@ -100,8 +101,6 @@ class HomeScreen extends ConsumerWidget {
 
   /// 복약함 탭으로 이동한다.
   void _navigateToCabinet(BuildContext context) {
-    // 하단 네비게이션의 복약함 탭으로 전환 (인덱스 1)
-    // ShellRoute 기반 네비게이션에서는 go를 사용
-    // 라우터가 구성되면 context.go('/cabinet') 호출
+    context.go('/cabinet');
   }
 }

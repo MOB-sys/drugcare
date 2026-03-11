@@ -6,14 +6,14 @@ import 'package:pillright/features/search/models/supplement_detail.dart';
 
 /// 약물 상세 정보 프로바이더.
 final drugDetailProvider =
-    FutureProvider.family<DrugDetail, int>((ref, drugId) async {
+    FutureProvider.autoDispose.family<DrugDetail, int>((ref, drugId) async {
   final service = ref.read(drugServiceProvider);
   return service.getDrugDetail(drugId);
 });
 
 /// 영양제 상세 정보 프로바이더.
-final supplementDetailProvider =
-    FutureProvider.family<SupplementDetail, int>((ref, supplementId) async {
+final supplementDetailProvider = FutureProvider.autoDispose
+    .family<SupplementDetail, int>((ref, supplementId) async {
   final service = ref.read(supplementServiceProvider);
   return service.getSupplementDetail(supplementId);
 });

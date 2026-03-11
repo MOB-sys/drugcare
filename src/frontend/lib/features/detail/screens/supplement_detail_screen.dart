@@ -38,6 +38,9 @@ class _SupplementDetailScreenState
   /// 복약함 추가 로딩 상태.
   bool _isAddingToCabinet = false;
 
+  /// 메트릭스 이벤트 전송 여부.
+  bool _metricsTracked = false;
+
   @override
   Widget build(BuildContext context) {
     final asyncDetail =
@@ -71,11 +74,14 @@ class _SupplementDetailScreenState
       ),
       body: asyncDetail.when(
         data: (supplement) {
-          // 영양제 상세 조회 메트릭스 이벤트 추적 (fire-and-forget).
-          ref.read(metricsServiceProvider).trackEvent(
-            'detail_view',
-            eventData: {'type': 'supplement', 'id': widget.supplementId},
-          );
+          // 영양제 상세 조회 메트릭스 이벤트 추적 (1회만).
+          if (!_metricsTracked) {
+            _metricsTracked = true;
+            ref.read(metricsServiceProvider).trackEvent(
+              'detail_view',
+              eventData: {'type': 'supplement', 'id': widget.supplementId},
+            );
+          }
           return _buildContent(supplement);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -262,7 +268,7 @@ class _SupplementDetailScreenState
             ),
             const SizedBox(height: 8),
             Text(
-              error.toString(),
+              '네트워크 연결을 확인하고 다시 시도해 주세요.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,

@@ -3,6 +3,8 @@ class ApiConstants {
   ApiConstants._();
 
   /// 백엔드 기본 URL (빌드 시 --dart-define=API_BASE_URL 로 오버라이드).
+  ///
+  /// 릴리스 빌드에서는 반드시 HTTPS URL을 지정해야 한다.
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
     defaultValue: 'http://localhost:8000',

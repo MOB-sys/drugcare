@@ -218,6 +218,7 @@ class SearchNotifier extends StateNotifier<SearchState> {
 }
 
 /// 검색 상태 프로바이더.
-final searchProvider = StateNotifierProvider<SearchNotifier, SearchState>((ref) {
+final searchProvider =
+    StateNotifierProvider.autoDispose<SearchNotifier, SearchState>((ref) {
   return SearchNotifier(ref);
 });

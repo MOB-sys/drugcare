@@ -48,7 +48,8 @@ class Reminder {
       cabinetItemId: json['cabinet_item_id'] as int,
       itemName: json['item_name'] as String,
       reminderTime: json['reminder_time'] as String,
-      daysOfWeek: (json['days_of_week'] as List).cast<int>(),
+      daysOfWeek:
+          (json['days_of_week'] as List).map((e) => (e as num).toInt()).toList(),
       isActive: json['is_active'] as bool,
       memo: json['memo'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),

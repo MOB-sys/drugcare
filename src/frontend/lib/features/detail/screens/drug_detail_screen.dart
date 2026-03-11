@@ -38,6 +38,9 @@ class _DrugDetailScreenState extends ConsumerState<DrugDetailScreen> {
   /// 복약함 추가 로딩 상태.
   bool _isAddingToCabinet = false;
 
+  /// 메트릭스 이벤트 전송 여부.
+  bool _metricsTracked = false;
+
   @override
   Widget build(BuildContext context) {
     final asyncDetail = ref.watch(drugDetailProvider(widget.drugId));
@@ -70,11 +73,14 @@ class _DrugDetailScreenState extends ConsumerState<DrugDetailScreen> {
       ),
       body: asyncDetail.when(
         data: (drug) {
-          // 약물 상세 조회 메트릭스 이벤트 추적 (fire-and-forget).
-          ref.read(metricsServiceProvider).trackEvent(
-            'detail_view',
-            eventData: {'type': 'drug', 'id': widget.drugId},
-          );
+          // 약물 상세 조회 메트릭스 이벤트 추적 (1회만).
+          if (!_metricsTracked) {
+            _metricsTracked = true;
+            ref.read(metricsServiceProvider).trackEvent(
+              'detail_view',
+              eventData: {'type': 'drug', 'id': widget.drugId},
+            );
+          }
           return _buildContent(drug);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -334,7 +340,7 @@ class _DrugDetailScreenState extends ConsumerState<DrugDetailScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              error.toString(),
+              '네트워크 연결을 확인하고 다시 시도해 주세요.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,

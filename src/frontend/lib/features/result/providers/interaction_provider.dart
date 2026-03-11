@@ -9,7 +9,7 @@ import 'package:pillright/features/search/models/selected_search_item.dart';
 ///
 /// [SelectedSearchItem] 목록을 받아 [InteractionItem]으로 변환한 뒤
 /// 상호작용 API를 호출하여 [InteractionCheckResponse]를 반환한다.
-final interactionResultProvider = FutureProvider.family<
+final interactionResultProvider = FutureProvider.autoDispose.family<
     InteractionCheckResponse, List<SelectedSearchItem>>(
   (ref, selectedItems) async {
     final interactionService = ref.read(interactionServiceProvider);

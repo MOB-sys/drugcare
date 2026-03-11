@@ -26,8 +26,8 @@ class ReviewKey {
 }
 
 /// 리뷰 통계 프로바이더.
-final reviewSummaryProvider =
-    FutureProvider.family<ReviewSummary, ReviewKey>((ref, key) async {
+final reviewSummaryProvider = FutureProvider.autoDispose
+    .family<ReviewSummary, ReviewKey>((ref, key) async {
   final service = ref.read(reviewServiceProvider);
   return service.getReviewSummary(key.itemType, key.itemId);
 });
@@ -182,7 +182,7 @@ class ReviewListNotifier extends StateNotifier<ReviewListState> {
 }
 
 /// 리뷰 목록 프로바이더.
-final reviewListProvider = StateNotifierProvider.family<
+final reviewListProvider = StateNotifierProvider.autoDispose.family<
     ReviewListNotifier, ReviewListState, ReviewKey>((ref, key) {
   return ReviewListNotifier(ref, key);
 });

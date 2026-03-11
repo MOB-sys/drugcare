@@ -69,7 +69,7 @@ class NotificationService {
   /// 리마인더에 대한 주간 반복 알림을 스케줄링한다.
   ///
   /// [reminder]의 각 요일에 대해 개별 알림을 등록한다.
-  /// 알림 ID: `reminder.id * 10 + dayIndex` (요일별 고유 ID).
+  /// 알림 ID: `reminder.id * 100 + dayOfWeek` (요일별 고유 ID).
   Future<void> scheduleReminder(Reminder reminder) async {
     if (!reminder.isActive) return;
 
@@ -103,7 +103,7 @@ class NotificationService {
 
     for (var i = 0; i < reminder.daysOfWeek.length; i++) {
       final dayOfWeek = reminder.daysOfWeek[i];
-      final notificationId = reminder.id * 10 + dayOfWeek;
+      final notificationId = reminder.id * 100 + dayOfWeek;
 
       // flutter_local_notifications의 Day: 1=Monday ~ 7=Sunday
       // Reminder의 daysOfWeek: 1=월 ~ 7=일 (동일 매핑)
@@ -123,10 +123,10 @@ class NotificationService {
 
   /// 리마인더의 모든 알림을 취소한다.
   ///
-  /// [reminderId]에 해당하는 요일별 알림 슬롯(id*10+1 ~ id*10+7)을 취소한다.
+  /// [reminderId]에 해당하는 요일별 알림 슬롯(id*100+1 ~ id*100+7)을 취소한다.
   Future<void> cancelReminder(int reminderId) async {
     for (var day = 1; day <= 7; day++) {
-      await _plugin.cancel(reminderId * 10 + day);
+      await _plugin.cancel(reminderId * 100 + day);
     }
   }
 
