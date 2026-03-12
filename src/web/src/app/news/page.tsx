@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { getRecentDrugs } from "@/lib/api/drugs";
+import { getAllNews } from "@/lib/content/loader";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { AdBanner } from "@/components/ads/AdBanner";
 import type { DrugSearchItem } from "@/types/drug";
@@ -140,6 +141,51 @@ export default async function NewsPage() {
             </div>
           )}
         </section>
+
+        {/* 안전 경고 (content/news 기반) */}
+        {(() => {
+          const newsItems = getAllNews();
+          if (newsItems.length === 0) return null;
+          const severityStyles: Record<string, string> = {
+            danger: "border-l-red-500",
+            warning: "border-l-amber-500",
+            info: "border-l-blue-500",
+          };
+          const severityLabels: Record<string, string> = { danger: "위험", warning: "주의", info: "정보" };
+          const sourceLabels: Record<string, string> = { mfds: "식약처", fda: "FDA", ema: "EMA" };
+          return (
+            <section className="mb-12">
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5 text-[var(--color-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                약물 안전 경고
+              </h2>
+              <div className="space-y-3">
+                {newsItems.map((item) => (
+                  <Link
+                    key={item.slug}
+                    href={`/news/${item.slug}`}
+                    className={`block p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 border-l-4 ${severityStyles[item.severity ?? "info"]} hover:shadow-sm transition-all`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                            {sourceLabels[item.source] ?? item.source} · {severityLabels[item.severity ?? "info"]}
+                          </span>
+                          <span className="text-xs text-gray-400 dark:text-gray-500">{item.publishedAt}</span>
+                        </div>
+                        <p className="text-sm font-medium text-gray-900 dark:text-white">{item.title}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-1">{item.description}</p>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          );
+        })()}
 
         <AdBanner slot="news-middle" format="horizontal" />
 

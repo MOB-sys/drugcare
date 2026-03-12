@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { tips } from "@/lib/data/tips";
-import type { Tip } from "@/lib/data/tips";
+import { getAllTips } from "@/lib/content/loader";
+import type { ContentTip } from "@/lib/content/types";
 
 interface RelatedTipsProps {
   /** Drug name or keywords used for matching tips. */
@@ -9,8 +9,9 @@ interface RelatedTipsProps {
   classNo?: string | null;
 }
 
-function findRelatedTips(drugName: string, classNo?: string | null): Tip[] {
+function findRelatedTips(drugName: string, classNo?: string | null): ContentTip[] {
   const nameLower = drugName.toLowerCase();
+  const tips = getAllTips();
 
   // Score each tip based on keyword overlap with drug name and tags
   const scored = tips.map((tip) => {

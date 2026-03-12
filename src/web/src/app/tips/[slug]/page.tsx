@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getTipBySlug, getAllTipSlugs } from "@/lib/data/tips";
+import { getTipBySlug, getAllTipSlugs } from "@/lib/content/loader";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { MarkdownRenderer } from "@/components/content/MarkdownRenderer";
 import { SITE_URL } from "@/lib/constants/site";
 
 interface PageProps {
@@ -60,29 +61,7 @@ export default async function TipDetailPage({ params }: PageProps) {
     keywords: tip.tags.join(", "),
   };
 
-  /** 마크다운 텍스트를 React 요소로 안전하게 변환 (dangerouslySetInnerHTML 미사용) */
-  const contentBlocks = tip.content.split("\n\n").map((block, i) => {
-    const trimmed = block.trim();
-    if (trimmed.startsWith("## ")) {
-      return <h2 key={i} className="text-xl font-bold text-[var(--color-primary)] mt-8 mb-3">{trimmed.slice(3)}</h2>;
-    }
-    if (trimmed.startsWith("### ")) {
-      return <h3 key={i} className="text-lg font-semibold text-gray-800 dark:text-gray-100 mt-6 mb-2">{trimmed.slice(4)}</h3>;
-    }
-    if (trimmed === "---") {
-      return <hr key={i} className="my-6 border-gray-200 dark:border-gray-700" />;
-    }
-    if (trimmed.startsWith("> ")) {
-      return <blockquote key={i} className="border-l-4 border-[var(--color-primary-100)] pl-4 text-sm text-gray-500 dark:text-gray-400 italic my-4">{trimmed.slice(2)}</blockquote>;
-    }
-    // 인라인 bold 처리
-    const parts = trimmed.split(/\*\*(.+?)\*\*/g);
-    return (
-      <p key={i} className="text-gray-700 dark:text-gray-200 leading-relaxed mb-3">
-        {parts.map((part, j) => (j % 2 === 1 ? <strong key={j}>{part}</strong> : part))}
-      </p>
-    );
-  });
+  /* Markdown 렌더링은 공통 컴포넌트에 위임 */
 
   return (
     <>
@@ -117,9 +96,7 @@ export default async function TipDetailPage({ params }: PageProps) {
         </div>
 
         {/* 본문 */}
-        <div className="prose prose-gray max-w-none">
-          {contentBlocks}
-        </div>
+        <MarkdownRenderer content={tip.content} />
 
         {/* 광고 */}
         <AdBanner slot="tip-detail-bottom" format="auto" />

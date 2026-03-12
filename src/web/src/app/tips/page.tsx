@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { tips } from "@/lib/data/tips";
+import { getAllTips } from "@/lib/content/loader";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { TipsList } from "@/components/tips/TipsList";
 import { SITE_URL } from "@/lib/constants/site";
@@ -42,7 +42,7 @@ export default function TipsPage() {
           약과 영양제를 안전하고 효과적으로 복용하기 위한 정보를 모았습니다.
         </p>
 
-        <TipsList tips={tips} />
+        <TipsList tips={getAllTips()} />
       </section>
     </>
   );

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import type { Tip } from "@/lib/data/tips";
+import type { ContentTip } from "@/lib/content/types";
 import { AdBanner } from "@/components/ads/AdBanner";
 
 const CATEGORIES = [
@@ -13,7 +13,7 @@ const CATEGORIES = [
   { key: "대상별", label: "대상별 주의" },
 ] as const;
 
-function matchesCategory(tip: Tip, category: string): boolean {
+function matchesCategory(tip: ContentTip, category: string): boolean {
   if (category === "all") return true;
   if (category === "약물 상호작용") {
     return tip.tags.some((t) => t.includes("상호작용") || t.includes("약 조합"));
@@ -38,7 +38,7 @@ function matchesCategory(tip: Tip, category: string): boolean {
   return false;
 }
 
-export function TipsList({ tips }: { tips: Tip[] }) {
+export function TipsList({ tips }: { tips: ContentTip[] }) {
   const [category, setCategory] = useState("all");
 
   const filtered = useMemo(
@@ -94,7 +94,7 @@ export function TipsList({ tips }: { tips: Tip[] }) {
   );
 }
 
-function TipCard({ tip }: { tip: Tip }) {
+function TipCard({ tip }: { tip: ContentTip }) {
   return (
     <Link
       href={`/tips/${tip.slug}`}

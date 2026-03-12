@@ -3,7 +3,7 @@ import { getAllDrugSlugs } from "@/lib/api/drugs";
 import { getAllSupplementSlugs } from "@/lib/api/supplements";
 import { getAllFoodSlugs } from "@/lib/api/foods";
 import { getAllHerbalMedicineSlugs } from "@/lib/api/herbal";
-import { getAllTipSlugs } from "@/lib/data/tips";
+import { getAllTipSlugs, getAllNewsSlugs, getAllResearchSlugs } from "@/lib/content/loader";
 import { ALL_LETTERS } from "@/lib/utils/korean";
 import { SITE_URL } from "@/lib/constants/site";
 import snsIndex from "../../public/sns-content/index.json";
@@ -65,6 +65,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
+  /* ── 뉴스 + 연구 ── */
+  const newsEntries: MetadataRoute.Sitemap = [
+    ...getAllNewsSlugs().map((slug) => ({
+      url: `${BASE_URL}/news/${slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  ];
+  const researchEntries: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/research`, changeFrequency: "weekly" as const, priority: 0.7 },
+    ...getAllResearchSlugs().map((slug) => ({
+      url: `${BASE_URL}/research/${slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
+  ];
+
   /* ── 식품 + 한약재 (소량 — 항상 포함) ── */
   let foodEntries: MetadataRoute.Sitemap = [];
   let herbalEntries: MetadataRoute.Sitemap = [];
@@ -103,7 +120,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   /* 현재까지 URL 수 계산 */
   const currentCount = staticPages.length + browseEntries.length + tipEntries.length
-    + safetyCardEntries.length + foodEntries.length + herbalEntries.length + drugEntries.length;
+    + safetyCardEntries.length + newsEntries.length + researchEntries.length
+    + foodEntries.length + herbalEntries.length + drugEntries.length;
 
   /* ── 영양제 (남은 한도만큼) ── */
   let suppEntries: MetadataRoute.Sitemap = [];
@@ -123,6 +141,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...browseEntries,
     ...tipEntries,
     ...safetyCardEntries,
+    ...newsEntries,
+    ...researchEntries,
     ...foodEntries,
     ...herbalEntries,
     ...drugEntries,
