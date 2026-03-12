@@ -97,7 +97,7 @@ jobs:
       # 실패 시 GitHub Issue 자동 생성
       - name: Create Issue on Failure
         if: failure()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const title = `[Review Agent] 일간 리뷰 실패 - ${new Date().toISOString().split('T')[0]}`;
