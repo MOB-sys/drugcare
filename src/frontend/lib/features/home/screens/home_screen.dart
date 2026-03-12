@@ -9,7 +9,7 @@ import 'package:pillright/features/home/widgets/cabinet_summary_card.dart';
 import 'package:pillright/features/home/widgets/health_tip_card.dart';
 import 'package:pillright/features/home/widgets/explore_tools_section.dart';
 import 'package:pillright/features/home/widgets/quick_search_bar.dart';
-import 'package:pillright/shared/widgets/ads/native_ad_widget.dart';
+import 'package:pillright/shared/widgets/ads/ad_banner_widget.dart';
 import 'package:pillright/shared/widgets/common/disclaimer_banner.dart';
 
 /// 홈 화면.
@@ -52,8 +52,8 @@ class HomeScreen extends ConsumerWidget {
               const HealthTipCard(),
               const SizedBox(height: 16),
 
-              // 네이티브 광고
-              const NativeAdWidget(),
+              // 배너 광고
+              const AdBannerWidget(),
               const SizedBox(height: 16),
 
               // 면책조항 배너
