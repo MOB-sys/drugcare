@@ -1,6 +1,6 @@
 """식품 라우터 — 식품 검색 및 상세 조회."""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Path, Query
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,7 +21,7 @@ router = APIRouter(prefix="/foods", tags=["foods"])
     description="식품명 등으로 식품을 검색합니다.",
 )
 async def search_foods(
-    q: str = Query("", description="검색어 (식품명 등)"),
+    q: str = Query("", max_length=200, description="검색어 (식품명 등)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),
@@ -80,7 +80,7 @@ async def get_food_count(
     description="slug로 식품 상세 정보를 조회합니다.",
 )
 async def get_food_by_slug(
-    slug: str,
+    slug: str = Path(..., max_length=200, pattern=r"^[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ\-]+$"),
     db: AsyncSession = Depends(get_db),
     redis: Redis = Depends(get_redis),
 ) -> dict:

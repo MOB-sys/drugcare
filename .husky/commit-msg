@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+# Review Agent — 커밋 메시지 컨벤션 검증
+# 허용: feat: fix: data: seo: web: app: api: ad: docs: test: chore: refactor: style: perf: ci:
+
+MSG=$(cat "$1")
+PATTERN='^(feat|fix|data|seo|web|app|api|ad|docs|test|chore|refactor|style|perf|ci)(\(.+\))?: .{3,}'
+
+# Merge 커밋은 허용
+if echo "$MSG" | grep -qE '^Merge '; then
+    exit 0
+fi
+
+# Co-Authored-By 제거 후 첫 줄만 검사
+FIRST_LINE=$(echo "$MSG" | head -1)
+
+if ! echo "$FIRST_LINE" | grep -qE "$PATTERN"; then
+    echo ""
+    echo "❌ 커밋 메시지가 컨벤션에 맞지 않습니다."
+    echo ""
+    echo "  형식: <type>: <description>"
+    echo "  허용 type: feat, fix, data, seo, web, app, api, ad, docs, test, chore, refactor"
+    echo ""
+    echo "  예시:"
+    echo "    feat: 약물 상세 페이지 SSG 구현"
+    echo "    fix: 검색 결과 페이지네이션 오류 수정"
+    echo "    api: 영양제 slug 조회 엔드포인트 추가"
+    echo ""
+    echo "  입력된 메시지: $FIRST_LINE"
+    echo ""
+    exit 1
+fi

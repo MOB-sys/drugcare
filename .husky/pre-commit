@@ -41,6 +41,19 @@ if [ -n "$SECRETS" ]; then
     exit 1
 fi
 
+# 변경된 Python 파일 함수 길이 경고 (50줄 초과)
+if [ -n "$BACKEND_CHANGED" ]; then
+    LONG_FUNCS=$(git diff --cached --name-only -- 'src/backend/*.py' | grep -v test | while read -r f; do
+        [ -f "$f" ] || continue
+        awk '/^(    )?((async )?def |class )/{if(name!=""&&NR-s>50)printf "%s:%d: %d줄\n",FILENAME,s,NR-s; name=$0;s=NR} END{if(name!=""&&NR-s>50)printf "%s:%d: %d줄\n",FILENAME,s,NR-s}' "$f"
+    done 2>/dev/null || true)
+    if [ -n "$LONG_FUNCS" ]; then
+        echo ""
+        echo "[Review Agent] 50줄 초과 함수 (경고):"
+        echo "$LONG_FUNCS"
+    fi
+fi
+
 # next.config.ts 변경 시 CSP 경고
 CONFIG_CHANGED=$(git diff --cached --name-only -- 'src/web/next.config.ts' | head -1)
 if [ -n "$CONFIG_CHANGED" ]; then

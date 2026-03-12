@@ -1,0 +1,189 @@
+{
+  "_comment": "자율 복구 룰 정의 — drugcare 프로덕션 환경 맞춤",
+  "rules": [
+    {
+      "id": "backend_unhealthy",
+      "description": "Backend API 응답 없음 또는 비정상",
+      "detect": {
+        "type": "http_check",
+        "url": "${API_BASE}/api/v1/health",
+        "expect_status": 200,
+        "timeout": 10
+      },
+      "actions": [
+        {
+          "order": 1,
+          "action": "restart_container",
+          "target": "yakmeogeo-backend",
+          "wait_after": 15,
+          "max_retries": 2
+        },
+        {
+          "order": 2,
+          "action": "restart_dependencies",
+          "targets": ["yakmeogeo-redis", "yakmeogeo-db"],
+          "wait_after": 20,
+          "condition": "if_still_failing"
+        },
+        {
+          "order": 3,
+          "action": "full_stack_restart",
+          "command": "docker compose -f docker-compose.prod.yml down && docker compose -f docker-compose.prod.yml up -d",
+          "condition": "if_still_failing"
+        }
+      ],
+      "escalation": { "severity": "CRITICAL", "alert_key": "backend_down" },
+      "cooldown": 300
+    },
+    {
+      "id": "redis_down",
+      "description": "Redis 컨테이너 미실행 또는 ping 실패",
+      "detect": {
+        "type": "container_check",
+        "container": "yakmeogeo-redis",
+        "health_cmd": "redis-cli ping"
+      },
+      "actions": [
+        {
+          "order": 1,
+          "action": "restart_container",
+          "target": "yakmeogeo-redis",
+          "wait_after": 10,
+          "max_retries": 2
+        },
+        {
+          "order": 2,
+          "action": "restart_container",
+          "target": "yakmeogeo-backend",
+          "wait_after": 15,
+          "reason": "backend reconnection after redis recovery"
+        }
+      ],
+      "escalation": { "severity": "CRITICAL", "alert_key": "redis_down" },
+      "cooldown": 300
+    },
+    {
+      "id": "db_degraded",
+      "description": "DB 커넥션 풀 고갈 (health API에서 database error)",
+      "detect": {
+        "type": "http_check",
+        "url": "${API_BASE}/api/v1/health",
+        "expect_body_contains": "\"database\":\"error\"",
+        "timeout": 15
+      },
+      "actions": [
+        {
+          "order": 1,
+          "action": "restart_container",
+          "target": "yakmeogeo-backend",
+          "wait_after": 15,
+          "reason": "reset connection pool"
+        }
+      ],
+      "escalation": { "severity": "WARNING", "alert_key": "db_pool_exhausted" },
+      "cooldown": 600
+    },
+    {
+      "id": "disk_critical",
+      "description": "디스크 사용량 95% 초과",
+      "detect": { "type": "disk_check", "threshold": 95 },
+      "actions": [
+        {
+          "order": 1,
+          "action": "shell_command",
+          "command": "docker system prune -af --volumes 2>/dev/null; journalctl --vacuum-time=3d 2>/dev/null"
+        },
+        {
+          "order": 2,
+          "action": "shell_command",
+          "command": "find /tmp -type f -mtime +7 -delete 2>/dev/null; find ${LOG_DIR} -name '*.log' -mtime +7 -delete 2>/dev/null",
+          "condition": "if_still_above_90"
+        }
+      ],
+      "escalation": { "severity": "CRITICAL", "alert_key": "disk_critical" },
+      "cooldown": 1800
+    },
+    {
+      "id": "disk_warning",
+      "description": "디스크 사용량 80% 초과",
+      "detect": { "type": "disk_check", "threshold": 80 },
+      "actions": [
+        {
+          "order": 1,
+          "action": "shell_command",
+          "command": "docker image prune -af 2>/dev/null"
+        }
+      ],
+      "escalation": { "severity": "WARNING", "alert_key": "disk_warning" },
+      "cooldown": 3600
+    },
+    {
+      "id": "nginx_down",
+      "description": "Nginx 컨테이너 비정상",
+      "detect": { "type": "container_check", "container": "yakmeogeo-nginx" },
+      "actions": [
+        {
+          "order": 1,
+          "action": "restart_container",
+          "target": "yakmeogeo-nginx",
+          "wait_after": 5,
+          "max_retries": 2
+        }
+      ],
+      "escalation": { "severity": "CRITICAL", "alert_key": "nginx_down" },
+      "cooldown": 300
+    },
+    {
+      "id": "ssl_expiry_soon",
+      "description": "SSL 인증서 7일 이내 만료",
+      "detect": { "type": "ssl_check", "domain": "${DOMAIN}", "warn_days": 7 },
+      "actions": [
+        {
+          "order": 1,
+          "action": "shell_command",
+          "command": "docker compose -f docker-compose.prod.yml exec certbot certbot renew --non-interactive"
+        },
+        {
+          "order": 2,
+          "action": "restart_container",
+          "target": "yakmeogeo-nginx",
+          "wait_after": 5
+        }
+      ],
+      "escalation": { "severity": "WARNING", "alert_key": "ssl_expiry" },
+      "cooldown": 86400
+    },
+    {
+      "id": "high_memory",
+      "description": "시스템 메모리 90% 이상 사용",
+      "detect": { "type": "memory_check", "threshold": 90 },
+      "actions": [
+        {
+          "order": 1,
+          "action": "shell_command",
+          "command": "docker compose -f docker-compose.prod.yml restart backend"
+        }
+      ],
+      "escalation": { "severity": "WARNING", "alert_key": "high_memory" },
+      "cooldown": 1800
+    },
+    {
+      "id": "data_pipeline_stuck",
+      "description": "데이터 파이프라인 lock 파일 2시간 이상 존재",
+      "detect": {
+        "type": "stale_lock",
+        "lock_file": "${PROJECT_DIR}/scripts/data-import/.collector.lock",
+        "max_age_minutes": 120
+      },
+      "actions": [
+        {
+          "order": 1,
+          "action": "shell_command",
+          "command": "rm -f ${PROJECT_DIR}/scripts/data-import/.collector.lock"
+        }
+      ],
+      "escalation": { "severity": "WARNING", "alert_key": "pipeline_stuck" },
+      "cooldown": 7200
+    }
+  ]
+}

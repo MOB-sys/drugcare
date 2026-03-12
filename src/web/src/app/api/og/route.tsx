@@ -3,6 +3,10 @@ import { type NextRequest } from "next/server";
 
 export const runtime = "edge";
 
+function sanitize(str: string): string {
+  return str.replace(/[<>"']/g, "");
+}
+
 const PRIMARY_COLOR = "#1B3A5C";
 const PRIMARY_DARK = "#132B45";
 const DRUG_BG = "#EEF2F7";
@@ -10,8 +14,8 @@ const SUPPLEMENT_BG = "#ECFDF5";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
-  const title = (searchParams.get("title") || "약잘알").slice(0, 100);
-  const description = (searchParams.get("description") || "").slice(0, 200);
+  const title = sanitize((searchParams.get("title") || "약잘알").slice(0, 100));
+  const description = sanitize((searchParams.get("description") || "").slice(0, 200));
   const type = searchParams.get("type") || "drug";
 
   const bgColor = type === "supplement" ? SUPPLEMENT_BG : DRUG_BG;

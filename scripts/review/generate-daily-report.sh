@@ -56,6 +56,25 @@ else
 fi
 echo "" >> "$SUMMARY_FILE"
 
+# 복잡도 검사
+echo "--- 복잡도 검사 실행 ---"
+if [ -f "${PROJECT_DIR}/scripts/review/check-complexity.sh" ]; then
+    if bash "${PROJECT_DIR}/scripts/review/check-complexity.sh" "${PROJECT_DIR}/src/backend" "${PROJECT_DIR}/src/web" >> "$SUMMARY_FILE" 2>&1; then
+        echo "### 복잡도: PASS" >> "$SUMMARY_FILE"
+    else
+        echo "### 복잡도: FAIL" >> "$SUMMARY_FILE"
+        TOTAL_ERRORS=$((TOTAL_ERRORS + 1))
+    fi
+    echo "" >> "$SUMMARY_FILE"
+fi
+
+# 품질 점수
+echo "--- 품질 점수 계산 ---"
+if [ -f "${PROJECT_DIR}/scripts/review/check-quality.sh" ]; then
+    bash "${PROJECT_DIR}/scripts/review/check-quality.sh" "${PROJECT_DIR}" --report >> "$SUMMARY_FILE" 2>&1 || true
+    echo "" >> "$SUMMARY_FILE"
+fi
+
 # 테스트 파일 카운트
 echo "--- 테스트 통계 ---"
 WEB_TEST_COUNT=$(find "${PROJECT_DIR}/src/web/src" -name "*.test.*" 2>/dev/null | wc -l | xargs)

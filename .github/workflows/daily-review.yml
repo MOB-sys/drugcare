@@ -60,6 +60,19 @@ jobs:
           echo "=== 업데이트 가능 패키지 ==="
           npm outdated 2>/dev/null || echo "모두 최신"
 
+      # 복잡도 검사
+      - name: Complexity Check
+        run: bash scripts/review/check-complexity.sh src/backend src/web
+
+      # 코드 중복 검사
+      - name: Duplication Check
+        run: bash scripts/review/check-duplication.sh src/backend src/web
+
+      # 통합 품질 점수
+      - name: Quality Score
+        run: bash scripts/review/check-quality.sh . --report
+        continue-on-error: true
+
       # 테스트 파일 통계
       - name: Test Statistics
         run: |

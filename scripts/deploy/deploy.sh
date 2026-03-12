@@ -47,6 +47,14 @@ echo ">>> 헬스체크 대기 중..."
 for i in $(seq 1 $MAX_RETRIES); do
     if curl -sf "$HEALTH_URL" > /dev/null 2>&1; then
         echo ">>> 헬스체크 성공! (${i}/${MAX_RETRIES})"
+
+        # Watchdog 데몬 시작/재시작
+        WATCHDOG="$(dirname "$0")/../maintenance/watchdog/watchdog-daemon.sh"
+        if [ -x "$WATCHDOG" ]; then
+            echo ">>> Watchdog 데몬 시작..."
+            "$WATCHDOG" restart 2>/dev/null || "$WATCHDOG" start 2>/dev/null || true
+        fi
+
         echo "=== 배포 완료 ==="
         $COMPOSE ps
         exit 0

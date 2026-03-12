@@ -46,11 +46,27 @@ target-version = "py311"
 line-length = 100
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "N", "W"]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "W",    # pycodestyle warnings
+    "B",    # flake8-bugbear (일반 버그 패턴)
+    "S",    # flake8-bandit (보안)
+    "UP",   # pyupgrade (Python 3.11+ 최적화)
+    "SIM",  # flake8-simplify (단순화 가능 코드)
+]
 
 [tool.ruff.lint.per-file-ignores]
 "src/backend/main.py" = ["E402"]
 "src/backend/services/supplement_service.py" = ["E402", "I001"]
+"tests/**" = ["S101"]  # assert 허용
+"src/backend/routers/**" = ["B008"]  # FastAPI Depends() 패턴 허용
+"src/backend/middleware/**" = ["SIM102"]  # 기존 nested if 패턴 유지
+"src/backend/models/**" = ["UP042"]  # str+Enum 패턴 (Python 3.10 호환)
+"src/backend/services/**" = ["UP017", "S110"]  # timezone.utc 기존 패턴, except pass
+"src/backend/utils/**" = ["UP017", "S324"]  # timezone.utc 기존 패턴, md5 캐시키용
 
 [tool.mypy]
 python_version = "3.11"

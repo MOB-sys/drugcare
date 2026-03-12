@@ -20,10 +20,20 @@ log() {
     echo "[$TIMESTAMP] $1"
 }
 
+ESCALATION_SCRIPT="${ESCALATION_SCRIPT:-$(dirname "$0")/../maintenance/escalation/alert-escalation.sh}"
+
 send_alert() {
     local alert_key="$1"
     local message="$2"
-    # 중복 알림 방지 (1시간 내 동일 알림 차단)
+    local severity="${3:-WARNING}"
+
+    # 에스컬레이션 시스템이 있으면 위임 (심각도별 차등 재알림 + SMS/전화)
+    if [ -x "$ESCALATION_SCRIPT" ]; then
+        "$ESCALATION_SCRIPT" "$alert_key" "$severity" "$message"
+        return
+    fi
+
+    # 폴백: 기존 단순 알림 (에스컬레이션 미설치 시)
     local stamp_file="/tmp/yakmeogeo-alert-${alert_key}"
     if [ -f "$stamp_file" ]; then
         local last=$(cat "$stamp_file")
@@ -56,10 +66,10 @@ else
     API_STATUS=$(curl -s -o /dev/null -w '%{http_code}' "$HEALTH_ENDPOINT" --max-time "$TIMEOUT" 2>/dev/null || echo "000")
     if [ "$API_STATUS" = "200" ]; then
         log "RECOVERED: Backend auto-recovered"
-        send_alert "backend" "Backend was down, auto-recovered after restart"
+        send_alert "backend" "Backend was down, auto-recovered after restart" "INFO"
     else
         log "CRITICAL: Backend still down after restart"
-        send_alert "backend-critical" "Backend is DOWN! Auto-restart failed (HTTP $API_STATUS)"
+        send_alert "backend_down" "Backend is DOWN! Auto-restart failed (HTTP $API_STATUS)" "CRITICAL"
     fi
 fi
 
@@ -71,7 +81,7 @@ else
     log "FAIL: Redis status=$REDIS_STATUS"
     docker restart "$REDIS_CONTAINER" 2>/dev/null || true
     sleep 10
-    send_alert "redis" "Redis was down ($REDIS_STATUS), restarted"
+    send_alert "redis_down" "Redis was down ($REDIS_STATUS), restarted" "CRITICAL"
 fi
 
 # --- 3. 웹(Vercel) 헬스체크 ---
@@ -81,7 +91,7 @@ if [ "$WEB_STATUS" = "200" ]; then
     log "OK: Web (HTTP $WEB_STATUS, ${WEB_TIME}s)"
 else
     log "WARN: Web unreachable (HTTP $WEB_STATUS)"
-    send_alert "web" "Web (pillright.com) unreachable: HTTP $WEB_STATUS"
+    send_alert "web_down" "Web (pillright.com) unreachable: HTTP $WEB_STATUS" "WARNING"
 fi
 
 # --- 4. 디스크 체크 + 자동 정리 ---
@@ -92,10 +102,10 @@ elif [ "$DISK_USAGE" -lt 95 ]; then
     log "WARN: Disk ${DISK_USAGE}%"
     docker image prune -f > /dev/null 2>&1 || true
     docker container prune -f > /dev/null 2>&1 || true
-    send_alert "disk" "Disk usage ${DISK_USAGE}%, auto-pruned Docker"
+    send_alert "disk_warning" "Disk usage ${DISK_USAGE}%, auto-pruned Docker" "WARNING"
 else
     log "CRITICAL: Disk ${DISK_USAGE}%!"
-    send_alert "disk-critical" "Disk CRITICAL: ${DISK_USAGE}%!"
+    send_alert "disk_critical" "Disk CRITICAL: ${DISK_USAGE}%!" "CRITICAL"
 fi
 
 # --- 5. 메모리 체크 ---
@@ -104,10 +114,10 @@ if [ "$MEM_AVAIL" -gt 200 ]; then
     log "OK: Memory ${MEM_AVAIL}MB available"
 elif [ "$MEM_AVAIL" -gt 100 ]; then
     log "WARN: Memory low ${MEM_AVAIL}MB"
-    send_alert "memory" "Available memory low: ${MEM_AVAIL}MB"
+    send_alert "high_memory" "Available memory low: ${MEM_AVAIL}MB" "WARNING"
 else
     log "CRITICAL: Memory ${MEM_AVAIL}MB!"
-    send_alert "memory-critical" "Memory CRITICAL: ${MEM_AVAIL}MB!"
+    send_alert "high_memory" "Memory CRITICAL: ${MEM_AVAIL}MB!" "CRITICAL"
 fi
 
 # --- 6. SSL 만료 체크 (매일 09시에만) ---
@@ -123,7 +133,7 @@ if [ "$HOUR" = "09" ]; then
                 log "OK: SSL expires in ${DAYS_LEFT} days"
             else
                 log "WARN: SSL expires in ${DAYS_LEFT} days!"
-                send_alert "ssl" "SSL expires in ${DAYS_LEFT} days! Renew ASAP"
+                send_alert "ssl_expiry" "SSL expires in ${DAYS_LEFT} days! Renew ASAP" "WARNING"
             fi
         fi
     fi

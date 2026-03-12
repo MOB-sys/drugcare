@@ -1,6 +1,6 @@
 """의약품 라우터 — 약물 검색 및 상세 조회."""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Path, Query
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -27,7 +27,7 @@ router = APIRouter(prefix="/drugs", tags=["drugs"])
     description="제품명, 성분명 등으로 의약품을 검색합니다.",
 )
 async def search_drugs(
-    q: str = Query("", description="검색어 (제품명, 성분명 등)"),
+    q: str = Query("", max_length=200, description="검색어 (제품명, 성분명 등)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),
@@ -101,7 +101,7 @@ async def get_drug_browse_counts(
     description="초성(ㄱ~ㅎ) 또는 알파벳(A~Z)으로 의약품을 조회합니다.",
 )
 async def browse_drugs(
-    letter: str = Query(..., description="초성(ㄱ~ㅎ) 또는 알파벳(A~Z)"),
+    letter: str = Query(..., max_length=10, description="초성(ㄱ~ㅎ) 또는 알파벳(A~Z)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(50, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),
@@ -119,7 +119,7 @@ async def browse_drugs(
     description="부작용 키워드로 해당 부작용이 보고된 의약품을 검색합니다.",
 )
 async def search_by_side_effect(
-    q: str = Query(..., description="부작용 키워드"),
+    q: str = Query(..., max_length=200, description="부작용 키워드"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
@@ -137,9 +137,9 @@ async def search_by_side_effect(
     description="약의 색상, 모양, 각인 정보로 의약품을 식별합니다.",
 )
 async def identify_drug(
-    color: str = Query(None, description="약 색상"),
-    shape: str = Query(None, description="약 모양"),
-    imprint: str = Query(None, description="각인 문자"),
+    color: str = Query(None, max_length=50, description="약 색상"),
+    shape: str = Query(None, max_length=50, description="약 모양"),
+    imprint: str = Query(None, max_length=50, description="각인 문자"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
@@ -157,7 +157,7 @@ async def identify_drug(
     description="질환 키워드로 관련 주의사항이 있는 의약품을 검색합니다.",
 )
 async def search_by_condition(
-    q: str = Query(..., description="질환 키워드"),
+    q: str = Query(..., max_length=200, description="질환 키워드"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
@@ -175,7 +175,7 @@ async def search_by_condition(
     description="증상 키워드로 효능효과에 해당하는 의약품을 검색합니다.",
 )
 async def search_by_symptom(
-    q: str = Query(..., description="증상 키워드 (예: 두통, 소화불량)"),
+    q: str = Query(..., max_length=200, description="증상 키워드 (예: 두통, 소화불량)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),
@@ -210,7 +210,7 @@ async def get_recent_drugs(
     description="slug로 의약품 상세 정보를 조회합니다.",
 )
 async def get_drug_by_slug(
-    slug: str,
+    slug: str = Path(..., max_length=200, pattern=r"^[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ\-]+$"),
     db: AsyncSession = Depends(get_db),
     redis: Redis = Depends(get_redis),
 ) -> dict:

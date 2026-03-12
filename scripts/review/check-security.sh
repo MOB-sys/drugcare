@@ -61,10 +61,14 @@ if [ "${CI:-}" = "true" ]; then
     echo ""
     echo "--- S-5: npm audit ---"
     cd "$WEB_DIR"
-    if npm audit --audit-level=high 2>/dev/null; then
-        echo "PASS: 고위험 취약점 없음"
+    if npm audit --audit-level=critical 2>/dev/null; then
+        echo "PASS: critical 취약점 없음"
     else
-        echo "WARN: 취약점 발견 (상세 확인 필요)"
+        echo "FAIL: critical 취약점 발견"
+        ERRORS=$((ERRORS + 1))
+    fi
+    if ! npm audit --audit-level=high 2>/dev/null; then
+        echo "WARN: high 취약점 발견 (상세 확인 필요)"
         WARNINGS=$((WARNINGS + 1))
     fi
     cd - > /dev/null

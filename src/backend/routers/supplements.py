@@ -1,6 +1,6 @@
 """영양제 라우터 — 건강기능식품 검색 및 상세 조회."""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Path, Query
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,7 +21,7 @@ router = APIRouter(prefix="/supplements", tags=["supplements"])
     description="제품명, 성분명 등으로 건강기능식품을 검색합니다.",
 )
 async def search_supplements(
-    q: str = Query("", description="검색어 (제품명, 성분명 등)"),
+    q: str = Query("", max_length=200, description="검색어 (제품명, 성분명 등)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),
@@ -95,7 +95,7 @@ async def get_supplement_browse_counts(
     description="초성(ㄱ~ㅎ) 또는 알파벳(A~Z)으로 영양제를 조회합니다.",
 )
 async def browse_supplements(
-    letter: str = Query(..., description="초성(ㄱ~ㅎ) 또는 알파벳(A~Z)"),
+    letter: str = Query(..., max_length=10, description="초성(ㄱ~ㅎ) 또는 알파벳(A~Z)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(50, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),
@@ -119,7 +119,7 @@ async def browse_supplements(
     description="slug로 영양제 상세 정보를 조회합니다.",
 )
 async def get_supplement_by_slug(
-    slug: str,
+    slug: str = Path(..., max_length=200, pattern=r"^[a-z0-9가-힣ㄱ-ㅎㅏ-ㅣ\-]+$"),
     db: AsyncSession = Depends(get_db),
     redis: Redis = Depends(get_redis),
 ) -> dict:

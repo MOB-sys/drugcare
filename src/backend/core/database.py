@@ -8,6 +8,10 @@ from src.backend.core.config import get_settings
 
 settings = get_settings()
 
+_connect_args: dict = {"timeout": 10}
+if not settings.is_development:
+    _connect_args["ssl"] = "require"
+
 engine = create_async_engine(
     settings.DATABASE_URL,
     echo=settings.DEBUG,
@@ -16,7 +20,7 @@ engine = create_async_engine(
     pool_pre_ping=True,
     pool_recycle=3600,
     pool_timeout=30,
-    connect_args={"timeout": 10},
+    connect_args=_connect_args,
 )
 
 async_session_factory = async_sessionmaker(
