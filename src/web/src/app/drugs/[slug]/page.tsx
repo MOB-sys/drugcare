@@ -8,6 +8,9 @@ import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { DURSafetySection } from "@/components/detail/DURSafetySection";
 import { DosageGuide } from "@/components/detail/DosageGuide";
 import { FoodInteractionSection } from "@/components/detail/FoodInteractionSection";
+import { FallbackInfoSection } from "@/components/detail/FallbackInfoSection";
+import { IngredientGuideSection } from "@/components/detail/IngredientGuideSection";
+import { CategoryInfoSection } from "@/components/detail/CategoryInfoSection";
 import { CheckCTA } from "@/components/detail/CheckCTA";
 import { AddToCabinetButton } from "@/components/detail/AddToCabinetButton";
 import { AdBanner } from "@/components/ads/AdBanner";
@@ -22,6 +25,7 @@ import { RelatedTips } from "@/components/drug/RelatedTips";
 import { buildDrugFAQItems, buildFAQJsonLd } from "@/lib/faq";
 import { SITE_URL } from "@/lib/constants/site";
 import { DetailViewTracker } from "@/components/common/DetailViewTracker";
+import { buildDrugFallbackContent } from "@/lib/utils/drugFallbackContent";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -42,9 +46,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   try {
     const drug = await getDrugBySlug(slug);
     const title = `${drug.item_name} 효능·용법·상호작용`;
+    const fallback = buildDrugFallbackContent(drug);
     const description = drug.efcy_qesitm
       ? `${drug.item_name} — ${drug.efcy_qesitm.slice(0, 120)}`
-      : `${drug.item_name} 의약품 상세 정보를 확인하세요.`;
+      : fallback.overview
+        ? `${drug.item_name} — ${fallback.overview.slice(0, 120)}`
+        : fallback.category
+          ? `${drug.item_name}은(는) ${fallback.category.name} 계열 의약품입니다. 효능, 용법, 부작용, 상호작용 정보를 확인하세요.`
+          : `${drug.item_name} 의약품 상세 정보 — 효능, 용법, 부작용, 상호작용을 확인하세요.`;
     const siteUrl = SITE_URL;
     return {
       title,
@@ -92,6 +101,8 @@ export default async function DrugDetailPage({ params }: PageProps) {
     // 관련 약물 로드 실패 시 빈 배열로 대체 — 메인 콘텐츠 표시에 영향 없음
   }
 
+  const fallback = buildDrugFallbackContent(drug);
+
   const otcLabel =
     drug.etc_otc_code === "일반의약품"
       ? "일반의약품"
@@ -104,7 +115,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
     "@type": "Drug",
     name: drug.item_name,
     manufacturer: drug.entp_name ? { "@type": "Organization", name: drug.entp_name } : undefined,
-    description: drug.efcy_qesitm ?? undefined,
+    description: drug.efcy_qesitm ?? fallback.overview ?? undefined,
     administrationRoute: drug.use_method_qesitm ?? undefined,
     warning: drug.atpn_warn_qesitm ?? undefined,
   };
@@ -118,20 +129,23 @@ export default async function DrugDetailPage({ params }: PageProps) {
     intrcQesitm: drug.intrc_qesitm,
     depositMethodQesitm: drug.deposit_method_qesitm,
   };
-  const faqItems = buildDrugFAQItems(faqSourceFields);
+  const baseFaqItems = buildDrugFAQItems(faqSourceFields);
+  const faqItems = [...baseFaqItems, ...fallback.additionalFAQs];
   const faqJsonLd = buildFAQJsonLd(faqSourceFields);
 
-  /* 목차 아이템 구성 — 내용이 있는 섹션만 */
+  /* 목차 아이템 구성 — 내용이 있는 섹션만 (폴백 포함) */
   const tocItems: TocItem[] = [
-    drug.efcy_qesitm && { id: "efficacy", label: "효능·효과" },
+    (drug.efcy_qesitm || fallback.overview) && { id: "efficacy", label: "효능·효과" },
     drug.use_method_qesitm && { id: "usage", label: "용법·용량" },
     drug.ingredients?.length && { id: "ingredients", label: "성분정보" },
+    fallback.matchedIngredients.length > 0 && { id: "ingredient-guides", label: "성분 가이드" },
     drug.atpn_warn_qesitm && { id: "warnings", label: "주의사항 (경고)" },
     drug.atpn_qesitm && { id: "precautions", label: "주의사항" },
-    drug.intrc_qesitm && { id: "interactions", label: "상호작용" },
+    (drug.intrc_qesitm || fallback.fallbackInteractions) && { id: "interactions", label: "상호작용" },
     drug.intrc_qesitm && { id: "food-interactions", label: "음식 상호작용" },
-    drug.se_qesitm && { id: "side-effects", label: "부작용" },
+    (drug.se_qesitm || fallback.fallbackSideEffects) && { id: "side-effects", label: "부작용" },
     drug.dur_safety?.length && { id: "dur-safety", label: "DUR 안전성" },
+    fallback.category && { id: "category-info", label: "분류 정보" },
     drug.deposit_method_qesitm && { id: "storage", label: "보관방법" },
   ].filter(Boolean) as TocItem[];
 
@@ -195,6 +209,9 @@ export default async function DrugDetailPage({ params }: PageProps) {
             {/* 정보 섹션 */}
             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-6 divide-y divide-gray-100 dark:divide-gray-700 shadow-sm">
               <InfoSection id="efficacy" title="효능·효과" content={drug.efcy_qesitm} />
+              {!drug.efcy_qesitm && fallback.overview && (
+                <FallbackInfoSection id="efficacy" title="효능·효과 (일반 정보)" content={fallback.overview} />
+              )}
               {drug.use_method_qesitm ? (
                 <DosageGuide id="usage" content={drug.use_method_qesitm} />
               ) : null}
@@ -205,11 +222,23 @@ export default async function DrugDetailPage({ params }: PageProps) {
                 </div>
               )}
 
+              {fallback.matchedIngredients.length > 0 && (
+                <div id="ingredient-guides" className="scroll-mt-24">
+                  <IngredientGuideSection matchedIngredients={fallback.matchedIngredients} />
+                </div>
+              )}
+
               <InfoSection id="warnings" title="주의사항 (경고)" content={drug.atpn_warn_qesitm} />
               <InfoSection id="precautions" title="주의사항" content={drug.atpn_qesitm} />
               <InfoSection id="interactions" title="상호작용" content={drug.intrc_qesitm} />
+              {!drug.intrc_qesitm && fallback.fallbackInteractions && (
+                <FallbackInfoSection id="interactions" title="상호작용 (일반 정보)" content={fallback.fallbackInteractions} />
+              )}
               <FoodInteractionSection intrcText={drug.intrc_qesitm} />
               <InfoSection id="side-effects" title="부작용" content={drug.se_qesitm} />
+              {!drug.se_qesitm && fallback.fallbackSideEffects && (
+                <FallbackInfoSection id="side-effects" title="부작용 (일반 정보)" content={fallback.fallbackSideEffects} />
+              )}
               {drug.se_qesitm && (
                 <div className="px-0 pb-2 -mt-2">
                   <Link
@@ -249,6 +278,12 @@ export default async function DrugDetailPage({ params }: PageProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </Link>
+                </div>
+              )}
+
+              {fallback.category && (
+                <div id="category-info" className="scroll-mt-24">
+                  <CategoryInfoSection category={fallback.category} />
                 </div>
               )}
 

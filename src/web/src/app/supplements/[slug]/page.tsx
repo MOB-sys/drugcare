@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSupplementBySlug, getRelatedSupplements } from "@/lib/api/supplements";
 import { InfoSection } from "@/components/detail/InfoSection";
+import { FallbackInfoSection } from "@/components/detail/FallbackInfoSection";
+import { IngredientGuideSection } from "@/components/detail/IngredientGuideSection";
 import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { CheckCTA } from "@/components/detail/CheckCTA";
 import { AddToCabinetButton } from "@/components/detail/AddToCabinetButton";
@@ -16,6 +18,7 @@ import type { TocItem } from "@/components/common/TableOfContents";
 import type { IngredientInfo } from "@/types/drug";
 import { SITE_URL } from "@/lib/constants/site";
 import { DetailViewTracker } from "@/components/common/DetailViewTracker";
+import { buildSupplementFallbackContent } from "@/lib/utils/supplementFallbackContent";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -36,9 +39,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   try {
     const supp = await getSupplementBySlug(slug);
     const title = `${supp.product_name} 기능성·성분·섭취방법`;
+    const fallback = buildSupplementFallbackContent(supp);
     const description = supp.functionality
       ? `${supp.product_name} — ${supp.functionality.slice(0, 120)}`
-      : `${supp.product_name} 건강기능식품 상세 정보를 확인하세요.`;
+      : fallback.overview
+        ? `${supp.product_name} — ${fallback.overview.slice(0, 120)}`
+        : supp.category
+          ? `${supp.product_name}은(는) ${supp.category} 분야의 건강기능식품입니다. 기능성, 성분, 섭취방법을 확인하세요.`
+          : `${supp.product_name} 건강기능식품 상세 정보 — 기능성, 성분, 섭취방법을 확인하세요.`;
     const siteUrl = SITE_URL;
     return {
       title,
@@ -90,6 +98,8 @@ export default async function SupplementDetailPage({ params }: PageProps) {
   }
 
   const ingredients = normalizeIngredients(supp.ingredients);
+  const fallback = buildSupplementFallbackContent(supp);
+
   let relatedSupps: Awaited<ReturnType<typeof getRelatedSupplements>> = [];
   try {
     relatedSupps = await getRelatedSupplements(supp.category, slug);
@@ -102,7 +112,7 @@ export default async function SupplementDetailPage({ params }: PageProps) {
     "@type": "Product",
     name: supp.product_name,
     manufacturer: supp.company ? { "@type": "Organization", name: supp.company } : undefined,
-    description: supp.functionality ?? undefined,
+    description: supp.functionality ?? fallback.overview ?? undefined,
     category: supp.category ?? "건강기능식품",
   };
 
@@ -112,6 +122,7 @@ export default async function SupplementDetailPage({ params }: PageProps) {
   if (supp.main_ingredient) faqEntries.push({ question: `${supp.product_name}의 주성분은?`, answer: supp.main_ingredient });
   if (supp.intake_method) faqEntries.push({ question: `${supp.product_name}의 섭취방법은?`, answer: supp.intake_method });
   if (supp.precautions) faqEntries.push({ question: `${supp.product_name} 섭취 시 주의사항은?`, answer: supp.precautions });
+  faqEntries.push(...fallback.additionalFAQs);
 
   const faqJsonLd = faqEntries.length > 0 ? {
     "@context": "https://schema.org",
@@ -123,13 +134,14 @@ export default async function SupplementDetailPage({ params }: PageProps) {
     })),
   } : null;
 
-  /* 목차 아이템 구성 */
+  /* 목차 아이템 구성 (폴백 포함) */
   const tocItems: TocItem[] = [
-    supp.functionality && { id: "functionality", label: "기능성" },
+    (supp.functionality || fallback.overview) && { id: "functionality", label: "기능성" },
     supp.main_ingredient && { id: "main-ingredient", label: "주성분" },
     ingredients.length > 0 && { id: "ingredients", label: "성분정보" },
+    fallback.matchedIngredients.length > 0 && { id: "ingredient-guides", label: "성분 가이드" },
     supp.intake_method && { id: "intake", label: "섭취방법" },
-    supp.precautions && { id: "precautions", label: "섭취 시 주의사항" },
+    (supp.precautions || fallback.fallbackPrecautions) && { id: "precautions", label: "섭취 시 주의사항" },
   ].filter(Boolean) as TocItem[];
 
   return (
@@ -179,6 +191,9 @@ export default async function SupplementDetailPage({ params }: PageProps) {
             {/* 정보 섹션 */}
             <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-6 divide-y divide-gray-100 dark:divide-gray-700 shadow-sm">
               <InfoSection id="functionality" title="기능성" content={supp.functionality} />
+              {!supp.functionality && fallback.overview && (
+                <FallbackInfoSection id="functionality" title="기능성 (일반 정보)" content={fallback.overview} />
+              )}
               <InfoSection id="main-ingredient" title="주성분" content={supp.main_ingredient} />
 
               {ingredients.length > 0 && (
@@ -187,8 +202,17 @@ export default async function SupplementDetailPage({ params }: PageProps) {
                 </div>
               )}
 
+              {fallback.matchedIngredients.length > 0 && (
+                <div id="ingredient-guides" className="scroll-mt-24">
+                  <IngredientGuideSection matchedIngredients={fallback.matchedIngredients} />
+                </div>
+              )}
+
               <InfoSection id="intake" title="섭취방법" content={supp.intake_method} />
               <InfoSection id="precautions" title="섭취 시 주의사항" content={supp.precautions} />
+              {!supp.precautions && fallback.fallbackPrecautions && (
+                <FallbackInfoSection id="precautions" title="섭취 시 주의사항 (일반 정보)" content={fallback.fallbackPrecautions} />
+              )}
             </div>
 
             {/* CTA */}
