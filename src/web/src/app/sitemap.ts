@@ -6,6 +6,7 @@ import { getAllHerbalMedicineSlugs } from "@/lib/api/herbal";
 import { getAllTipSlugs } from "@/lib/data/tips";
 import { ALL_LETTERS } from "@/lib/utils/korean";
 import { SITE_URL } from "@/lib/constants/site";
+import snsIndex from "../../public/sns-content/index.json";
 
 const BASE_URL = SITE_URL;
 const SITEMAP_LIMIT = 45000;
@@ -36,6 +37,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/privacy`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/terms`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
     { url: `${BASE_URL}/contact`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
+  ];
+
+  /* ── 안전 카드 ── */
+  const safetyCardEntries: MetadataRoute.Sitemap = [
+    { url: `${BASE_URL}/safety-cards`, changeFrequency: "weekly" as const, priority: 0.8 },
+    ...snsIndex.items.map((item: { id: string }) => ({
+      url: `${BASE_URL}/safety-cards/${item.id}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    })),
   ];
 
   /* ── A~Z 브라우즈 ── */
@@ -92,7 +103,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   /* 현재까지 URL 수 계산 */
   const currentCount = staticPages.length + browseEntries.length + tipEntries.length
-    + foodEntries.length + herbalEntries.length + drugEntries.length;
+    + safetyCardEntries.length + foodEntries.length + herbalEntries.length + drugEntries.length;
 
   /* ── 영양제 (남은 한도만큼) ── */
   let suppEntries: MetadataRoute.Sitemap = [];
@@ -111,6 +122,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...staticPages,
     ...browseEntries,
     ...tipEntries,
+    ...safetyCardEntries,
     ...foodEntries,
     ...herbalEntries,
     ...drugEntries,

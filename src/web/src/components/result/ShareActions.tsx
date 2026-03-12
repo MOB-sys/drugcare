@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { KakaoShareButton } from "@/components/common/KakaoShareButton";
+import { track } from "@/lib/analytics/track";
 
 export function ShareActions() {
   const [copied, setCopied] = useState(false);
@@ -15,6 +16,7 @@ export function ShareActions() {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
+      track("share_click", { method: "copy" });
       if (timerRef.current) clearTimeout(timerRef.current);
       timerRef.current = setTimeout(() => setCopied(false), 2000);
     } catch { /* clipboard not available */ }
@@ -23,6 +25,7 @@ export function ShareActions() {
   async function handleShare() {
     if (navigator.share) {
       try {
+        track("share_click", { method: "native" });
         await navigator.share({
           title: document.title,
           url: window.location.href,
@@ -34,6 +37,7 @@ export function ShareActions() {
   }
 
   function handlePrint() {
+    track("share_click", { method: "print" });
     window.print();
   }
 

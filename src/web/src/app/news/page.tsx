@@ -24,30 +24,30 @@ const SAFETY_CARDS = [
   {
     title: "임산부 약물 안전",
     description: "임신 중 복용 시 주의해야 할 약물과 안전한 대안에 대해 알아보세요.",
-    href: "/tips",
+    href: "/tips/pregnant-medication-safety",
     icon: "pregnant",
-    color: "bg-pink-50 text-pink-600 border-pink-100",
+    color: "bg-pink-50 text-pink-600 border-pink-100 dark:bg-pink-950/30 dark:text-pink-400 dark:border-pink-900",
   },
   {
     title: "노인 다제 복용 주의",
     description: "65세 이상 어르신의 다제 복용 위험성과 주의사항을 확인하세요.",
-    href: "/tips",
+    href: "/tips/elderly-polypharmacy-risks",
     icon: "elderly",
-    color: "bg-amber-50 text-amber-600 border-amber-100",
+    color: "bg-amber-50 text-amber-600 border-amber-100 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900",
   },
   {
     title: "계절별 상비약 가이드",
     description: "계절에 따라 준비해야 할 상비약과 올바른 보관 방법을 안내합니다.",
-    href: "/tips",
+    href: "/tips/spring-allergy-medication-guide",
     icon: "seasonal",
-    color: "bg-sky-50 text-sky-600 border-sky-100",
+    color: "bg-sky-50 text-sky-600 border-sky-100 dark:bg-sky-950/30 dark:text-sky-400 dark:border-sky-900",
   },
   {
     title: "건강기능식품 선택 가이드",
     description: "건강기능식품의 올바른 선택과 복용 방법에 대해 알아보세요.",
-    href: "/supplements",
+    href: "/tips/omega3-complete-guide",
     icon: "supplement",
-    color: "bg-emerald-50 text-emerald-600 border-emerald-100",
+    color: "bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900",
   },
 ];
 

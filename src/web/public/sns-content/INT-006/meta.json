@@ -1,0 +1,68 @@
+{
+  "id": "INT-006",
+  "title": "탄산칼슘 + 황산제일철 — 같이 먹어도 될까?",
+  "severity": "moderate",
+  "danger_score": 5,
+  "disclaimer": "본 영상은 정보 제공 목적이며 의사·약사의 전문적 판단을 대체하지 않습니다",
+  "source": "e약은요 API",
+  "scenes": [
+    {
+      "scene": 1,
+      "name": "hook",
+      "image": "01_hook.webp",
+      "narration": "이거 모르고 같이 먹는 사람 진짜 많아요",
+      "screen_text": "칼슘 + 철분",
+      "subtitle": "이거 모르고 같이 먹는 사람 진짜 많아요"
+    },
+    {
+      "scene": 2,
+      "name": "problem",
+      "image": "02_problem.webp",
+      "narration": "칼슘과 철분을 동시에 복용하면 철분 흡수가 크게 감소합니다.",
+      "screen_text": "칼슘 영양제 vs 철분 영양제",
+      "subtitle": "칼슘과 철분을 동시에 복용하면 철분 흡수가 크게 감소합니다."
+    },
+    {
+      "scene": 3,
+      "name": "danger",
+      "image": "03_danger.webp",
+      "narration": "위험도 5점! 철분 흡수 저하, 빈혈 개선 효과 감소 위험이 있어요.",
+      "screen_text": "위험도 5/10",
+      "subtitle": "위험도 5/10 — 철분 흡수 저하, 빈혈 개선 효과 감소"
+    },
+    {
+      "scene": 4,
+      "name": "mechanism",
+      "image": "04_mechanism.webp",
+      "narration": "칼슘은 장에서 철분과 같은 흡수 경로를 경쟁합니다.",
+      "screen_text": "왜 위험할까요?",
+      "subtitle": "칼슘은 장에서 철분과 같은 흡수 경로를 경쟁합니다."
+    },
+    {
+      "scene": 5,
+      "name": "solution",
+      "image": "05_solution.webp",
+      "narration": "칼슘과 철분은 최소 2시간 간격을 두고 복용하세요.",
+      "screen_text": "안전한 복용법",
+      "subtitle": "칼슘과 철분은 최소 2시간 간격을 두고 복용하세요."
+    },
+    {
+      "scene": 6,
+      "name": "app_demo",
+      "image": "06_app_demo.webp",
+      "narration": "약잘알에서 바로 확인하세요.",
+      "screen_text": "약잘알 — 3초 만에 확인",
+      "subtitle": "약잘알에서 바로 확인하세요."
+    },
+    {
+      "scene": 7,
+      "name": "cta",
+      "image": "07_cta.webp",
+      "narration": "pillright.com에서 무료로 확인하세요",
+      "screen_text": "pillright.com",
+      "subtitle": "pillright.com에서 무료로 확인하세요"
+    }
+  ],
+  "total_scenes": 7,
+  "exported_at": "2026-03-12T12:58:04.984854"
+}

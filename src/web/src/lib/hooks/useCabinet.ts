@@ -8,6 +8,7 @@ import {
   deleteCabinetItem,
 } from "@/lib/api/cabinet";
 import { ApiError } from "@/lib/api/client";
+import { track } from "@/lib/analytics/track";
 
 interface UseCabinetReturn {
   items: CabinetItem[];
@@ -59,6 +60,7 @@ export function useCabinet(): UseCabinetReturn {
           nickname: itemName,
         });
         setItems((prev) => [...prev, newItem]);
+        track("cabinet_add", { type: itemType, id: itemId, name: itemName });
         return { success: true };
       } catch (e) {
         if (e instanceof ApiError && e.status === 409) {
@@ -75,6 +77,7 @@ export function useCabinet(): UseCabinetReturn {
     try {
       await deleteCabinetItem(id);
       setItems((prev) => prev.filter((item) => item.id !== id));
+      track("cabinet_remove", { id });
       return true;
     } catch (e) {
       console.error("[useCabinet] 복약함 항목 삭제 실패:", e);

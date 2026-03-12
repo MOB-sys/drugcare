@@ -9,6 +9,7 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
 import { KakaoShareButton } from "@/components/common/KakaoShareButton";
 import { SITE_URL } from "@/lib/constants/site";
+import { DetailViewTracker } from "@/components/common/DetailViewTracker";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -138,6 +139,8 @@ export default async function HerbalMedicineDetailPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c') }}
         />
       )}
+
+      <DetailViewTracker type="herbal" id={herbal.id} name={displayName} />
 
       <Breadcrumbs
         items={[

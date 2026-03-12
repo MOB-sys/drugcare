@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { track } from "@/lib/analytics/track";
 
 interface KakaoShareButtonProps {
   /** 카카오 공유 카드 제목 */
@@ -64,6 +65,7 @@ export function KakaoShareButton({
       const url = pageUrl || window.location.href;
       const image = imageUrl || `${window.location.origin}/icon-512.png`;
 
+      track("share_click", { method: "kakao" });
       window.Kakao!.Share.sendDefault({
         objectType: "feed",
         content: {

@@ -22,6 +22,7 @@ const ADSENSE_ID = sanitizeEnvId(process.env.NEXT_PUBLIC_ADSENSE_ID);
 const NAVER_VERIFY = sanitizeEnvId(process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION);
 const KAKAO_JS_KEY = sanitizeEnvId(process.env.NEXT_PUBLIC_KAKAO_JS_KEY);
 const IOS_APP_ID = sanitizeEnvId(process.env.NEXT_PUBLIC_IOS_APP_ID);
+const CLARITY_ID = sanitizeEnvId(process.env.NEXT_PUBLIC_CLARITY_ID);
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -153,6 +154,13 @@ export default function RootLayout({
             crossOrigin="anonymous"
             strategy="lazyOnload"
           />
+        )}
+
+        {/* Microsoft Clarity — 히트맵 & 세션 녹화 */}
+        {CLARITY_ID && (
+          <Script id="clarity-init" strategy="afterInteractive">
+            {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","${CLARITY_ID}");`}
+          </Script>
         )}
 
         {/* Kakao SDK — 카카오톡 공유 */}

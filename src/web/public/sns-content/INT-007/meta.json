@@ -1,0 +1,68 @@
+{
+  "id": "INT-007",
+  "title": "푸라노쿠마린 + 아토르바스타틴/심바스타틴 — 같이 먹어도 될까?",
+  "severity": "high",
+  "danger_score": 8,
+  "disclaimer": "본 영상은 정보 제공 목적이며 의사·약사의 전문적 판단을 대체하지 않습니다",
+  "source": "식약처 DUR 데이터",
+  "scenes": [
+    {
+      "scene": 1,
+      "name": "hook",
+      "image": "01_hook.webp",
+      "narration": "건강하려고 마신 자몽주스가 독이 될 수 있어요... 이걸 모르는 사람들은 멘탈이 나가버렸습니다",
+      "screen_text": "자몽주스 + 고지혈증약",
+      "subtitle": "건강하려고 마신 자몽주스가 독이 될 수 있어요......"
+    },
+    {
+      "scene": 2,
+      "name": "problem",
+      "image": "02_problem.webp",
+      "narration": "자몽은 스타틴 계열 고지혈증약의 혈중 농도를 위험 수준으로 높일 수 있습니다.",
+      "screen_text": "자몽(자몽주스) vs 고지혈증약(스타틴)",
+      "subtitle": "자몽은 스타틴 계열 고지혈증약의 혈중 농도를 위험 수준으로 높일 수 있습니다."
+    },
+    {
+      "scene": 3,
+      "name": "danger",
+      "image": "03_danger.webp",
+      "narration": "위험도 8점! 횡문근융해증 위험, 근육통 위험이 있어요.",
+      "screen_text": "위험도 8/10",
+      "subtitle": "위험도 8/10 — 횡문근융해증 위험, 근육통"
+    },
+    {
+      "scene": 4,
+      "name": "mechanism",
+      "image": "04_mechanism.webp",
+      "narration": "자몽에 포함된 푸라노쿠마린이 간과 소장의 CYP3A4 효소를 억제합니다.",
+      "screen_text": "왜 위험할까요?",
+      "subtitle": "자몽에 포함된 푸라노쿠마린이 간과 소장의 CYP3A4 효소를 억제합니다."
+    },
+    {
+      "scene": 5,
+      "name": "solution",
+      "image": "05_solution.webp",
+      "narration": "스타틴 복용 중에는 자몽 및 자몽주스를 피하세요.",
+      "screen_text": "안전한 복용법",
+      "subtitle": "스타틴 복용 중에는 자몽 및 자몽주스를 피하세요."
+    },
+    {
+      "scene": 6,
+      "name": "app_demo",
+      "image": "06_app_demo.webp",
+      "narration": "약잘알에서 바로 확인하세요.",
+      "screen_text": "약잘알 — 3초 만에 확인",
+      "subtitle": "약잘알에서 바로 확인하세요."
+    },
+    {
+      "scene": 7,
+      "name": "cta",
+      "image": "07_cta.webp",
+      "narration": "pillright.com에서 무료로 확인하세요",
+      "screen_text": "pillright.com",
+      "subtitle": "pillright.com에서 무료로 확인하세요"
+    }
+  ],
+  "total_scenes": 7,
+  "exported_at": "2026-03-12T13:04:42.527775"
+}

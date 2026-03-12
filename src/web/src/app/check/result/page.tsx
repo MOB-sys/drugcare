@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { ShareActions } from "@/components/result/ShareActions";
 import { AppPromotionCTA } from "@/components/result/AppPromotionCTA";
 import type { InteractionCheckItem } from "@/types/interaction";
+import { ResultTracker } from "@/components/result/ResultTracker";
 
 interface PageProps {
   searchParams: Promise<{ items?: string }>;
@@ -102,6 +103,12 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
 
       <section className="max-w-2xl mx-auto px-4 py-6">
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-6">상호작용 체크 결과</h1>
+
+        <ResultTracker
+          totalChecked={data.total_checked}
+          interactionsFound={data.interactions_found}
+          hasDanger={data.has_danger}
+        />
 
         <div className="space-y-4">
           <ResultSummaryCard data={data} />

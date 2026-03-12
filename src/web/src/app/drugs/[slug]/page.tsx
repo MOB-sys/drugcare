@@ -21,6 +21,7 @@ import { DrugFAQ } from "@/components/drug/DrugFAQ";
 import { RelatedTips } from "@/components/drug/RelatedTips";
 import { buildDrugFAQItems, buildFAQJsonLd } from "@/lib/faq";
 import { SITE_URL } from "@/lib/constants/site";
+import { DetailViewTracker } from "@/components/common/DetailViewTracker";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -146,6 +147,8 @@ export default async function DrugDetailPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c') }}
         />
       )}
+
+      <DetailViewTracker type="drug" id={drug.id} name={drug.item_name} />
 
       <Breadcrumbs
         items={[

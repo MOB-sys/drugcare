@@ -2,6 +2,8 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useCabinet } from "./useCabinet";
 
+vi.mock("@/lib/analytics/track", () => ({ track: vi.fn() }));
+
 const MOCK_ITEM = {
   id: 1,
   device_id: "test",

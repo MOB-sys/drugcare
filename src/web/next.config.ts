@@ -69,11 +69,11 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://t1.kakaocdn.net https://www.google.com https://www.gstatic.com blob:",
+              "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://t1.kakaocdn.net https://www.google.com https://www.gstatic.com https://www.clarity.ms blob:",
               "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
               "img-src 'self' data: blob: https:",
               "font-src 'self' https://cdn.jsdelivr.net data:",
-              "connect-src 'self' https://api.pillright.com https://www.google-analytics.com https://analytics.google.com https://pagead2.googlesyndication.com https://*.sentry.io https://www.google.com",
+              "connect-src 'self' https://api.pillright.com https://www.google-analytics.com https://analytics.google.com https://pagead2.googlesyndication.com https://*.sentry.io https://www.google.com https://www.clarity.ms https://*.clarity.ms",
               "frame-src 'self' https://pagead2.googlesyndication.com https://www.google.com https://tpc.googlesyndication.com",
               "object-src 'none'",
               "base-uri 'self'",

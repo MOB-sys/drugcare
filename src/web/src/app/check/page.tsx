@@ -10,6 +10,7 @@ import { SearchResults } from "@/components/check/SearchResults";
 import { SelectedItemsBar } from "@/components/check/SelectedItemsBar";
 import { CheckButton } from "@/components/check/CheckButton";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
+import { track } from "@/lib/analytics/track";
 
 function CheckPageContent() {
   const router = useRouter();
@@ -33,6 +34,10 @@ function CheckPageContent() {
     const encoded = search.selectedItems
       .map((i) => `${i.item_type}:${i.item_id}:${encodeURIComponent(i.name)}`)
       .join(",");
+    track("interaction_check", {
+      item_count: search.selectedItems.length,
+      items: search.selectedItems.map((i) => `${i.item_type}:${i.name}`).join(", "),
+    });
     router.push(`/check/result?items=${encoded}`);
   }
 

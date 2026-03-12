@@ -14,6 +14,7 @@ import type { FoodSearchItem } from "@/types/food";
 import type { HerbalMedicineSearchItem } from "@/types/herbal";
 import type { SearchFilter, SelectedItem } from "@/types/search";
 import { MAX_INTERACTION_ITEMS } from "@/lib/constants/severity";
+import { track } from "@/lib/analytics/track";
 
 export interface SearchResultItem {
   item_type: "drug" | "supplement" | "food" | "herbal";
@@ -175,6 +176,9 @@ export function useSearch(): UseSearchReturn {
 
         if (!controller.signal.aborted && currentRequestId === requestIdRef.current) {
           setResults(merged);
+          if (merged.length > 0 || trimmedQuery.length >= 2) {
+            track("search", { query: trimmedQuery, filter, result_count: merged.length });
+          }
         }
       } catch (error) {
         if (!controller.signal.aborted && currentRequestId === requestIdRef.current) {

@@ -15,6 +15,7 @@ import { TableOfContents } from "@/components/common/TableOfContents";
 import type { TocItem } from "@/components/common/TableOfContents";
 import type { IngredientInfo } from "@/types/drug";
 import { SITE_URL } from "@/lib/constants/site";
+import { DetailViewTracker } from "@/components/common/DetailViewTracker";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -143,6 +144,8 @@ export default async function SupplementDetailPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c') }}
         />
       )}
+
+      <DetailViewTracker type="supplement" id={supp.id} name={supp.product_name} />
 
       <Breadcrumbs
         items={[

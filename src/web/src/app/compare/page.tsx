@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { AdBanner } from "@/components/ads/AdBanner";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import { SITE_URL } from "@/lib/constants/site";
+import { track } from "@/lib/analytics/track";
 import type { DrugSearchItem, DrugDetail } from "@/types/drug";
 import type { SupplementSearchItem, SupplementDetail } from "@/types/supplement";
 
@@ -156,6 +157,7 @@ export default function ComparePage() {
       const detailed = await loadDetails(item);
       if (slot === "a") setItemA(detailed);
       else setItemB(detailed);
+      track("compare_select", { slot, type: item.type, id: item.id, name: item.name });
     } catch {
       setError("상세 정보를 불러오지 못했습니다. 다시 시도해주세요.");
     }

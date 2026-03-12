@@ -1,0 +1,68 @@
+{
+  "id": "INT-001",
+  "title": "아세트아미노펜 + 에탄올 — 같이 먹어도 될까?",
+  "severity": "high",
+  "danger_score": 8,
+  "disclaimer": "본 영상은 정보 제공 목적이며 의사·약사의 전문적 판단을 대체하지 않습니다",
+  "source": "식약처 DUR 데이터",
+  "scenes": [
+    {
+      "scene": 1,
+      "name": "hook",
+      "image": "01_hook.webp",
+      "narration": "두통약 먹고 회식 간 적 있죠?",
+      "screen_text": "해열제 + 술",
+      "subtitle": "두통약 먹고 회식 간 적 있죠?"
+    },
+    {
+      "scene": 2,
+      "name": "problem",
+      "image": "02_problem.webp",
+      "narration": "아세트아미노펜과 알코올을 함께 섭취하면 간 독성이 크게 증가합니다.",
+      "screen_text": "해열진통제(아세트아미노펜) vs 술(알코올)",
+      "subtitle": "아세트아미노펜과 알코올을 함께 섭취하면 간 독성이 크게 증가합니다."
+    },
+    {
+      "scene": 3,
+      "name": "danger",
+      "image": "03_danger.webp",
+      "narration": "위험도 8점! 간 손상, 급성 간부전 위험 증가에 주의하세요.",
+      "screen_text": "위험도 8/10",
+      "subtitle": "위험도 8/10 — 간 손상, 급성 간부전 위험 증가"
+    },
+    {
+      "scene": 4,
+      "name": "mechanism",
+      "image": "04_mechanism.webp",
+      "narration": "아세트아미노펜은 간에서 대사되며, 알코올도 간에서 처리됩니다.",
+      "screen_text": "왜 위험할까요?",
+      "subtitle": "아세트아미노펜은 간에서 대사되며, 알코올도 간에서 처리됩니다."
+    },
+    {
+      "scene": 5,
+      "name": "solution",
+      "image": "05_solution.webp",
+      "narration": "아세트아미노펜 복용 전후 최소 24시간은 음주를 피하세요.",
+      "screen_text": "안전한 복용법",
+      "subtitle": "아세트아미노펜 복용 전후 최소 24시간은 음주를 피하세요."
+    },
+    {
+      "scene": 6,
+      "name": "app_demo",
+      "image": "06_app_demo.webp",
+      "narration": "약잘알에서 바로 확인하세요.",
+      "screen_text": "약잘알 — 3초 만에 확인",
+      "subtitle": "약잘알에서 바로 확인하세요."
+    },
+    {
+      "scene": 7,
+      "name": "cta",
+      "image": "07_cta.webp",
+      "narration": "pillright.com에서 무료로 확인하세요",
+      "screen_text": "pillright.com",
+      "subtitle": "pillright.com에서 무료로 확인하세요"
+    }
+  ],
+  "total_scenes": 7,
+  "exported_at": "2026-03-12T13:04:52.122470"
+}

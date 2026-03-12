@@ -9,6 +9,7 @@ import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
 import { KakaoShareButton } from "@/components/common/KakaoShareButton";
 import { SITE_URL } from "@/lib/constants/site";
+import { DetailViewTracker } from "@/components/common/DetailViewTracker";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -59,6 +60,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 /** 영양소 데이터를 테이블 행으로 변환. */
 function renderNutrients(nutrients: Record<string, unknown>[] | null) {
   if (!nutrients || nutrients.length === 0) return null;
+
+  // 데이터 구조에 따라 컬럼 결정: amount가 있으면 함량 표시, note만 있으면 설명 표시
+  const hasAmount = nutrients.some((n) => n.amount != null);
+
   return (
     <div id="nutrients" className="py-5 scroll-mt-24">
       <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-3">영양성분</h2>
@@ -67,20 +72,24 @@ function renderNutrients(nutrients: Record<string, unknown>[] | null) {
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-700">
               <th className="text-left py-2 pr-4 text-gray-500 dark:text-gray-400 font-medium">성분명</th>
-              <th className="text-right py-2 text-gray-500 dark:text-gray-400 font-medium">함량</th>
+              <th className="text-right py-2 text-gray-500 dark:text-gray-400 font-medium">
+                {hasAmount ? "함량" : "특성"}
+              </th>
             </tr>
           </thead>
           <tbody>
-            {nutrients.map((n, i) => (
-              <tr key={i} className="border-b border-gray-100 dark:border-gray-700/50">
-                <td className="py-2 pr-4 text-gray-900 dark:text-gray-100">
-                  {String(n.name ?? n.nutrient_name ?? "")}
-                </td>
-                <td className="py-2 text-right text-gray-600 dark:text-gray-300">
-                  {n.amount != null ? `${n.amount}${n.unit ? ` ${n.unit}` : ""}` : "-"}
-                </td>
-              </tr>
-            ))}
+            {nutrients.map((n, i) => {
+              const name = String(n.name ?? n.nutrient_name ?? "");
+              const value = hasAmount
+                ? (n.amount != null ? `${n.amount}${n.unit ? ` ${n.unit}` : ""}` : "-")
+                : String(n.note ?? n.description ?? n.effect ?? "-");
+              return (
+                <tr key={i} className="border-b border-gray-100 dark:border-gray-700/50">
+                  <td className="py-2 pr-4 text-gray-900 dark:text-gray-100">{name}</td>
+                  <td className="py-2 text-right text-gray-600 dark:text-gray-300">{value}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -137,6 +146,8 @@ export default async function FoodDetailPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c') }}
         />
       )}
+
+      <DetailViewTracker type="food" id={food.id} name={food.name} />
 
       <Breadcrumbs
         items={[
