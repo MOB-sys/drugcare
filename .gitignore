@@ -59,6 +59,10 @@ htmlcov/
 *.key
 yakmeogeo.egg-info/
 
+# Store screenshots & capture tools
+src/frontend/store/sns-screenshots/
+src/web/capture-screenshots.mjs
+
 # Next.js
 .next/
 out/
