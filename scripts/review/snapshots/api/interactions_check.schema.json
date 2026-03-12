@@ -1,0 +1,5 @@
+{
+  "detail": [
+    "array_of: {'type': 'string', 'loc': ['array_of: str'], 'msg': 'string', 'input': {'type': 'str', 'id': 'int'}}"
+  ]
+}

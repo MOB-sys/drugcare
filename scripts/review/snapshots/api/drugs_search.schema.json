@@ -1,0 +1,16 @@
+{
+  "success": "boolean",
+  "data": {
+    "items": [
+      "array_empty"
+    ],
+    "total": "number",
+    "page": "number",
+    "page_size": "number",
+    "total_pages": "number"
+  },
+  "error": "null",
+  "meta": {
+    "timestamp": "string"
+  }
+}

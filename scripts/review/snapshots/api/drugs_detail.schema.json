@@ -1,0 +1,8 @@
+{
+  "success": "boolean",
+  "data": "null",
+  "error": "string",
+  "meta": {
+    "timestamp": "string"
+  }
+}

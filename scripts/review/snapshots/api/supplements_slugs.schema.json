@@ -1,0 +1,10 @@
+{
+  "success": "boolean",
+  "data": [
+    "array_empty"
+  ],
+  "error": "null",
+  "meta": {
+    "timestamp": "string"
+  }
+}
