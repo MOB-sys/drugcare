@@ -10,7 +10,7 @@ doi: "10.1007/s40262-025-01612-2"
 authors: ["Rieborn A", "Guchelaar NAD", "van Gelder T", "Gelderblom H", "Luelmo SAC"]
 journal: "Clinical pharmacokinetics"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "high"
 ---

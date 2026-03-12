@@ -10,7 +10,7 @@ doi: "10.1002/cpdd.1626"
 authors: ["Lee L", "Richards AL", "Reddy N", "Beers B", "Golden L"]
 journal: "Clinical pharmacology in drug development"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

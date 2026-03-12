@@ -63,6 +63,7 @@ export function SearchResultItem({
         setCabinetStatus("duplicate");
       } else {
         setCabinetStatus("idle");
+        console.warn("[복약함] 추가 실패:", err instanceof Error ? err.message : err);
       }
     }
   }

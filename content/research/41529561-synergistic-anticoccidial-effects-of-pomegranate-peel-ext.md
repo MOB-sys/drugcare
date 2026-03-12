@@ -10,7 +10,7 @@ doi: "10.1016/j.vetpar.2026.110693"
 authors: ["Wang W", "Yi X", "Han Y", "Feng P", "Bo R"]
 journal: "Veterinary parasitology"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

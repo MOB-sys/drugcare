@@ -10,7 +10,7 @@ doi: "10.1111/cts.70443"
 authors: ["Libiad Y", "Franck B", "Tron C", "Lalanne S", "Boglione-Kerrien C"]
 journal: "Clinical and translational science"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

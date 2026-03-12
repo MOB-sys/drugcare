@@ -10,7 +10,7 @@ doi: "10.1093/jpp/rgaf132"
 authors: ["Keller DN", "Medwid SJ", "Legan RM", "Schwarz UI", "Kim RB"]
 journal: "The Journal of pharmacy and pharmacology"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

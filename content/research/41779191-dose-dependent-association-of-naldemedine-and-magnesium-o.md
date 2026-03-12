@@ -10,7 +10,7 @@ doi: "10.1007/s00520-026-10487-3"
 authors: ["Hoshino R", "Ishihara M", "Watanabe D", "Goto S", "Nakaya H"]
 journal: "Supportive care in cancer : official journal of the Multinational Association of Supportive Care in Cancer"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

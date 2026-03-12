@@ -10,7 +10,7 @@ doi: "10.1080/19932820.2025.2611580"
 authors: ["Alhudiri I", "Ebrahim F", "Elzagheid A"]
 journal: "The Libyan journal of medicine"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

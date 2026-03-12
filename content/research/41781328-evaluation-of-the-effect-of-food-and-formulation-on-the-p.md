@@ -10,7 +10,7 @@ doi: "10.1111/cts.70512"
 authors: ["Suchomel J", "Bowman CM", "Chiang PC", "Dhawan M", "Eng-Wong J"]
 journal: "Clinical and translational science"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

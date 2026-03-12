@@ -10,7 +10,7 @@ doi: "10.1007/s12094-025-04017-6"
 authors: ["Yang F", "Meng X", "Qin S", "Guo Q", "Wei L"]
 journal: "Clinical & translational oncology : official publication of the Federation of Spanish Oncology Societies and of the National Cancer Institute of Mexico"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

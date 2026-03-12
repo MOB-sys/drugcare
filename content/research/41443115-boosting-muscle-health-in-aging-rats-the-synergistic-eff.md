@@ -10,7 +10,7 @@ doi: "10.1016/j.tice.2025.103290"
 authors: ["Aghaei F", "Arabzadeh E", "Feizolahi F", "Nejati Bezdi A", "Abasi M"]
 journal: "Tissue & cell"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

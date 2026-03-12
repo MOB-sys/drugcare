@@ -10,7 +10,7 @@ doi: "10.1136/bmjopen-2025-103495"
 authors: ["Yazie TS", "Alemu MA", "Zewdu WS", "Asmare Emiru Z", "Tarekegn GY"]
 journal: "BMJ open"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "high"
 ---

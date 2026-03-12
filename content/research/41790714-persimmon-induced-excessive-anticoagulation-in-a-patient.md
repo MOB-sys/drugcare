@@ -10,7 +10,7 @@ doi: "10.1097/MD.0000000000047861"
 authors: ["Kim J", "Lee S", "Moon H", "Lee W"]
 journal: "Medicine"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

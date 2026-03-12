@@ -10,7 +10,7 @@ doi: "10.1016/j.bulcan.2025.10.009"
 authors: ["Fleta L", "Laffitte PV", "Slama B", "Trinh I", "Georges V"]
 journal: "Bulletin du cancer"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

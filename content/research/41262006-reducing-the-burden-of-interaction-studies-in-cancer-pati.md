@@ -10,7 +10,7 @@ doi: "10.1002/cpt.70141"
 authors: ["Mohmaed Ali MI", "van der Heijden LT", "Tibben M", "Rosing H", "Kalicharan R"]
 journal: "Clinical pharmacology and therapeutics"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

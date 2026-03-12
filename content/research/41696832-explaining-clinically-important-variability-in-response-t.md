@@ -10,7 +10,7 @@ doi: "10.1002/jcph.70163"
 authors: ["Kang W", "Conchon Costa AC", "Medeiros JIM", "Cicali B", "Salgado Junior W"]
 journal: "Journal of clinical pharmacology"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

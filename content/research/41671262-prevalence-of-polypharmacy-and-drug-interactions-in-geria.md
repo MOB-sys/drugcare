@@ -10,7 +10,7 @@ doi: "10.1371/journal.pone.0341183"
 authors: ["Khaiser UF", "Sultana R", "Das R", "Alzahrani SG", "Kannan M"]
 journal: "PloS one"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

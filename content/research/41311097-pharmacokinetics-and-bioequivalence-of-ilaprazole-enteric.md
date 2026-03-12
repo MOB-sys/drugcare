@@ -10,7 +10,7 @@ doi: "10.1002/cpdd.1628"
 authors: ["Du L", "Zhang Y", "Gan F", "Yang J", "Li L"]
 journal: "Clinical pharmacology in drug development"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "high"
 ---

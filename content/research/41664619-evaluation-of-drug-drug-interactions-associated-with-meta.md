@@ -10,7 +10,7 @@ doi: "10.1080/17512433.2026.2630755"
 authors: ["Jacobs TG", "van den Eijnde SEJD", "Nijboer L", "Kylstra A", "Nicia SB"]
 journal: "Expert review of clinical pharmacology"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

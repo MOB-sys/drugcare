@@ -10,7 +10,7 @@ doi: "10.1002/cpdd.70044"
 authors: ["Sun B", "Zhao L", "Gan F", "Zhan Q"]
 journal: "Clinical pharmacology in drug development"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "high"
 ---

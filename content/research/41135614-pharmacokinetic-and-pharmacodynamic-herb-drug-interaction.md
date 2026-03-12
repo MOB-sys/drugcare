@@ -10,7 +10,7 @@ doi: "10.1016/j.jep.2025.120776"
 authors: ["Hwang I", "Kim JH", "Song J", "Kim H", "Cho HY"]
 journal: "Journal of ethnopharmacology"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "high"
 ---

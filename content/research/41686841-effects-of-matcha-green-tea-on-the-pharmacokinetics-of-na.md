@@ -10,7 +10,7 @@ doi: "10.1371/journal.pone.0342857"
 authors: ["Mashaqbeh ET", "El-Elimat T", "Alshogran OY", "Hamzeh I", "Obeidat ZM"]
 journal: "PloS one"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

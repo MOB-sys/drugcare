@@ -10,7 +10,7 @@ doi: "10.1111/myc.70157"
 authors: ["Shah S", "Clarke L", "Lee T", "Georgiades L", "Smith BJ"]
 journal: "Mycoses"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

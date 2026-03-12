@@ -10,7 +10,7 @@ doi: "10.1093/oncolo/oyaf402"
 authors: ["Pisegna S", "Scagnoli S", "Gentile G", "Chiavassa A", "Caputo R"]
 journal: "The oncologist"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

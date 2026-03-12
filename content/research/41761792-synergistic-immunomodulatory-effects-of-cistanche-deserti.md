@@ -10,7 +10,7 @@ doi: "10.36721/PJPS.2026.39.4.REG.15065.1"
 authors: ["Zhang Y", "Liu J"]
 journal: "Pakistan journal of pharmaceutical sciences"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

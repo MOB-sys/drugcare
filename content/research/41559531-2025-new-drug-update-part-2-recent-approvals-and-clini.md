@@ -10,7 +10,7 @@ doi: "10.4140/TCP.n.2026.3"
 authors: ["Friedman S", "Akerman K", "Bouwmeester C"]
 journal: "The Senior care pharmacist"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

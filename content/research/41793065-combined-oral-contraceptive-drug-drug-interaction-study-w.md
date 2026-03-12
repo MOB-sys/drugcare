@@ -10,7 +10,7 @@ doi: "10.1002/jcph.70161"
 authors: ["Iavarone L", "Lavezzi SM", "Carcas AJ", "Chaychenko T", "Gabarro-Carrion R"]
 journal: "Journal of clinical pharmacology"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

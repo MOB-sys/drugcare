@@ -10,7 +10,7 @@ doi: "10.1016/j.seizure.2026.01.011"
 authors: ["Krayem M", "van der Goten M", "Strzelczyk A", "Rosenow F", "von Podewils F"]
 journal: "Seizure"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

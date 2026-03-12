@@ -10,7 +10,7 @@ doi: "10.1007/s12185-025-04108-8"
 authors: ["Komatsu N", "Ito K", "Arita K", "Mitobe Y", "Mitsui H"]
 journal: "International journal of hematology"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "high"
 ---

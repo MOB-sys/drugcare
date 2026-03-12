@@ -36,11 +36,14 @@ async function waitForRateLimit(path: string): Promise<void> {
     if (delay > 0) {
       await new Promise((r) => setTimeout(r, delay));
     }
-    // 대기 후 가장 오래된 항목 제거
-    recent.shift();
+    // 대기 후 가장 오래된 항목 제거하고 윈도우 밖 타임스탬프도 재정리
+    const afterWait = Date.now();
+    const refreshed = recent.filter((t) => afterWait - t < RATE_LIMIT_WINDOW);
+    recent.length = 0;
+    recent.push(...refreshed);
   }
 
-  recent.push(Date.now());
+  recent.push(now);
   if (recent.length > 0) {
     requestLog.set(group, recent);
   } else {

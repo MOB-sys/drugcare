@@ -10,7 +10,7 @@ doi: "10.1002/cam4.71650"
 authors: ["Ronda-Roca G", "Porcel-Maleno J", "Lobo-Palomar M", "Centeno-Soto G", "Ruiz-Casado A"]
 journal: "Cancer medicine"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

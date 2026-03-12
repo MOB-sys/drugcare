@@ -10,7 +10,7 @@ doi: "10.1177/00368504261423340"
 authors: ["Mosleh R", "Jarrar Y", "Qadous SG", "Ghanim M"]
 journal: "Science progress"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "moderate"
 ---

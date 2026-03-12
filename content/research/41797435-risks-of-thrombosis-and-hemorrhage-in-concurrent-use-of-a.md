@@ -10,7 +10,7 @@ doi: "10.1002/cncr.70266"
 authors: ["Wang TF", "Clarke A", "Rath M", "Yoo S", "Fremont D"]
 journal: "Cancer"
 publishedAt: "2026-03-12"
-reviewStatus: "review"
+reviewStatus: "published"
 relatedIngredients: []
 evidenceLevel: "high"
 ---
