@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { track } from "@/lib/analytics/track";
 
 interface Props {
-  type: "drug" | "supplement" | "food" | "herbal";
+  type: "drug" | "supplement" | "food" | "herbal" | "safety-card";
   id: number;
   name: string;
 }

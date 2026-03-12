@@ -131,7 +131,7 @@ export default async function SafetyCardDetailPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <DetailViewTracker type="drug" id={0} name={`safety-card:${id}`} />
+      <DetailViewTracker type="safety-card" id={0} name={cleanTitle} />
 
       <Breadcrumbs
         items={[

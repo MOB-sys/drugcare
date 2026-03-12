@@ -236,7 +236,7 @@ export function SymptomChecker() {
                       )}
                     </div>
                     {drug.etc_otc_code && (
-                      <span className="shrink-0 text-xs px-2 py-0.5 rounded-md bg-blue-50 text-blue-700">
+                      <span className="shrink-0 text-xs px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
                         {drug.etc_otc_code}
                       </span>
                     )}

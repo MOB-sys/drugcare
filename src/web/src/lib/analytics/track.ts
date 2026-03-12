@@ -1,6 +1,6 @@
 /** GA4 + 백엔드 메트릭스 이중 전송 유틸리티. */
 
-type ItemType = "drug" | "supplement" | "food" | "herbal";
+type ItemType = "drug" | "supplement" | "food" | "herbal" | "safety-card";
 
 interface EventMap {
   search: { query: string; filter: string; result_count: number };

@@ -65,7 +65,7 @@ function DrugSearchBox({
         <p className="font-semibold text-[var(--color-text)]">{selected.name}</p>
         {selected.sub && <p className="text-sm text-[var(--color-text-secondary)]">{selected.sub}</p>}
         <span className={`inline-block mt-1 px-2 py-0.5 rounded-md text-xs font-medium ${
-          selected.type === "drug" ? "bg-blue-50 text-blue-700" : "bg-emerald-50 text-emerald-700"
+          selected.type === "drug" ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" : "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
         }`}>
           {selected.type === "drug" ? "의약품" : "건강기능식품"}
         </span>
@@ -94,7 +94,7 @@ function DrugSearchBox({
                 className="w-full text-left px-2 py-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-sm transition-colors"
               >
                 <span className={`inline-block mr-1.5 px-1.5 py-0.5 rounded text-xs ${
-                  r.type === "drug" ? "bg-blue-50 text-blue-700" : "bg-emerald-50 text-emerald-700"
+                  r.type === "drug" ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" : "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
                 }`}>
                   {r.type === "drug" ? "약" : "영양제"}
                 </span>

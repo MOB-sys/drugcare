@@ -16,8 +16,8 @@ export function CabinetItemCard({ item, isDeleting, onDelete }: CabinetItemCardP
       <span
         className={`shrink-0 px-2 py-0.5 rounded-md text-xs font-medium ${
           item.item_type === "drug"
-            ? "bg-blue-50 text-blue-700"
-            : "bg-emerald-50 text-emerald-700"
+            ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300"
+            : "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300"
         }`}
       >
         {item.item_type === "drug" ? "의약품" : "영양제"}

@@ -182,7 +182,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
                     <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">{drug.entp_name}</span>
                   )}
                   {otcLabel && (
-                    <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700">{otcLabel}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">{otcLabel}</span>
                   )}
                   {drug.class_no && (
                     <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400">분류 {drug.class_no}</span>
