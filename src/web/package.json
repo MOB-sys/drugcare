@@ -13,7 +13,7 @@
     "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
-    "@next/third-parties": "^15.3.0",
+    "@next/third-parties": "^16.1.6",
     "@sentry/nextjs": "^10.40.0",
     "@vercel/og": "^0.6.0",
     "critters": "^0.0.23",
