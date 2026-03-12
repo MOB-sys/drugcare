@@ -1,12 +1,20 @@
-"""AI 기반 논문/경고 → 한국어 콘텐츠 요약."""
+"""AI 기반 논문/경고 → 한국어 콘텐츠 요약.
+
+OPENAI_API_KEY가 없으면 템플릿 기반 로컬 요약으로 폴백한다.
+"""
 
 import json
-from openai import OpenAI
+import re
 
-from config import AI_MAX_TOKENS, AI_MODEL, OPENAI_API_KEY
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None  # type: ignore[assignment,misc]
+
+from config import AI_MAX_TOKENS, AI_MODEL, OPENAI_API_KEY, REQUIRED_DISCLAIMER
 from pubmed_fetcher import PubMedArticle
 
-client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY else None
+client = OpenAI(api_key=OPENAI_API_KEY) if OPENAI_API_KEY and OpenAI else None
 
 RESEARCH_PROMPT = """당신은 약물 안전 정보 전문 에디터입니다.
 다음 영문 논문 초록을 일반인이 이해할 수 있는 한국어 건강 콘텐츠로 변환하세요.
@@ -61,11 +69,147 @@ NEWS_PROMPT = """당신은 약물 안전 정보 전문 에디터입니다.
 """
 
 
+def _truncate(text: str, max_len: int) -> str:
+    """문장 단위로 잘라서 max_len 이내로."""
+    if len(text) <= max_len:
+        return text
+    cut = text[:max_len].rsplit(". ", 1)[0]
+    return cut + "." if not cut.endswith(".") else cut
+
+
+def _extract_tags_from_mesh(article: PubMedArticle) -> list[str]:
+    """MeSH 용어에서 태그 추출."""
+    tag_map = {
+        "Drug Interactions": "약물 상호작용",
+        "Dietary Supplements": "영양제",
+        "Herb-Drug Interactions": "한약재 상호작용",
+        "Food-Drug Interactions": "음식-약물 상호작용",
+        "Polypharmacy": "다제복용",
+        "Pregnancy": "임산부",
+        "Aged": "고령자",
+        "Adverse Effects": "부작용",
+        "Drug Safety": "약물 안전",
+        "Vitamins": "비타민",
+        "Anti-Bacterial Agents": "항생제",
+        "Antineoplastic Agents": "항암제",
+        "Anticoagulants": "항응고제",
+        "Probiotics": "유산균",
+    }
+    tags = []
+    for mesh in article.mesh_terms:
+        if mesh in tag_map:
+            tags.append(tag_map[mesh])
+    if not tags:
+        tags = ["약물 연구", "복약 안전"]
+    return tags[:5]
+
+
+def local_summarize_research(article: PubMedArticle) -> dict:
+    """AI 없이 템플릿 기반으로 연구 요약 생성."""
+    abstract = _truncate(article.abstract, 1500)
+    authors_str = ", ".join(article.authors[:3])
+    if len(article.authors) > 3:
+        authors_str += " 외"
+
+    title = article.title
+    if len(title) > 60:
+        title = title[:57] + "..."
+
+    description = f"{article.journal}에 발표된 연구 — {title[:50]}"
+    if len(description) > 80:
+        description = description[:77] + "..."
+
+    tags = _extract_tags_from_mesh(article)
+
+    content = f"""## 연구 요약
+
+**{article.title}**
+
+{article.journal} 학술지에 발표된 이 연구는 {authors_str} 연구팀이 수행하였습니다.
+
+## 핵심 내용
+
+{abstract}
+
+## 일반인을 위한 해석
+
+이 연구는 약물 또는 영양제의 안전한 사용에 관한 과학적 근거를 제공할 수 있습니다. 다만, 개별 연구 결과만으로 일반화하기는 어려우며, 추가적인 연구가 필요할 수 있습니다.
+
+### 실천 사항
+
+- 현재 복용 중인 약물이나 영양제에 대해 궁금한 점이 있다면 담당 의사 또는 약사와 상담하시기 바랍니다
+- 약물이나 영양제의 용법·용량을 임의로 변경하지 마세요
+- 이상 반응이 나타나면 즉시 전문가에게 문의하세요
+
+> {REQUIRED_DISCLAIMER} (PMID: {article.pmid})"""
+
+    # 근거 수준 추정
+    abstract_lower = article.abstract.lower()
+    if any(kw in abstract_lower for kw in ["meta-analysis", "systematic review", "cochrane"]):
+        evidence = "high"
+    elif any(kw in abstract_lower for kw in ["randomized", "rct", "controlled trial", "double-blind"]):
+        evidence = "high"
+    elif any(kw in abstract_lower for kw in ["cohort", "prospective", "retrospective"]):
+        evidence = "moderate"
+    else:
+        evidence = "moderate"
+
+    return {
+        "title": title,
+        "description": description,
+        "content": content,
+        "tags": tags,
+        "evidence_level": evidence,
+    }
+
+
+def local_summarize_alert(title: str, content: str, source: str) -> dict:
+    """AI 없이 템플릿 기반으로 안전 경고 요약 생성."""
+    source_label = {"mfds": "식약처", "fda": "미국 FDA", "ema": "유럽 EMA"}.get(source, source)
+
+    # 심각도 추정
+    severity = "info"
+    combined = (title + " " + content).lower()
+    if any(kw in combined for kw in ["recall", "회수", "class i", "판매중지", "death", "사망"]):
+        severity = "danger"
+    elif any(kw in combined for kw in ["warning", "주의", "경고", "class ii", "변경"]):
+        severity = "warning"
+
+    body = f"""## 주요 내용
+
+{source_label}에서 발표한 의약품 안전 정보입니다.
+
+{content[:800]}
+
+## 권장 사항
+
+- 해당 의약품을 복용 중인 경우, 담당 의사 또는 약사와 상담하시기 바랍니다
+- 이상 반응이 나타나면 즉시 의료기관을 방문하세요
+- 임의로 약물 복용을 중단하지 마세요
+
+> {REQUIRED_DISCLAIMER}"""
+
+    if len(title) > 40:
+        title = title[:37] + "..."
+
+    description = f"{source_label} 안전 정보 — {title[:40]}"
+    if len(description) > 80:
+        description = description[:77] + "..."
+
+    return {
+        "title": title,
+        "description": description,
+        "content": body,
+        "tags": ["의약품 안전", source_label, "안전 경고"],
+        "severity": severity,
+    }
+
+
 def summarize_research(article: PubMedArticle) -> dict | None:
-    """PubMed 논문을 한국어 연구 요약으로 변환."""
+    """PubMed 논문을 한국어 연구 요약으로 변환. AI 없으면 로컬 폴백."""
     if not client:
-        print("  ⚠️ OPENAI_API_KEY 미설정, 건너뜀")
-        return None
+        print("  ℹ️ OPENAI_API_KEY 미설정 → 로컬 요약 사용")
+        return local_summarize_research(article)
 
     prompt = RESEARCH_PROMPT.format(
         title=article.title,
@@ -93,10 +237,10 @@ def summarize_research(article: PubMedArticle) -> dict | None:
 
 
 def summarize_alert(title: str, content: str, source: str) -> dict | None:
-    """안전 경고를 한국어 뉴스로 변환."""
+    """안전 경고를 한국어 뉴스로 변환. AI 없으면 로컬 폴백."""
     if not client:
-        print("  ⚠️ OPENAI_API_KEY 미설정, 건너뜀")
-        return None
+        print("  ℹ️ OPENAI_API_KEY 미설정 → 로컬 요약 사용")
+        return local_summarize_alert(title, content, source)
 
     prompt = NEWS_PROMPT.format(title=title, source=source, content=content[:3000])
 
