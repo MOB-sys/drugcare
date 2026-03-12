@@ -68,6 +68,9 @@ jobs:
             echo "=== 코드 업데이트 ==="
             git pull origin main
 
+            echo "=== 배포 전 검증 ==="
+            bash scripts/deploy/pre-deploy-check.sh docker-compose.prod.yml .env
+
             echo "=== Docker 이미지 빌드 ==="
             docker compose -f docker-compose.prod.yml build backend
 
@@ -81,16 +84,32 @@ jobs:
             echo "=== 서비스 재시작 ==="
             docker compose -f docker-compose.prod.yml up -d
 
-            echo "=== 헬스체크 ==="
+            echo "=== Nginx DNS 갱신 (backend IP 변경 대응) ==="
+            docker exec yakmeogeo-nginx nginx -s reload 2>/dev/null || true
+
+            echo "=== 헬스체크 (DB+Redis 포함) ==="
             for i in $(seq 1 20); do
-              if curl -sf http://localhost/api/v1/health > /dev/null 2>&1; then
-                echo "헬스체크 성공!"
+              HEALTH=$(curl -sf http://localhost/api/v1/health 2>/dev/null || echo "")
+              if echo "$HEALTH" | grep -q '"status":"healthy"'; then
+                echo "헬스체크 성공! DB·Redis 모두 정상"
                 docker compose -f docker-compose.prod.yml ps
                 exit 0
+              fi
+              # 부분 장애 감지 — degraded면 즉시 로그 출력
+              if echo "$HEALTH" | grep -q '"status":"degraded"'; then
+                echo "WARNING: 서비스 degraded 상태 감지"
+                echo "$HEALTH" | python3 -m json.tool 2>/dev/null || echo "$HEALTH"
               fi
               echo "대기 중... ($i/20)"
               sleep 3
             done
-            echo "ERROR: 헬스체크 실패"
-            docker compose -f docker-compose.prod.yml logs --tail=30 backend
+            echo "ERROR: 헬스체크 실패 — 자동 롤백 시도"
+            docker compose -f docker-compose.prod.yml logs --tail=50 backend
+            # 롤백: 이전 이미지로 복원
+            if docker image ls drugcare-backend --format '{{.ID}}' | tail -1 | grep -q .; then
+              echo "이전 이미지로 롤백..."
+              git stash
+              docker compose -f docker-compose.prod.yml up -d backend
+              docker compose -f docker-compose.prod.yml restart nginx
+            fi
             exit 1

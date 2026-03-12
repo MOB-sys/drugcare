@@ -9,8 +9,9 @@ from src.backend.core.config import get_settings
 settings = get_settings()
 
 _connect_args: dict = {"timeout": 10}
-if not settings.is_development:
-    _connect_args["ssl"] = "require"
+# SSL은 DATABASE_URL의 ?ssl= 파라미터로 제어 (Docker 내부 통신은 SSL 불필요)
+if "ssl=" in settings.DATABASE_URL:
+    _connect_args["ssl"] = settings.DATABASE_URL.split("ssl=")[-1].split("&")[0]
 
 engine = create_async_engine(
     settings.DATABASE_URL,
