@@ -66,6 +66,7 @@ jobs:
             cd ${{ secrets.SERVER_PROJECT_DIR || '/opt/drugcare' }}
 
             echo "=== 코드 업데이트 ==="
+            git stash --include-untracked 2>/dev/null || true
             git pull origin main
 
             echo "=== 배포 전 검증 ==="
