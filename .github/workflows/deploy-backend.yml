@@ -90,7 +90,7 @@ jobs:
 
             echo "=== 헬스체크 (DB+Redis 포함) ==="
             for i in $(seq 1 20); do
-              HEALTH=$(curl -sf http://localhost/api/v1/health 2>/dev/null || echo "")
+              HEALTH=$(docker exec yakmeogeo-backend curl -sf http://localhost:8000/api/v1/health 2>/dev/null || echo "")
               if echo "$HEALTH" | grep -q '"status":"healthy"'; then
                 echo "헬스체크 성공! DB·Redis 모두 정상"
                 docker compose -f docker-compose.prod.yml ps
