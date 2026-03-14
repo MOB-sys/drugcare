@@ -8,6 +8,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
 import { KakaoShareButton } from "@/components/common/KakaoShareButton";
+import { SafeImage } from "@/components/common/SafeImage";
 import { SITE_URL } from "@/lib/constants/site";
 import { DetailViewTracker } from "@/components/common/DetailViewTracker";
 
@@ -160,21 +161,34 @@ export default async function FoodDetailPage({ params }: PageProps) {
       <div className="max-w-5xl mx-auto px-4 py-6">
         <article className="max-w-3xl">
           {/* 헤더 */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2 break-keep">{food.name}</h1>
-            <div className="flex flex-wrap gap-2 text-sm mb-3">
-              {food.category && (
-                <span className="px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">
-                  {food.category}
-                </span>
-              )}
-              {food.common_names && food.common_names.length > 0 && (
-                <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                  {food.common_names.join(", ")}
-                </span>
-              )}
+          <div className="flex gap-6 mb-6">
+            {food.image_url && (
+              <SafeImage
+                src={food.image_url}
+                alt={food.name}
+                width={128}
+                height={128}
+                priority
+                sizes="128px"
+                className="rounded-xl object-cover bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
+              />
+            )}
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2 break-keep">{food.name}</h1>
+              <div className="flex flex-wrap gap-2 text-sm mb-3">
+                {food.category && (
+                  <span className="px-2 py-0.5 rounded-md bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300">
+                    {food.category}
+                  </span>
+                )}
+                {food.common_names && food.common_names.length > 0 && (
+                  <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                    {food.common_names.join(", ")}
+                  </span>
+                )}
+              </div>
+              <DataSource source="식약처 식품안전정보" />
             </div>
-            <DataSource source="식약처 식품안전정보" />
           </div>
 
           {/* 정보 섹션 */}

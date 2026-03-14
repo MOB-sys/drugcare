@@ -44,6 +44,23 @@ async def search_foods(
 
 
 @router.get(
+    "/suggest",
+    response_model=ApiResponse[list[dict]],
+    summary="식품 검색 자동완성",
+    description="검색어에 대한 식품 이름 자동완성 제안을 반환합니다.",
+)
+async def suggest_foods(
+    q: str = Query("", min_length=2, max_length=100, description="검색어 (2자 이상)"),
+    limit: int = Query(10, ge=1, le=20, description="최대 결과 수"),
+    db: AsyncSession = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+) -> dict:
+    """식품 자동완성 제안 엔드포인트."""
+    result = await food_service.suggest_foods(db, redis, q, limit)
+    return success_response(result)
+
+
+@router.get(
     "/slugs",
     response_model=ApiResponse[list[str]],
     summary="식품 slug 전체 목록",

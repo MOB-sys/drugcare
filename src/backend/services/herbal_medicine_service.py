@@ -3,7 +3,7 @@
 import math
 
 from redis.asyncio import Redis
-from sqlalchemy import func, or_, select
+from sqlalchemy import case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
@@ -58,8 +58,16 @@ async def search_herbal_medicines(
             HerbalMedicine.latin_name.ilike(like_pattern),
             HerbalMedicine.category.ilike(like_pattern),
         )
+        # 관련성 점수: 정확 일치 > 접두사 > 포함(이름) > 포함(기타)
+        relevance = case(
+            (HerbalMedicine.name.ilike(q_stripped), 4),
+            (HerbalMedicine.name.ilike(f"{q_stripped}%"), 3),
+            (HerbalMedicine.name.ilike(like_pattern), 2),
+            else_=1,
+        )
     else:
         condition = None
+        relevance = None
 
     # 전체 건수 조회
     count_stmt = select(func.count()).select_from(HerbalMedicine)
@@ -71,11 +79,13 @@ async def search_herbal_medicines(
     total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     page = min(page, max(1, total_pages))
 
-    # 페이지네이션 조회
+    # 페이지네이션 조회 (관련성 높은 순)
     offset = (page - 1) * page_size
     search_stmt = select(HerbalMedicine)
     if condition is not None:
         search_stmt = search_stmt.where(condition)
+    if relevance is not None:
+        search_stmt = search_stmt.order_by(relevance.desc(), HerbalMedicine.name)
     search_stmt = search_stmt.offset(offset).limit(page_size)
     rows = await db.execute(search_stmt)
     herbals = rows.scalars().all()
@@ -91,6 +101,57 @@ async def search_herbal_medicines(
     }
 
     await cache_set(redis, cache_key, result, CACHE_TTL_HERBAL_SEARCH)
+    return result
+
+
+async def suggest_herbal_medicines(
+    db: AsyncSession,
+    redis: Redis,
+    q: str,
+    limit: int = 10,
+) -> list[dict]:
+    """한약재 검색 자동완성 제안을 반환한다.
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+        q: 검색어 (2자 이상).
+        limit: 최대 결과 수 (기본 10).
+
+    Returns:
+        [{"name": ..., "slug": ..., "type": "herbal"}] 형태의 리스트.
+    """
+    q_stripped = q.strip()
+    if len(q_stripped) < 2:
+        return []
+
+    cache_key = make_cache_key("herbal", "suggest", hash_query(q_stripped), str(limit))
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    like_pattern = f"%{q_stripped}%"
+    relevance = case(
+        (HerbalMedicine.name.ilike(q_stripped), 3),
+        (HerbalMedicine.name.ilike(f"{q_stripped}%"), 2),
+        else_=1,
+    )
+
+    stmt = (
+        select(HerbalMedicine.name, HerbalMedicine.slug)
+        .where(
+            or_(
+                HerbalMedicine.name.ilike(like_pattern),
+                HerbalMedicine.korean_name.ilike(like_pattern),
+            )
+        )
+        .order_by(relevance.desc(), HerbalMedicine.name)
+        .limit(limit)
+    )
+    rows = await db.execute(stmt)
+    result = [{"name": r[0], "slug": r[1], "type": "herbal"} for r in rows.all()]
+
+    await cache_set(redis, cache_key, result, 60 * 60)  # 1시간
     return result
 
 

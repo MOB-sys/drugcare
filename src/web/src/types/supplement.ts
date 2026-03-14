@@ -7,6 +7,7 @@ export interface SupplementSearchItem {
   company: string | null;
   main_ingredient: string | null;
   category: string | null;
+  image_url: string | null;
 }
 
 export interface SupplementDetail {
@@ -21,5 +22,6 @@ export interface SupplementDetail {
   precautions: string | null;
   intake_method: string | null;
   category: string | null;
+  image_url: string | null;
   source: string | null;
 }

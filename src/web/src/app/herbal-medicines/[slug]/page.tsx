@@ -8,6 +8,7 @@ import { AdBanner } from "@/components/ads/AdBanner";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
 import { KakaoShareButton } from "@/components/common/KakaoShareButton";
+import { SafeImage } from "@/components/common/SafeImage";
 import { SITE_URL } from "@/lib/constants/site";
 import { DetailViewTracker } from "@/components/common/DetailViewTracker";
 
@@ -153,26 +154,39 @@ export default async function HerbalMedicineDetailPage({ params }: PageProps) {
       <div className="max-w-5xl mx-auto px-4 py-6">
         <article className="max-w-3xl">
           {/* 헤더 */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2 break-keep">{displayName}</h1>
-            <div className="flex flex-wrap gap-2 text-sm mb-3">
-              {herbal.name !== displayName && (
-                <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                  {herbal.name}
-                </span>
-              )}
-              {herbal.latin_name && (
-                <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 italic">
-                  {herbal.latin_name}
-                </span>
-              )}
-              {herbal.category && (
-                <span className="px-2 py-0.5 rounded-md bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
-                  {herbal.category}
-                </span>
-              )}
+          <div className="flex gap-6 mb-6">
+            {herbal.image_url && (
+              <SafeImage
+                src={herbal.image_url}
+                alt={displayName}
+                width={128}
+                height={128}
+                priority
+                sizes="128px"
+                className="rounded-xl object-cover bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
+              />
+            )}
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2 break-keep">{displayName}</h1>
+              <div className="flex flex-wrap gap-2 text-sm mb-3">
+                {herbal.name !== displayName && (
+                  <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                    {herbal.name}
+                  </span>
+                )}
+                {herbal.latin_name && (
+                  <span className="px-2 py-0.5 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 italic">
+                    {herbal.latin_name}
+                  </span>
+                )}
+                {herbal.category && (
+                  <span className="px-2 py-0.5 rounded-md bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+                    {herbal.category}
+                  </span>
+                )}
+              </div>
+              <DataSource source="식약처 생약정보" />
             </div>
-            <DataSource source="식약처 생약정보" />
           </div>
 
           {/* 정보 섹션 */}

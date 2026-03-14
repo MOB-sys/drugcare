@@ -16,6 +16,7 @@ import { KakaoShareButton } from "@/components/common/KakaoShareButton";
 import { TableOfContents } from "@/components/common/TableOfContents";
 import type { TocItem } from "@/components/common/TableOfContents";
 import type { IngredientInfo } from "@/types/drug";
+import { SafeImage } from "@/components/common/SafeImage";
 import { SITE_URL } from "@/lib/constants/site";
 import { DetailViewTracker } from "@/components/common/DetailViewTracker";
 import { buildSupplementFallbackContent } from "@/lib/utils/supplementFallbackContent";
@@ -172,7 +173,19 @@ export default async function SupplementDetailPage({ params }: PageProps) {
           {/* ── 메인 콘텐츠 ── */}
           <article className="min-w-0">
             {/* 헤더 */}
-            <div className="mb-6">
+            <div className="flex gap-6 mb-6">
+              {supp.image_url && (
+                <SafeImage
+                  src={supp.image_url}
+                  alt={supp.product_name}
+                  width={128}
+                  height={128}
+                  priority
+                  sizes="128px"
+                  className="rounded-xl object-contain bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
+                />
+              )}
+              <div className="min-w-0">
               <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-2 break-keep">{supp.product_name}</h1>
               <div className="flex flex-wrap gap-2 text-sm mb-3">
                 {supp.company && (
@@ -186,6 +199,7 @@ export default async function SupplementDetailPage({ params }: PageProps) {
                 )}
               </div>
               <DataSource source="식약처 건강기능식품 정보" />
+              </div>
             </div>
 
             {/* 정보 섹션 */}

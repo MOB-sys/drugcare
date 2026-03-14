@@ -3,7 +3,7 @@
 import math
 
 from redis.asyncio import Redis
-from sqlalchemy import String, cast, func, or_, select
+from sqlalchemy import String, case, cast, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
@@ -57,8 +57,16 @@ async def search_foods(
             cast(Food.common_names, String).ilike(like_pattern),
             Food.category.ilike(like_pattern),
         )
+        # 관련성 점수: 정확 일치 > 접두사 > 포함(이름) > 포함(기타)
+        relevance = case(
+            (Food.name.ilike(q_stripped), 4),
+            (Food.name.ilike(f"{q_stripped}%"), 3),
+            (Food.name.ilike(like_pattern), 2),
+            else_=1,
+        )
     else:
         condition = None
+        relevance = None
 
     # 전체 건수 조회
     count_stmt = select(func.count()).select_from(Food)
@@ -70,11 +78,13 @@ async def search_foods(
     total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     page = min(page, max(1, total_pages))
 
-    # 페이지네이션 조회
+    # 페이지네이션 조회 (관련성 높은 순)
     offset = (page - 1) * page_size
     search_stmt = select(Food)
     if condition is not None:
         search_stmt = search_stmt.where(condition)
+    if relevance is not None:
+        search_stmt = search_stmt.order_by(relevance.desc(), Food.name)
     search_stmt = search_stmt.offset(offset).limit(page_size)
     rows = await db.execute(search_stmt)
     foods = rows.scalars().all()
@@ -90,6 +100,57 @@ async def search_foods(
     }
 
     await cache_set(redis, cache_key, result, CACHE_TTL_FOOD_SEARCH)
+    return result
+
+
+async def suggest_foods(
+    db: AsyncSession,
+    redis: Redis,
+    q: str,
+    limit: int = 10,
+) -> list[dict]:
+    """식품 검색 자동완성 제안을 반환한다.
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+        q: 검색어 (2자 이상).
+        limit: 최대 결과 수 (기본 10).
+
+    Returns:
+        [{"name": ..., "slug": ..., "type": "food"}] 형태의 리스트.
+    """
+    q_stripped = q.strip()
+    if len(q_stripped) < 2:
+        return []
+
+    cache_key = make_cache_key("food", "suggest", hash_query(q_stripped), str(limit))
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    like_pattern = f"%{q_stripped}%"
+    relevance = case(
+        (Food.name.ilike(q_stripped), 3),
+        (Food.name.ilike(f"{q_stripped}%"), 2),
+        else_=1,
+    )
+
+    stmt = (
+        select(Food.name, Food.slug)
+        .where(
+            or_(
+                Food.name.ilike(like_pattern),
+                cast(Food.common_names, String).ilike(like_pattern),
+            )
+        )
+        .order_by(relevance.desc(), Food.name)
+        .limit(limit)
+    )
+    rows = await db.execute(stmt)
+    result = [{"name": r[0], "slug": r[1], "type": "food"} for r in rows.all()]
+
+    await cache_set(redis, cache_key, result, 60 * 60)  # 1시간
     return result
 
 

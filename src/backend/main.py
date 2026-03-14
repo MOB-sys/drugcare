@@ -31,6 +31,8 @@ if _sentry_dsn:
         send_default_pii=False,
         before_send_transaction=_filter_transactions,
     )
+from redis.asyncio import Redis
+
 from src.backend.core.database import engine
 from src.backend.core.redis import pool as redis_pool
 from src.backend.middleware.device_auth import DeviceAuthMiddleware
@@ -49,6 +51,7 @@ from src.backend.routers import (
     metrics,
     reminders,
     reviews,
+    search,
     supplements,
 )
 
@@ -76,6 +79,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         settings.APP_ENV,
         settings.DEBUG,
     )
+
+    # Redis 연결 확인
+    try:
+        redis = Redis(connection_pool=redis_pool)
+        await redis.ping()
+        logger.info("Redis 연결 확인 완료 (ping OK)")
+    except Exception:
+        logger.error("Redis 연결 실패 — 캐시 기능이 비활성화될 수 있습니다", exc_info=True)
 
     yield
 
@@ -148,3 +159,4 @@ app.include_router(reminders.router, prefix=api_prefix)
 app.include_router(feedback.router, prefix=api_prefix)
 app.include_router(reviews.router, prefix=api_prefix)
 app.include_router(metrics.router, prefix=api_prefix)
+app.include_router(search.router, prefix=api_prefix)

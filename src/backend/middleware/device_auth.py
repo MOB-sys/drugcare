@@ -45,7 +45,37 @@ class DeviceAuthMiddleware(BaseHTTPMiddleware):
     - X-Device-ID 헤더가 있으면 앱 클라이언트로 처리.
     - 헤더 없으면 session_id 쿠키를 확인 (웹 클라이언트).
     - 둘 다 없으면 web-{uuid4} 생성 후 Set-Cookie.
+    - 모든 상태 변경 요청(POST/PUT/PATCH/DELETE)은 Origin/Referer 검증 필수.
     """
+
+    # CSRF 허용 Origin 목록 (클래스 레벨 상수)
+    _ALLOWED_ORIGINS: set[str] = {
+        "https://pillright.com",
+        "https://www.pillright.com",
+        "http://localhost:3000",
+    }
+
+    def _check_csrf(self, request: Request) -> bool:
+        """상태 변경 요청의 Origin/Referer를 검증한다.
+
+        Args:
+            request: HTTP 요청 객체.
+
+        Returns:
+            True이면 통과, False이면 CSRF 차단.
+        """
+        if request.method not in ("POST", "PUT", "PATCH", "DELETE"):
+            return True
+
+        origin = request.headers.get("origin", "")
+        referer = request.headers.get("referer", "")
+
+        # Origin 또는 Referer 중 하나라도 허용 목록과 일치하면 통과
+        if any(origin.startswith(o) or referer.startswith(o) for o in self._ALLOWED_ORIGINS):
+            return True
+
+        # 네이티브 앱: Origin/Referer가 둘 다 비어있고 X-Device-ID가 있으면 통과
+        return bool(not origin and not referer and request.headers.get("X-Device-ID"))
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         """요청의 디바이스 인증을 확인하고 처리한다."""
@@ -59,76 +89,35 @@ class DeviceAuthMiddleware(BaseHTTPMiddleware):
         if path.startswith(EXEMPT_PREFIXES):
             return await call_next(request)
 
+        # CSRF 보호: 모든 상태 변경 요청에 대해 Origin/Referer 검증
+        if not self._check_csrf(request):
+            from starlette.responses import JSONResponse
+
+            return JSONResponse(
+                {"success": False, "error": "CSRF 검증 실패"},
+                status_code=403,
+            )
+
         # 1) X-Device-ID 헤더 (앱 클라이언트)
         device_id = request.headers.get("X-Device-ID")
         if device_id and _UUID_RE.match(device_id):
             request.state.device_id = device_id
-
-            # CSRF 보호: 상태 변경 요청 시 Origin 검증 (앱은 X-Device-ID로 통과)
-            if request.method in ("POST", "PUT", "PATCH", "DELETE"):
-                origin = request.headers.get("origin", "")
-                referer = request.headers.get("referer", "")
-                allowed_origins = {
-                    "https://pillright.com",
-                    "https://www.pillright.com",
-                    "http://localhost:3000",
-                }
-                if not any(origin.startswith(o) or referer.startswith(o) for o in allowed_origins):
-                    # X-Device-ID가 있으므로 모바일 앱 — 통과
-                    pass
-
             return await call_next(request)
 
         # 2) session_id 쿠키 (웹 클라이언트)
         session_id = request.cookies.get("session_id")
         if session_id and session_id.startswith("web-") and _UUID_RE.match(session_id[4:]):
             request.state.device_id = session_id
-
-            # CSRF 보호: 웹 클라이언트의 상태 변경 요청 시 Origin 검증
-            if request.method in ("POST", "PUT", "PATCH", "DELETE"):
-                origin = request.headers.get("origin", "")
-                referer = request.headers.get("referer", "")
-                allowed_origins = {
-                    "https://pillright.com",
-                    "https://www.pillright.com",
-                    "http://localhost:3000",
-                }
-                if not any(origin.startswith(o) or referer.startswith(o) for o in allowed_origins):
-                    from starlette.responses import JSONResponse
-
-                    return JSONResponse(
-                        {"success": False, "error": "CSRF 검증 실패"},
-                        status_code=403,
-                    )
-
             return await call_next(request)
 
         # 3) 둘 다 없으면 새 웹 세션 생성
-        # CSRF 보호: 새 세션의 상태 변경 요청도 Origin 검증
-        if request.method in ("POST", "PUT", "PATCH", "DELETE"):
-            origin = request.headers.get("origin", "")
-            referer = request.headers.get("referer", "")
-            allowed_origins = {
-                "https://pillright.com",
-                "https://www.pillright.com",
-                "http://localhost:3000",
-            }
-            if not any(origin.startswith(o) or referer.startswith(o) for o in allowed_origins):
-                if not request.headers.get("X-Device-ID"):
-                    from starlette.responses import JSONResponse
-
-                    return JSONResponse(
-                        {"success": False, "error": "CSRF 검증 실패"},
-                        status_code=403,
-                    )
-
         new_session_id = f"web-{uuid4()}"
         request.state.device_id = new_session_id
         response = await call_next(request)
         response.set_cookie(
             key="session_id",
             value=new_session_id,
-            max_age=60 * 60 * 24 * 365,
+            max_age=60 * 60 * 24 * 90,
             httponly=True,
             samesite="strict",
             secure=True,

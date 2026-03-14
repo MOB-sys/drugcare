@@ -1,11 +1,27 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { SearchIcon, CloseIcon } from "@/components/icons";
+import { fetchSearchSuggestions, type SearchSuggestion } from "@/lib/api/search";
 
 const POPULAR_SEARCHES = [
   "비타민D", "오메가3", "타이레놀", "마그네슘", "유산균",
   "아스피린", "철분", "비타민C", "혈압약", "종합비타민",
 ];
+
+const TYPE_LABELS: Record<string, string> = {
+  drug: "약물",
+  supplement: "영양제",
+  food: "식품",
+  herbal: "한약재",
+};
+
+const TYPE_COLORS: Record<string, string> = {
+  drug: "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300",
+  supplement: "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300",
+  food: "bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300",
+  herbal: "bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300",
+};
 
 interface SearchInputProps {
   value: string;
@@ -25,7 +41,10 @@ export function SearchInput({
   onClearRecent,
 }: SearchInputProps) {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -37,64 +56,99 @@ export function SearchInput({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // 자동완성 제안 fetching (디바운스 300ms)
+  const fetchSuggestions = useCallback((query: string) => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+
+    if (query.trim().length < 2) {
+      setSuggestions([]);
+      return;
+    }
+
+    setLoadingSuggestions(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const results = await fetchSearchSuggestions(query.trim(), 8);
+        setSuggestions(results);
+      } catch {
+        setSuggestions([]);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    }, 300);
+  }, []);
+
+  function handleChange(newValue: string) {
+    onChange(newValue);
+    fetchSuggestions(newValue);
+  }
+
   function handleSelect(query: string) {
     onChange(query);
     onSearchSelect?.(query);
     setShowDropdown(false);
+    setSuggestions([]);
   }
 
-  const shouldShowDropdown = showDropdown && !value.trim() && (recentSearches.length > 0 || POPULAR_SEARCHES.length > 0);
+  const hasSuggestions = value.trim().length >= 2 && suggestions.length > 0;
+  const showEmptyState = showDropdown && !value.trim() && (recentSearches.length > 0 || POPULAR_SEARCHES.length > 0);
+  const showSuggestionList = showDropdown && hasSuggestions;
 
   return (
     <div ref={wrapperRef} className="relative">
-      <svg
-        className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-        />
-      </svg>
+      <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-gray-500" />
       <label htmlFor="search-input" className="sr-only">약물 또는 영양제 검색</label>
       <input
         id="search-input"
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => handleChange(e.target.value)}
         onFocus={() => setShowDropdown(true)}
         placeholder="약물 또는 영양제를 검색하세요"
         aria-label="약물 또는 영양제 검색"
         role="combobox"
-        aria-expanded={shouldShowDropdown}
-        aria-controls={shouldShowDropdown ? "search-dropdown" : undefined}
+        aria-expanded={showEmptyState || showSuggestionList}
+        aria-controls={showEmptyState || showSuggestionList ? "search-dropdown" : undefined}
         autoComplete="off"
         maxLength={200}
         className="w-full pl-11 pr-10 py-3 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-base bg-white dark:bg-gray-800 dark:text-gray-100"
       />
       {value && (
         <button
-          onClick={() => onChange("")}
-          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 w-7 h-7 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+          onClick={() => { onChange(""); setSuggestions([]); }}
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 w-8 h-8 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
           aria-label="검색어 지우기"
         >
-          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <CloseIcon className="w-full h-full" />
         </button>
       )}
 
-      {/* 드롭다운: 최근 검색 + 인기 검색어 */}
-      {shouldShowDropdown && (
+      {/* 자동완성 제안 드롭다운 */}
+      {showSuggestionList && (
+        <div id="search-dropdown" role="listbox" className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-20 overflow-hidden">
+          <div className="p-2">
+            {suggestions.map((s, i) => (
+              <button
+                key={`${s.type}-${s.slug}-${i}`}
+                onClick={() => handleSelect(s.name)}
+                role="option"
+                className="w-full flex items-center gap-2 px-3 py-2 text-left rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                <span className="text-sm text-gray-900 dark:text-gray-100 flex-1 truncate">{s.name}</span>
+                <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium shrink-0 ${TYPE_COLORS[s.type] || ""}`}>
+                  {TYPE_LABELS[s.type] || s.type}
+                </span>
+              </button>
+            ))}
+          </div>
+          {loadingSuggestions && (
+            <div className="px-3 py-2 text-xs text-gray-400 dark:text-gray-500 text-center">검색 중...</div>
+          )}
+        </div>
+      )}
+
+      {/* 드롭다운: 최근 검색 + 인기 검색어 (빈 입력 시) */}
+      {showEmptyState && !showSuggestionList && (
         <div id="search-dropdown" role="listbox" className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg z-20 overflow-hidden">
           {/* 최근 검색 */}
           {recentSearches.length > 0 && (
@@ -125,9 +179,7 @@ export function SearchInput({
                         className="pr-2 py-1 text-gray-300 dark:text-gray-600 hover:text-gray-500 dark:hover:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity"
                         aria-label={`${q} 삭제`}
                       >
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <CloseIcon className="w-3 h-3" />
                       </button>
                     )}
                   </div>

@@ -37,6 +37,7 @@ class Supplement(Base, TimestampMixin):
     precautions: Mapped[str | None] = mapped_column(Text)
     intake_method: Mapped[str | None] = mapped_column(Text)
     category: Mapped[str | None] = mapped_column(String(100))
+    image_url: Mapped[str | None] = mapped_column(String(500))
     source: Mapped[str | None] = mapped_column(String(100))
 
     __table_args__ = (

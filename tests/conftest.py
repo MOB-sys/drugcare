@@ -98,6 +98,7 @@ def mock_supplement(**overrides) -> MagicMock:
         "precautions": "과량 섭취 시 설사 가능",
         "intake_method": "1일 1회, 1회 1정",
         "category": "비타민",
+        "image_url": None,
         "source": "자체구축",
     }
     defaults.update(overrides)

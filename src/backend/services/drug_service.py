@@ -63,8 +63,16 @@ async def search_drugs(
             Drug.material_name.ilike(like_pattern),
             Drug.efcy_qesitm.ilike(like_pattern),
         )
+        # 관련성 점수: 정확 일치 > 접두사 > 포함(이름) > 포함(기타)
+        relevance = case(
+            (Drug.item_name.ilike(q_stripped), 4),
+            (Drug.item_name.ilike(f"{q_stripped}%"), 3),
+            (Drug.item_name.ilike(like_pattern), 2),
+            else_=1,
+        )
     else:
         condition = None
+        relevance = None
 
     # 전체 건수 조회
     count_stmt = select(func.count()).select_from(Drug)
@@ -76,11 +84,13 @@ async def search_drugs(
     total_pages = math.ceil(total / page_size) if page_size > 0 else 0
     page = min(page, max(1, total_pages))
 
-    # 페이지네이션 조회
+    # 페이지네이션 조회 (관련성 높은 순)
     offset = (page - 1) * page_size
     search_stmt = select(Drug)
     if condition is not None:
         search_stmt = search_stmt.where(condition)
+    if relevance is not None:
+        search_stmt = search_stmt.order_by(relevance.desc(), Drug.item_name)
     search_stmt = search_stmt.offset(offset).limit(page_size)
     rows = await db.execute(search_stmt)
     drugs = rows.scalars().all()
@@ -96,6 +106,54 @@ async def search_drugs(
     }
 
     await cache_set(redis, cache_key, result, CACHE_TTL_DRUG_SEARCH)
+    return result
+
+
+async def suggest_drugs(
+    db: AsyncSession,
+    redis: Redis,
+    q: str,
+    limit: int = 10,
+) -> list[dict]:
+    """의약품 검색 자동완성 제안을 반환한다.
+
+    접두사 매칭 우선, 포함 매칭 보조로 최대 limit개의 제안을 반환한다.
+
+    Args:
+        db: 비동기 DB 세션.
+        redis: Redis 클라이언트.
+        q: 검색어 (2자 이상).
+        limit: 최대 결과 수 (기본 10).
+
+    Returns:
+        [{"name": ..., "slug": ..., "type": "drug"}] 형태의 리스트.
+    """
+    q_stripped = q.strip()
+    if len(q_stripped) < 2:
+        return []
+
+    cache_key = make_cache_key("drug", "suggest", hash_query(q_stripped), str(limit))
+    cached = await cache_get(redis, cache_key)
+    if cached is not None:
+        return cached
+
+    like_pattern = f"%{q_stripped}%"
+    relevance = case(
+        (Drug.item_name.ilike(q_stripped), 3),
+        (Drug.item_name.ilike(f"{q_stripped}%"), 2),
+        else_=1,
+    )
+
+    stmt = (
+        select(Drug.item_name, Drug.slug)
+        .where(Drug.item_name.ilike(like_pattern))
+        .order_by(relevance.desc(), Drug.item_name)
+        .limit(limit)
+    )
+    rows = await db.execute(stmt)
+    result = [{"name": r[0], "slug": r[1], "type": "drug"} for r in rows.all()]
+
+    await cache_set(redis, cache_key, result, 60 * 60)  # 1시간
     return result
 
 

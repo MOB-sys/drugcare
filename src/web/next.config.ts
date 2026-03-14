@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "nedrug.mfds.go.kr",
       },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+      },
     ],
     formats: ["image/avif", "image/webp"],
   },

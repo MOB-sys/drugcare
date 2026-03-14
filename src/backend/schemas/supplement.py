@@ -12,6 +12,7 @@ class SupplementSearchItem(BaseModel):
     company: str | None = None
     main_ingredient: str | None = None
     category: str | None = None
+    image_url: str | None = None
 
     model_config = {"from_attributes": True}
 
@@ -30,6 +31,7 @@ class SupplementDetail(BaseModel):
     precautions: str | None = None
     intake_method: str | None = None
     category: str | None = None
+    image_url: str | None = None
     source: str | None = None
 
     model_config = {"from_attributes": True}
