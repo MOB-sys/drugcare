@@ -53,7 +53,10 @@ export function SearchInput({
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
   }, []);
 
   // 자동완성 제안 fetching (디바운스 300ms)

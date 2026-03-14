@@ -108,6 +108,47 @@ def mock_supplement(**overrides) -> MagicMock:
     return mock
 
 
+def mock_food(**overrides) -> MagicMock:
+    """FoodSearchItem/FoodDetail 호환 mock Food ORM 객체를 생성한다."""
+    defaults = {
+        "id": 1,
+        "name": "자몽",
+        "slug": "food-grapefruit",
+        "category": "과일",
+        "description": "CYP3A4 효소 억제로 다수 약물과 상호작용",
+        "common_names": ["자몽", "그레이프프루트", "grapefruit"],
+        "nutrients": {"vitamin_c": "38mg"},
+        "image_url": None,
+    }
+    defaults.update(overrides)
+    mock = MagicMock()
+    for k, v in defaults.items():
+        setattr(mock, k, v)
+    return mock
+
+
+def mock_herbal_medicine(**overrides) -> MagicMock:
+    """HerbalMedicineSearchItem/HerbalMedicineDetail 호환 mock 객체."""
+    defaults = {
+        "id": 1,
+        "name": "인삼",
+        "slug": "herbal-ginseng",
+        "korean_name": "인삼",
+        "latin_name": "Panax ginseng",
+        "category": "보기약",
+        "properties": {"taste": "단맛", "nature": "온성", "meridian": ["비", "폐"]},
+        "description": "대표적 보기약으로 기를 보하고 체력을 회복시킨다",
+        "efficacy": "원기 회복, 면역력 강화, 항피로",
+        "precautions": "고혈압 환자 주의, 와파린 병용 주의",
+        "image_url": None,
+    }
+    defaults.update(overrides)
+    mock = MagicMock()
+    for k, v in defaults.items():
+        setattr(mock, k, v)
+    return mock
+
+
 def mock_interaction(**overrides) -> MagicMock:
     """InteractionResult 호환 mock Interaction ORM 객체를 생성한다.
 

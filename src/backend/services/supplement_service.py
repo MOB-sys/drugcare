@@ -6,7 +6,11 @@ from redis.asyncio import Redis
 from sqlalchemy import case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.backend.core.redis import CACHE_TTL_SUPPLEMENT_DETAIL, CACHE_TTL_SUPPLEMENT_SEARCH
+from src.backend.core.redis import (
+    CACHE_TTL_SUGGEST,
+    CACHE_TTL_SUPPLEMENT_DETAIL,
+    CACHE_TTL_SUPPLEMENT_SEARCH,
+)
 from src.backend.models.supplement import Supplement
 from src.backend.schemas.supplement import SupplementDetail, SupplementSearchItem
 from src.backend.utils.cache import cache_get, cache_set, hash_query, make_cache_key
@@ -143,7 +147,7 @@ async def suggest_supplements(
     rows = await db.execute(stmt)
     result = [{"name": r[0], "slug": r[1], "type": "supplement"} for r in rows.all()]
 
-    await cache_set(redis, cache_key, result, 60 * 60)  # 1시간
+    await cache_set(redis, cache_key, result, CACHE_TTL_SUGGEST)
     return result
 
 

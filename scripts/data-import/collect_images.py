@@ -31,9 +31,15 @@ UNSPLASH_ACCESS_KEY = os.environ.get("UNSPLASH_ACCESS_KEY", "")
 UNSPLASH_BASE = "https://api.unsplash.com"
 WIKIPEDIA_BASE = "https://en.wikipedia.org/api/rest_v1/page/summary"
 
-# Unsplash 무료 tier: 50 req/hr
+# Unsplash 무료 tier: 50 req/hr → 75초 간격으로 안전 유지
 UNSPLASH_DELAY = 75  # 초 (약 48 req/hr)
 WIKIPEDIA_DELAY = 0.3  # 초
+
+
+def _progress(current: int, total: int, prefix: str = "") -> str:
+    """진행률 문자열을 반환한다."""
+    pct = (current / total * 100) if total > 0 else 0
+    return f"{prefix}[{current}/{total}] {pct:.0f}%"
 
 
 def get_db_connection():
@@ -185,8 +191,10 @@ def collect_food_images(
 
     remaining = {"remaining": 50}
     updated = 0
+    est_minutes = len(rows) * UNSPLASH_DELAY / 60
+    logger.info("예상 소요시간: ~%.0f분 (delay %ds/건)", est_minutes, UNSPLASH_DELAY)
 
-    for food_id, name, common_names in rows:
+    for idx, (food_id, name, common_names) in enumerate(rows, 1):
         # common_names JSONB에서 영어명 추출 (마지막 항목이 보통 영문)
         search_term = name
         if common_names:
@@ -200,7 +208,13 @@ def collect_food_images(
                 else:
                     search_term = common_names[-1]
 
-        logger.info("[Food #%d] %s → 검색: %s", food_id, name, search_term)
+        logger.info(
+            "%s [Food #%d] %s → 검색: %s",
+            _progress(idx, len(rows)),
+            food_id,
+            name,
+            search_term,
+        )
 
         image_url = unsplash_search(f"{search_term} food", remaining)
 
@@ -245,9 +259,17 @@ def collect_herbal_images(
 
     remaining = {"remaining": 50}
     updated = 0
+    est_minutes = len(rows) * (WIKIPEDIA_DELAY + UNSPLASH_DELAY * 0.3) / 60
+    logger.info("예상 소요시간: ~%.0f분 (Wikipedia 우선, Unsplash 폴백)", est_minutes)
 
-    for herbal_id, name, latin_name in rows:
-        logger.info("[Herbal #%d] %s (latin: %s)", herbal_id, name, latin_name)
+    for idx, (herbal_id, name, latin_name) in enumerate(rows, 1):
+        logger.info(
+            "%s [Herbal #%d] %s (latin: %s)",
+            _progress(idx, len(rows)),
+            herbal_id,
+            name,
+            latin_name,
+        )
 
         image_url = None
 
@@ -330,9 +352,15 @@ def collect_supplement_images(
     category_cache: dict[str, list[str]] = {}
     updated = 0
 
-    for supp_id, product_name, category in rows:
+    for idx, (supp_id, product_name, category) in enumerate(rows, 1):
         cat_key = (category or "").strip()
-        logger.info("[Supplement #%d] %s (카테고리: %s)", supp_id, product_name, cat_key)
+        logger.info(
+            "%s [Supplement #%d] %s (카테고리: %s)",
+            _progress(idx, len(rows)),
+            supp_id,
+            product_name,
+            cat_key,
+        )
 
         # 캐시에 없으면 Unsplash에서 가져오기
         if cat_key not in category_cache:

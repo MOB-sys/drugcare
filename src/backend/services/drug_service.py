@@ -7,7 +7,7 @@ from redis.asyncio import Redis
 from sqlalchemy import and_, case, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH
+from src.backend.core.redis import CACHE_TTL_DRUG_DETAIL, CACHE_TTL_DRUG_SEARCH, CACHE_TTL_SUGGEST
 from src.backend.models.drug import Drug
 from src.backend.models.drug_dur_info import DrugDURInfo
 from src.backend.schemas.drug import (
@@ -153,7 +153,7 @@ async def suggest_drugs(
     rows = await db.execute(stmt)
     result = [{"name": r[0], "slug": r[1], "type": "drug"} for r in rows.all()]
 
-    await cache_set(redis, cache_key, result, 60 * 60)  # 1시간
+    await cache_set(redis, cache_key, result, CACHE_TTL_SUGGEST)
     return result
 
 
