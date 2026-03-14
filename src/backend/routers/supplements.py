@@ -21,7 +21,7 @@ router = APIRouter(prefix="/supplements", tags=["supplements"])
     description="제품명, 성분명 등으로 건강기능식품을 검색합니다.",
 )
 async def search_supplements(
-    q: str = Query("", max_length=200, description="검색어 (제품명, 성분명 등)"),
+    q: str = Query("", max_length=100, description="검색어 (제품명, 성분명 등)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),

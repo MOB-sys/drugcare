@@ -27,15 +27,21 @@ export default function CabinetPage() {
         <h1 className="text-2xl font-bold text-[var(--color-primary)] mb-6">내 복약함</h1>
 
         {isLoading && (
-          <div className="text-center py-16 text-gray-400 dark:text-gray-500">불러오는 중...</div>
+          <div className="text-center py-16 text-gray-400 dark:text-gray-500" role="status" aria-live="polite" aria-label="로딩 중">불러오는 중...</div>
         )}
 
         {error && (
-          <div className="text-center py-16">
+          <div className="text-center py-16" role="alert" aria-live="assertive">
             <p className="text-red-500 mb-2">{error}</p>
             <p className="text-sm text-gray-400 dark:text-gray-500">
               새로고침하거나 나중에 다시 시도해주세요.
             </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 inline-block px-6 py-2 rounded-xl text-white font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] transition-colors"
+            >
+              다시 시도
+            </button>
           </div>
         )}
 

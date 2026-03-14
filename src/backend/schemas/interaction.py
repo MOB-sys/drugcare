@@ -1,6 +1,6 @@
 """상호작용 체크 API 스키마."""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 from src.backend.models.interaction import ItemType, Severity
 
@@ -16,9 +16,21 @@ class InteractionCheckRequest(BaseModel):
     """상호작용 체크 요청.
 
     최소 2개 아이템을 받아 상호작용을 확인한다.
+    중복된 (item_type, item_id) 쌍은 허용하지 않는다.
     """
 
     items: list[InteractionItem] = Field(..., min_length=2, max_length=10)
+
+    @model_validator(mode="after")
+    def check_no_duplicates(self) -> "InteractionCheckRequest":
+        """중복 아이템이 없는지 검증한다."""
+        seen: set[tuple[str, int]] = set()
+        for item in self.items:
+            key = (item.item_type, item.item_id)
+            if key in seen:
+                raise ValueError(f"중복 아이템: {item.item_type}:{item.item_id}")
+            seen.add(key)
+        return self
 
 
 class InteractionResult(BaseModel):

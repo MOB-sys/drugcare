@@ -16,6 +16,7 @@ export function CheckButton({ items, isLoading, onClick }: CheckButtonProps) {
     <button
       onClick={onClick}
       disabled={!canCheck}
+      aria-busy={isLoading}
       className={`w-full py-3 rounded-xl text-white font-semibold text-base transition-all ${
         canCheck
           ? "bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] shadow-md hover:shadow-lg active:scale-[0.98]"

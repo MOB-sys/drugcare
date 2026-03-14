@@ -129,15 +129,18 @@ async def _call_openai(interaction: InteractionResult) -> dict | None:
         return None
 
 
-def _parse_openai_response(response: object) -> dict:
+def _parse_openai_response(response: object) -> dict | None:
     """OpenAI 응답을 파싱하여 설명/대처 방법 dict를 반환한다.
 
     Args:
         response: OpenAI ChatCompletion 응답 객체.
 
     Returns:
-        {"ai_explanation": str, "ai_recommendation": str | None}.
+        {"ai_explanation": str, "ai_recommendation": str | None} 또는 None.
     """
+    if not response.choices or not response.choices[0].message:
+        logger.warning("OpenAI 응답에 choices/message 없음")
+        return None
     content = response.choices[0].message.content or ""
 
     if "대처 방법:" in content:

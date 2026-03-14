@@ -114,6 +114,9 @@ async def _resolve_item_name(
 ) -> str | None:
     """아이템 유형과 ID로 이름을 조회한다.
 
+    해당 item_type에 맞는 테이블에서 이름 컬럼만 SELECT하여
+    불필요한 전체 행 로딩을 방지한다.
+
     Args:
         db: 비동기 DB 세션.
         item_type: 아이템 유형 (drug/supplement/food/herbal).
@@ -122,28 +125,19 @@ async def _resolve_item_name(
     Returns:
         아이템명 또는 None (존재하지 않는 경우).
     """
-    if item_type == CabinetItemType.DRUG:
-        stmt = select(Drug).where(Drug.id == item_id)
-        row = await db.execute(stmt)
-        drug = row.scalar_one_or_none()
-        return drug.item_name if drug else None
+    # item_type → (모델, 이름 컬럼) 매핑 — 해당 타입만 1회 쿼리
+    type_map = {
+        CabinetItemType.DRUG: (Drug, Drug.item_name),
+        CabinetItemType.SUPPLEMENT: (Supplement, Supplement.product_name),
+        CabinetItemType.FOOD: (Food, Food.name),
+        CabinetItemType.HERBAL: (HerbalMedicine, HerbalMedicine.name),
+    }
 
-    if item_type == CabinetItemType.SUPPLEMENT:
-        stmt = select(Supplement).where(Supplement.id == item_id)
-        row = await db.execute(stmt)
-        supplement = row.scalar_one_or_none()
-        return supplement.product_name if supplement else None
+    mapping = type_map.get(item_type)
+    if mapping is None:
+        return None
 
-    if item_type == CabinetItemType.FOOD:
-        stmt = select(Food).where(Food.id == item_id)
-        row = await db.execute(stmt)
-        food = row.scalar_one_or_none()
-        return food.name if food else None
-
-    if item_type == CabinetItemType.HERBAL:
-        stmt = select(HerbalMedicine).where(HerbalMedicine.id == item_id)
-        row = await db.execute(stmt)
-        herbal = row.scalar_one_or_none()
-        return herbal.name if herbal else None
-
-    return None
+    model, name_col = mapping
+    stmt = select(name_col).where(model.id == item_id)
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()

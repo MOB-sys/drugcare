@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:16.6-alpine
     container_name: yakmeogeo-db
     environment:
       POSTGRES_USER: ${DB_USER:-yakmeogeo}
@@ -25,9 +25,9 @@ services:
       - internal
 
   redis:
-    image: redis:7-alpine
+    image: redis:7.4-alpine
     container_name: yakmeogeo-redis
-    command: redis-server --requirepass ${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD} --maxmemory 256mb --maxmemory-policy allkeys-lru
     volumes:
       - redisdata:/data
     healthcheck:
@@ -70,7 +70,7 @@ services:
       - internal
 
   nginx:
-    image: nginx:1.25-alpine
+    image: nginx:1.27-alpine
     container_name: yakmeogeo-nginx
     ports:
       - "80:80"

@@ -21,7 +21,7 @@ router = APIRouter(prefix="/foods", tags=["foods"])
     description="식품명 등으로 식품을 검색합니다.",
 )
 async def search_foods(
-    q: str = Query("", max_length=200, description="검색어 (식품명 등)"),
+    q: str = Query("", max_length=100, description="검색어 (식품명 등)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),

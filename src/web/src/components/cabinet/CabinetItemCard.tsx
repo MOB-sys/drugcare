@@ -35,7 +35,7 @@ export function CabinetItemCard({ item, isDeleting, onDelete }: CabinetItemCardP
         aria-label={`${item.nickname || item.item_name} 삭제`}
       >
         {isDeleting ? (
-          <div className="w-4 h-4 border-2 border-gray-300 dark:border-gray-600 border-t-gray-500 rounded-full animate-spin" />
+          <div className="w-4 h-4 border-2 border-gray-300 dark:border-gray-600 border-t-gray-500 rounded-full animate-spin" role="status" aria-label="삭제 중" />
         ) : (
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

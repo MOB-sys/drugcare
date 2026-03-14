@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSupplementBySlug, getRelatedSupplements } from "@/lib/api/supplements";
@@ -9,7 +10,6 @@ import { IngredientsTable } from "@/components/detail/IngredientsTable";
 import { CheckCTA } from "@/components/detail/CheckCTA";
 import { AddToCabinetButton } from "@/components/detail/AddToCabinetButton";
 import { AdBanner } from "@/components/ads/AdBanner";
-import { ReviewSection } from "@/components/review/ReviewSection";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
 import { KakaoShareButton } from "@/components/common/KakaoShareButton";
@@ -20,6 +20,12 @@ import { SafeImage } from "@/components/common/SafeImage";
 import { SITE_URL } from "@/lib/constants/site";
 import { DetailViewTracker } from "@/components/common/DetailViewTracker";
 import { buildSupplementFallbackContent } from "@/lib/utils/supplementFallbackContent";
+
+/* ── Below-fold 클라이언트 컴포넌트 lazy loading ── */
+const ReviewSection = dynamic(
+  () => import("@/components/review/ReviewSection").then((m) => ({ default: m.ReviewSection })),
+  { loading: () => <div className="h-48 animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl mt-8" /> },
+);
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -108,14 +114,16 @@ export default async function SupplementDetailPage({ params }: PageProps) {
     // 관련 건강기능식품 로드 실패 시 빈 배열로 대체 — 메인 콘텐츠 표시에 영향 없음
   }
 
-  const jsonLd = {
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: supp.product_name,
-    manufacturer: supp.company ? { "@type": "Organization", name: supp.company } : undefined,
     description: supp.functionality ?? fallback.overview ?? undefined,
     category: supp.category ?? "건강기능식품",
   };
+  if (supp.company) jsonLd.brand = { "@type": "Brand", name: supp.company };
+  if (supp.company) jsonLd.manufacturer = { "@type": "Organization", name: supp.company };
+  if (supp.image_url) jsonLd.image = supp.image_url;
 
   /* FAQ JSON-LD — 상세 정보를 Q&A로 구조화 */
   const faqEntries: { question: string; answer: string }[] = [];

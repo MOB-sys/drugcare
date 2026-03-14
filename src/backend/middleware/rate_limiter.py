@@ -89,21 +89,20 @@ class RateLimiterMiddleware(BaseHTTPMiddleware):
 def _get_client_ip(request: Request) -> str:
     """클라이언트 IP를 추출한다 (리버스 프록시 환경 지원).
 
+    X-Forwarded-For는 클라이언트가 임의로 설정할 수 있어 신뢰하지 않는다.
+    X-Real-IP는 Nginx가 $remote_addr로 설정하므로 스푸핑이 불가능하다.
+
     Args:
         request: HTTP 요청.
 
     Returns:
         클라이언트 IP 문자열.
     """
-    # Trust X-Real-IP set by Nginx (most reliable)
+    # X-Real-IP만 신뢰 — Nginx가 $remote_addr에서 설정하므로 스푸핑 불가
+    # X-Forwarded-For는 클라이언트가 임의 조작 가능하므로 사용하지 않음
     real_ip = request.headers.get("X-Real-IP")
     if real_ip:
         return real_ip.strip()
-    # Fallback: use the LAST entry in X-Forwarded-For (closest proxy)
-    forwarded = request.headers.get("X-Forwarded-For")
-    if forwarded:
-        # Use first IP (original client) only if behind trusted reverse proxy
-        return forwarded.split(",")[0].strip()
     return request.client.host if request.client else "unknown"
 
 

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { SafeImage } from "@/components/common/SafeImage";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -14,18 +15,26 @@ import { CategoryInfoSection } from "@/components/detail/CategoryInfoSection";
 import { CheckCTA } from "@/components/detail/CheckCTA";
 import { AddToCabinetButton } from "@/components/detail/AddToCabinetButton";
 import { AdBanner } from "@/components/ads/AdBanner";
-import { ReviewSection } from "@/components/review/ReviewSection";
 import { Breadcrumbs } from "@/components/common/Breadcrumbs";
 import { DataSource } from "@/components/common/DataSource";
 import { KakaoShareButton } from "@/components/common/KakaoShareButton";
 import { TableOfContents } from "@/components/common/TableOfContents";
 import type { TocItem } from "@/components/common/TableOfContents";
-import { DrugFAQ } from "@/components/drug/DrugFAQ";
 import { RelatedTips } from "@/components/drug/RelatedTips";
 import { buildDrugFAQItems, buildFAQJsonLd } from "@/lib/faq";
 import { SITE_URL } from "@/lib/constants/site";
 import { DetailViewTracker } from "@/components/common/DetailViewTracker";
 import { buildDrugFallbackContent } from "@/lib/utils/drugFallbackContent";
+
+/* ── Below-fold 클라이언트 컴포넌트 lazy loading ── */
+const ReviewSection = dynamic(
+  () => import("@/components/review/ReviewSection").then((m) => ({ default: m.ReviewSection })),
+  { loading: () => <div className="h-48 animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl mt-8" /> },
+);
+const DrugFAQ = dynamic(
+  () => import("@/components/drug/DrugFAQ").then((m) => ({ default: m.DrugFAQ })),
+  { loading: () => <div className="h-32 animate-pulse bg-gray-100 dark:bg-gray-800 rounded-xl mt-8" /> },
+);
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -120,6 +129,18 @@ export default async function DrugDetailPage({ params }: PageProps) {
     warning: drug.atpn_warn_qesitm ?? undefined,
   };
 
+  /* Product JSON-LD — Google Merchant / Rich Results 지원 */
+  const productJsonLd: Record<string, unknown> = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: drug.item_name,
+    category: "의약품",
+  };
+  if (drug.efcy_qesitm) productJsonLd.description = drug.efcy_qesitm;
+  else if (fallback.overview) productJsonLd.description = fallback.overview;
+  if (drug.item_image) productJsonLd.image = drug.item_image;
+  if (drug.entp_name) productJsonLd.brand = { "@type": "Brand", name: drug.entp_name };
+
   /* FAQ — 상세 정보를 Q&A로 구조화 (UI accordion + JSON-LD) */
   const faqSourceFields = {
     drugName: drug.item_name,
@@ -161,6 +182,10 @@ export default async function DrugDetailPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd).replace(/</g, '\\u003c') }}
         />
       )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, '\\u003c') }}
+      />
 
       <DetailViewTracker type="drug" id={drug.id} name={drug.item_name} />
 

@@ -9,9 +9,14 @@ import { SITE_URL } from "@/lib/constants/site";
 import snsIndex from "../../public/sns-content/index.json";
 
 const BASE_URL = SITE_URL;
-const SITEMAP_LIMIT = 45000;
 
-/** 대량 slug 배열을 45,000건씩 청크로 나눈다. */
+/**
+ * 사이트맵당 최대 URL 수 — Google 한도는 50K이지만
+ * 10K 이하로 유지해야 크롤링 효율이 좋다.
+ */
+const URLS_PER_SITEMAP = 10_000;
+
+/** 대량 slug 배열을 size건씩 청크로 나눈다. */
 function chunk<T>(arr: T[], size: number): T[][] {
   const result: T[][] = [];
   for (let i = 0; i < arr.length; i += size) {
@@ -20,8 +25,68 @@ function chunk<T>(arr: T[], size: number): T[][] {
   return result;
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  /* ── 정적 페이지 ── */
+/**
+ * Next.js 15 sitemap index 지원.
+ * 반환된 id 배열 수만큼 /sitemap/{id}.xml이 생성되고,
+ * /sitemap.xml은 자동으로 sitemap index로 동작한다.
+ *
+ * 할당:
+ *  - id 0 ~ N: 약물 (10K씩)
+ *  - id N+1  : 영양제
+ *  - id N+2  : 정적 + 식품 + 한약재 + 팁 + 뉴스 + 연구 + 안전카드 + 브라우즈
+ */
+export async function generateSitemaps() {
+  let drugCount = 0;
+  try {
+    const slugs = await getAllDrugSlugs();
+    drugCount = slugs.length;
+  } catch { /* API 미연결 대비 */ }
+
+  const drugSitemapCount = Math.max(1, Math.ceil(drugCount / URLS_PER_SITEMAP));
+
+  const ids: { id: number }[] = [];
+  for (let i = 0; i < drugSitemapCount; i++) {
+    ids.push({ id: i }); // drugs
+  }
+  ids.push({ id: drugSitemapCount });     // supplements
+  ids.push({ id: drugSitemapCount + 1 }); // misc (static + foods + herbals + tips + news + research + safety cards + browse)
+
+  return ids;
+}
+
+export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
+  /* ── 약물 사이트맵 개수 계산 (generateSitemaps와 동일 로직) ── */
+  let drugSlugs: string[] = [];
+  try {
+    drugSlugs = await getAllDrugSlugs();
+  } catch { /* API 미연결 대비 */ }
+  const drugSitemapCount = Math.max(1, Math.ceil(drugSlugs.length / URLS_PER_SITEMAP));
+
+  /* ── id < drugSitemapCount → 약물 사이트맵 ── */
+  if (id < drugSitemapCount) {
+    const drugChunks = chunk(drugSlugs, URLS_PER_SITEMAP);
+    const slugsForId = drugChunks[id] ?? [];
+    return slugsForId.map((slug) => ({
+      url: `${BASE_URL}/drugs/${slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+  }
+
+  /* ── 영양제 사이트맵 ── */
+  if (id === drugSitemapCount) {
+    let suppSlugs: string[] = [];
+    try {
+      suppSlugs = await getAllSupplementSlugs();
+    } catch { /* API 미연결 대비 */ }
+    return suppSlugs.map((slug) => ({
+      url: `${BASE_URL}/supplements/${slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+    }));
+  }
+
+  /* ── 기타 (정적 + 식품 + 한약재 + 팁 + 뉴스 + 연구 + 안전카드 + 브라우즈) ── */
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE_URL, lastModified: new Date(), changeFrequency: "daily", priority: 1.0 },
     { url: `${BASE_URL}/check`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
@@ -39,7 +104,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/contact`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
   ];
 
-  /* ── 안전 카드 ── */
   const safetyCardEntries: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/safety-cards`, changeFrequency: "weekly" as const, priority: 0.8 },
     ...snsIndex.items.map((item: { id: string }) => ({
@@ -49,13 +113,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  /* ── A~Z 브라우즈 ── */
   const browseEntries: MetadataRoute.Sitemap = ALL_LETTERS.flatMap((letter) => [
     { url: `${BASE_URL}/drugs/browse/${encodeURIComponent(letter)}`, changeFrequency: "weekly" as const, priority: 0.6 },
     { url: `${BASE_URL}/supplements/browse/${encodeURIComponent(letter)}`, changeFrequency: "weekly" as const, priority: 0.6 },
   ]);
 
-  /* ── 팁 ── */
   const tipEntries: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/tips`, changeFrequency: "weekly" as const, priority: 0.8 },
     ...getAllTipSlugs().map((slug) => ({
@@ -65,14 +127,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  /* ── 뉴스 + 연구 ── */
-  const newsEntries: MetadataRoute.Sitemap = [
-    ...getAllNewsSlugs().map((slug) => ({
-      url: `${BASE_URL}/news/${slug}`,
-      changeFrequency: "monthly" as const,
-      priority: 0.6,
-    })),
-  ];
+  const newsEntries: MetadataRoute.Sitemap = getAllNewsSlugs().map((slug) => ({
+    url: `${BASE_URL}/news/${slug}`,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
   const researchEntries: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}/research`, changeFrequency: "weekly" as const, priority: 0.7 },
     ...getAllResearchSlugs().map((slug) => ({
@@ -82,9 +142,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   ];
 
-  /* ── 식품 + 한약재 (소량 — 항상 포함) ── */
   let foodEntries: MetadataRoute.Sitemap = [];
-  let herbalEntries: MetadataRoute.Sitemap = [];
   try {
     const foodSlugs = await getAllFoodSlugs();
     foodEntries = foodSlugs.map((slug) => ({
@@ -94,43 +152,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
   } catch { /* API 미연결 대비 */ }
 
+  let herbalEntries: MetadataRoute.Sitemap = [];
   try {
     const herbalSlugs = await getAllHerbalMedicineSlugs();
     herbalEntries = herbalSlugs.map((slug) => ({
       url: `${BASE_URL}/herbal-medicines/${slug}`,
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
-    }));
-  } catch { /* API 미연결 대비 */ }
-
-  /* ── 약물 (대량 — 45K씩 분할) ── */
-  let drugEntries: MetadataRoute.Sitemap = [];
-  try {
-    const drugSlugs = await getAllDrugSlugs();
-    const drugChunks = chunk(drugSlugs, SITEMAP_LIMIT);
-    // 첫 청크만 이 사이트맵에 포함 (50K 한도 준수)
-    if (drugChunks.length > 0) {
-      drugEntries = drugChunks[0].map((slug) => ({
-        url: `${BASE_URL}/drugs/${slug}`,
-        changeFrequency: "monthly" as const,
-        priority: 0.7,
-      }));
-    }
-  } catch { /* API 미연결 대비 */ }
-
-  /* 현재까지 URL 수 계산 */
-  const currentCount = staticPages.length + browseEntries.length + tipEntries.length
-    + safetyCardEntries.length + newsEntries.length + researchEntries.length
-    + foodEntries.length + herbalEntries.length + drugEntries.length;
-
-  /* ── 영양제 (남은 한도만큼) ── */
-  let suppEntries: MetadataRoute.Sitemap = [];
-  const remaining = SITEMAP_LIMIT - currentCount;
-  try {
-    const suppSlugs = await getAllSupplementSlugs();
-    const limitedSlugs = suppSlugs.slice(0, Math.max(0, remaining));
-    suppEntries = limitedSlugs.map((slug) => ({
-      url: `${BASE_URL}/supplements/${slug}`,
       changeFrequency: "monthly" as const,
       priority: 0.7,
     }));
@@ -145,7 +171,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...researchEntries,
     ...foodEntries,
     ...herbalEntries,
-    ...drugEntries,
-    ...suppEntries,
   ];
 }

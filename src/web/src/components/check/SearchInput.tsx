@@ -93,9 +93,11 @@ export function SearchInput({
     setSuggestions([]);
   }
 
+  const [activeIndex, setActiveIndex] = useState(-1);
   const hasSuggestions = value.trim().length >= 2 && suggestions.length > 0;
   const showEmptyState = showDropdown && !value.trim() && (recentSearches.length > 0 || POPULAR_SEARCHES.length > 0);
   const showSuggestionList = showDropdown && hasSuggestions;
+  const activeDescendant = showSuggestionList && activeIndex >= 0 ? `suggestion-${activeIndex}` : undefined;
 
   return (
     <div ref={wrapperRef} className="relative">
@@ -112,6 +114,8 @@ export function SearchInput({
         role="combobox"
         aria-expanded={showEmptyState || showSuggestionList}
         aria-controls={showEmptyState || showSuggestionList ? "search-dropdown" : undefined}
+        aria-activedescendant={activeDescendant}
+        aria-busy={loadingSuggestions}
         autoComplete="off"
         maxLength={200}
         className="w-full pl-11 pr-10 py-3 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent text-base bg-white dark:bg-gray-800 dark:text-gray-100"
@@ -133,8 +137,10 @@ export function SearchInput({
             {suggestions.map((s, i) => (
               <button
                 key={`${s.type}-${s.slug}-${i}`}
+                id={`suggestion-${i}`}
                 onClick={() => handleSelect(s.name)}
                 role="option"
+                aria-selected={activeIndex === i}
                 className="w-full flex items-center gap-2 px-3 py-2 text-left rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <span className="text-sm text-gray-900 dark:text-gray-100 flex-1 truncate">{s.name}</span>
@@ -145,7 +151,7 @@ export function SearchInput({
             ))}
           </div>
           {loadingSuggestions && (
-            <div className="px-3 py-2 text-xs text-gray-400 dark:text-gray-500 text-center">검색 중...</div>
+            <div className="px-3 py-2 text-xs text-gray-400 dark:text-gray-500 text-center" role="status" aria-live="polite">검색 중...</div>
           )}
         </div>
       )}

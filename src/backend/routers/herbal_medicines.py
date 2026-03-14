@@ -24,7 +24,7 @@ router = APIRouter(prefix="/herbal-medicines", tags=["herbal-medicines"])
     description="한약재명, 한글명 등으로 한약재를 검색합니다.",
 )
 async def search_herbal_medicines(
-    q: str = Query("", max_length=200, description="검색어 (한약재명, 한글명 등)"),
+    q: str = Query("", max_length=100, description="검색어 (한약재명, 한글명 등)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),

@@ -27,7 +27,7 @@ router = APIRouter(prefix="/drugs", tags=["drugs"])
     description="제품명, 성분명 등으로 의약품을 검색합니다.",
 )
 async def search_drugs(
-    q: str = Query("", max_length=200, description="검색어 (제품명, 성분명 등)"),
+    q: str = Query("", max_length=100, description="검색어 (제품명, 성분명 등)"),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),
@@ -136,7 +136,7 @@ async def browse_drugs(
     description="부작용 키워드로 해당 부작용이 보고된 의약품을 검색합니다.",
 )
 async def search_by_side_effect(
-    q: str = Query(..., max_length=200, description="부작용 키워드"),
+    q: str = Query(..., min_length=1, max_length=100, description="부작용 키워드"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
@@ -174,7 +174,7 @@ async def identify_drug(
     description="질환 키워드로 관련 주의사항이 있는 의약품을 검색합니다.",
 )
 async def search_by_condition(
-    q: str = Query(..., max_length=200, description="질환 키워드"),
+    q: str = Query(..., min_length=1, max_length=100, description="질환 키워드"),
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
@@ -192,7 +192,12 @@ async def search_by_condition(
     description="증상 키워드로 효능효과에 해당하는 의약품을 검색합니다.",
 )
 async def search_by_symptom(
-    q: str = Query(..., max_length=200, description="증상 키워드 (예: 두통, 소화불량)"),
+    q: str = Query(
+        ...,
+        min_length=1,
+        max_length=100,
+        description="증상 키워드",
+    ),
     page: int = Query(1, ge=1, description="페이지 번호"),
     page_size: int = Query(20, ge=1, le=100, description="페이지 크기"),
     db: AsyncSession = Depends(get_db),

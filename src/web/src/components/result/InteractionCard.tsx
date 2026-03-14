@@ -55,7 +55,7 @@ export function InteractionCard({ interaction }: InteractionCardProps) {
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <span className={`${config.iconColor}`} aria-hidden="true">{SEVERITY_ICONS[sev]}</span>
+            <span className={`${config.iconColor}`} role="img" aria-label={`${config.label} 등급`}>{SEVERITY_ICONS[sev]}</span>
             <SeverityBadge severity={sev} />
             <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
               {interaction.item_a_name} + {interaction.item_b_name}

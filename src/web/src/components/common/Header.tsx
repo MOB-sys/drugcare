@@ -223,6 +223,7 @@ export function Header() {
             className="p-2.5 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]"
             aria-label={mobileOpen ? "메뉴 닫기" : "메뉴 열기"}
             aria-expanded={mobileOpen}
+            aria-controls="mobile-nav-menu"
           >
             {mobileOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
@@ -232,6 +233,7 @@ export function Header() {
       {/* Mobile dropdown */}
       {mobileOpen && (
         <div
+          id="mobile-nav-menu"
           ref={mobileMenuRef}
           role="navigation"
           aria-label="모바일 메뉴"

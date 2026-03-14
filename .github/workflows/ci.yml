@@ -66,6 +66,19 @@ jobs:
       - name: Dependency Security Scan
         run: pip install pip-audit && pip-audit
 
+  backend-security:
+    name: Backend Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install bandit safety
+      - run: bandit -r src/backend/ -ll --format json -o bandit-report.json || true
+      - run: safety check --json || true
+
   # ── Flutter ──
   flutter-analyze:
     name: Flutter Analyze

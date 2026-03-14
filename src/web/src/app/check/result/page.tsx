@@ -56,7 +56,7 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
 
   if (checkItems.length < 2) {
     return (
-      <section className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <section className="max-w-2xl mx-auto px-4 py-16 text-center" role="alert">
         <p className="text-gray-500 dark:text-gray-400 mb-4">확인할 항목이 부족합니다. 2개 이상 선택해주세요.</p>
         <Link
           href="/check"
@@ -79,14 +79,22 @@ export default async function CheckResultPage({ searchParams }: PageProps) {
 
   if (error || !data) {
     return (
-      <section className="max-w-2xl mx-auto px-4 py-16 text-center">
+      <section className="max-w-2xl mx-auto px-4 py-16 text-center" role="alert" aria-live="assertive">
         <p className="text-red-600 mb-4">{error}</p>
-        <Link
-          href="/check"
-          className="inline-block px-6 py-2 rounded-xl text-white font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]"
-        >
-          다시 시도하기
-        </Link>
+        <div className="flex gap-3 justify-center">
+          <Link
+            href={`/check/result?items=${encodeURIComponent(raw)}`}
+            className="inline-block px-6 py-2 rounded-xl text-white font-semibold bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)]"
+          >
+            다시 시도하기
+          </Link>
+          <Link
+            href="/check"
+            className="inline-block px-6 py-2 rounded-xl font-semibold border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          >
+            다시 선택하기
+          </Link>
+        </div>
       </section>
     );
   }
