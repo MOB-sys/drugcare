@@ -39,8 +39,8 @@ def test_hash_query_deterministic():
 
 
 def test_hash_query_length():
-    """해시 결과는 정확히 16자리이다."""
-    assert len(hash_query("test")) == 16
+    """해시 결과는 정확히 32자리이다 (전체 MD5 해시)."""
+    assert len(hash_query("test")) == 32
 
 
 def test_hash_query_uniqueness():

@@ -17,7 +17,7 @@ const FILTERS: { value: SearchFilter; label: string }[] = [
 
 export function FilterChips({ current, onChange }: FilterChipsProps) {
   return (
-    <div className="flex gap-2" role="group" aria-label="검색 필터">
+    <div className="flex flex-wrap gap-2" role="group" aria-label="검색 필터">
       {FILTERS.map((f) => (
         <button
           key={f.value}

@@ -12,7 +12,7 @@ class CabinetItemCreate(BaseModel):
 
     item_type: CabinetItemType
     item_id: int = Field(..., gt=0)
-    nickname: str | None = None
+    nickname: str | None = Field(default=None, max_length=50)
 
 
 class CabinetItemResponse(BaseModel):
@@ -22,7 +22,7 @@ class CabinetItemResponse(BaseModel):
     item_type: CabinetItemType
     item_id: int
     item_name: str
-    nickname: str | None = None
+    nickname: str | None = Field(default=None, max_length=50)
     created_at: datetime
 
     model_config = {"from_attributes": True}

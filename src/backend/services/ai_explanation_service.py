@@ -2,6 +2,7 @@
 
 import asyncio
 import logging
+import re
 
 from openai import AsyncOpenAI
 from redis.asyncio import Redis
@@ -66,6 +67,23 @@ async def generate_explanation(
     return result
 
 
+_SANITIZE_RE = re.compile(r"[^\w\sㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9\-\(\)\[\]\/\.,·•%+]")
+
+
+def _sanitize_name(name: str) -> str:
+    """약물 이름에서 프롬프트 인젝션에 사용될 수 있는 특수 문자를 제거한다.
+
+    영숫자, 한글, 일반 구두점(괄호, 점, 콤마, 슬래시, 하이픈, %, +)만 허용한다.
+
+    Args:
+        name: 원본 약물/영양제 이름.
+
+    Returns:
+        특수 문자가 제거된 이름.
+    """
+    return _SANITIZE_RE.sub("", name).strip()
+
+
 async def _call_openai(interaction: InteractionResult) -> dict | None:
     """OpenAI GPT-4o를 호출하여 쉬운 설명을 생성한다.
 
@@ -80,9 +98,12 @@ async def _call_openai(interaction: InteractionResult) -> dict | None:
     if _openai_client is None:
         return None
 
+    safe_a = _sanitize_name(interaction.item_a_name)
+    safe_b = _sanitize_name(interaction.item_b_name)
+
     user_prompt = (
-        f"약물A: {interaction.item_a_name}\n"
-        f"약물B: {interaction.item_b_name}\n"
+        f"약물A: {safe_a}\n"
+        f"약물B: {safe_b}\n"
         f"심각도: {interaction.severity}\n"
         f"설명: {interaction.description or '없음'}\n"
         f"기전: {interaction.mechanism or '없음'}\n\n"

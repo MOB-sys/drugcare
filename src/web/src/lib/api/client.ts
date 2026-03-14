@@ -73,6 +73,11 @@ export async function fetchApi<T>(
   path: string,
   options?: RequestInit & { allowNullData?: boolean },
 ): Promise<T> {
+  // 경로 검증 — 경로 조작(traversal) 및 헤더 인젝션 방지
+  if (!path.startsWith('/') || path.includes('..') || /[\r\n]/.test(path)) {
+    throw new Error('Invalid API path');
+  }
+
   const method = (options?.method ?? "GET").toUpperCase();
   // POST/PUT/DELETE 등 비멱등 요청은 재시도하지 않음 (중복 생성/삭제 방지)
   if (method !== "GET" && method !== "HEAD") {

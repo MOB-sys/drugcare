@@ -5,10 +5,25 @@ class ApiConstants {
   /// 백엔드 기본 URL (빌드 시 --dart-define=API_BASE_URL 로 오버라이드).
   ///
   /// 릴리스 빌드에서는 반드시 HTTPS URL을 지정해야 한다.
+  /// 예: `flutter build appbundle --dart-define=API_BASE_URL=https://api.pillright.com`
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
     defaultValue: 'http://localhost:8000',
   );
+
+  /// 릴리스 빌드에서 baseUrl이 HTTPS인지 검증.
+  /// 앱 시작 시 호출하여 프로덕션 환경에서 평문 HTTP 사용을 방지한다.
+  static void assertHttpsInRelease() {
+    const isRelease = bool.fromEnvironment('dart.vm.product');
+    if (isRelease) {
+      assert(
+        baseUrl.startsWith('https://'),
+        'Release builds MUST use HTTPS for API_BASE_URL. '
+        'Current value: $baseUrl. '
+        'Set via --dart-define=API_BASE_URL=https://your-api-domain.com',
+      );
+    }
+  }
 
   /// API 버전 접두사.
   static const String apiPrefix = '/api/v1';

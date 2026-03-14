@@ -29,9 +29,9 @@ def hash_query(value: str) -> str:
         value: 해시할 문자열.
 
     Returns:
-        MD5 해시의 앞 16자리 hex 문자열.
+        MD5 해시의 full hex 문자열.
     """
-    return hashlib.md5(value.encode()).hexdigest()[:16]
+    return hashlib.md5(value.encode()).hexdigest()
 
 
 async def cache_get(redis: Redis, key: str) -> Any | None:

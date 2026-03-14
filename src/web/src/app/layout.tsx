@@ -8,6 +8,7 @@ import { WebVitals } from "@/components/common/WebVitals";
 import { ServiceWorkerRegister } from "@/components/common/ServiceWorkerRegister";
 import { ToastProvider } from "@/components/common/ToastProvider";
 import { CookieConsent } from "@/components/common/CookieConsent";
+import { ClarityScript } from "@/components/common/ClarityScript";
 import { SITE_URL } from "@/lib/constants/site";
 
 /** 환경변수 값이 안전한 영숫자/하이픈 문자열인지 검증 (XSS 방지). */
@@ -156,12 +157,8 @@ export default function RootLayout({
           />
         )}
 
-        {/* Microsoft Clarity — 히트맵 & 세션 녹화 */}
-        {CLARITY_ID && (
-          <Script id="clarity-init" strategy="afterInteractive">
-            {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","${CLARITY_ID}");`}
-          </Script>
-        )}
+        {/* Microsoft Clarity — 히트맵 & 세션 녹화 (쿠키 동의 후에만 로드) */}
+        {CLARITY_ID && <ClarityScript clarityId={CLARITY_ID} />}
 
         {/* Kakao SDK — 카카오톡 공유 */}
         {KAKAO_JS_KEY && (

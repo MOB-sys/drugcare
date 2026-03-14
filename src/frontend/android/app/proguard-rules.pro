@@ -1,9 +1,8 @@
-# Flutter
--keep class io.flutter.app.** { *; }
--keep class io.flutter.plugin.** { *; }
--keep class io.flutter.util.** { *; }
--keep class io.flutter.view.** { *; }
--keep class io.flutter.** { *; }
+# Flutter — keep only required framework classes
+-keep class io.flutter.app.FlutterApplication { *; }
+-keep class io.flutter.app.FlutterActivity { *; }
+-keep class io.flutter.plugin.editing.** { *; }
+-keep class io.flutter.embedding.** { *; }
 -keep class io.flutter.plugins.** { *; }
 
 # Google Mobile Ads

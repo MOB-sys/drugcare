@@ -63,6 +63,8 @@ jobs:
           cache: pip
       - run: pip install -e ".[dev]"
       - run: pytest --cov --cov-report=xml --cov-fail-under=70
+      - name: Dependency Security Scan
+        run: pip install pip-audit && pip-audit
 
   # ── Flutter ──
   flutter-analyze:

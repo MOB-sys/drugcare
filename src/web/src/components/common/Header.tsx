@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PillRightLogo } from "./PillRightLogo";
 import { useDarkMode } from "@/lib/hooks/useDarkMode";
+import { ChevronDownIcon, CloseIcon, MenuIcon, SunIcon, MoonIcon } from "@/components/icons";
 
 interface NavChild {
   href: string;
@@ -44,6 +45,8 @@ export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const { isDark, toggle } = useDarkMode();
 
   const [focusIndex, setFocusIndex] = useState(-1);
@@ -81,6 +84,46 @@ export function Header() {
     };
   }, [dropdownOpen, focusIndex]);
 
+  // 모바일 메뉴 포커스 트래핑 + Escape 닫기
+  const handleMobileKeyDown = useCallback((e: KeyboardEvent) => {
+    if (e.key === "Escape") {
+      setMobileOpen(false);
+      mobileToggleRef.current?.focus();
+      return;
+    }
+    if (e.key !== "Tab" || !mobileMenuRef.current) return;
+
+    const focusable = mobileMenuRef.current.querySelectorAll<HTMLElement>(
+      'a[href], button, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+    document.addEventListener("keydown", handleMobileKeyDown);
+    // 메뉴 열릴 때 첫 항목으로 포커스
+    const timer = setTimeout(() => {
+      const first = mobileMenuRef.current?.querySelector<HTMLElement>("a[href], button");
+      first?.focus();
+    }, 50);
+    return () => {
+      document.removeEventListener("keydown", handleMobileKeyDown);
+      clearTimeout(timer);
+    };
+  }, [mobileOpen, handleMobileKeyDown]);
+
   function isActive(href: string) {
     return pathname === href || pathname?.startsWith(href + "/");
   }
@@ -116,9 +159,7 @@ export function Header() {
                   }`}
                 >
                   {item.label}
-                  <svg className={`w-3.5 h-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                  <ChevronDownIcon className={`w-3.5 h-3.5 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
                 </button>
                 {dropdownOpen && (
                   <div className="absolute top-full left-0 mt-1 w-44 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-xl shadow-lg py-1 z-50" role="menu">
@@ -163,15 +204,7 @@ export function Header() {
             className="ml-2 p-2.5 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)] transition-colors"
             aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
           >
-            {isDark ? (
-              <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            ) : (
-              <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            )}
+            {isDark ? <SunIcon className="w-4.5 h-4.5" /> : <MoonIcon className="w-4.5 h-4.5" />}
           </button>
         </div>
 
@@ -182,36 +215,28 @@ export function Header() {
             className="p-2.5 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]"
             aria-label={isDark ? "라이트 모드로 전환" : "다크 모드로 전환"}
           >
-            {isDark ? (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-              </svg>
-            ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
-            )}
+            {isDark ? <SunIcon /> : <MoonIcon />}
           </button>
           <button
+            ref={mobileToggleRef}
             onClick={() => setMobileOpen(!mobileOpen)}
             className="p-2.5 rounded-lg text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-hover)]"
-            aria-label="메뉴 열기"
+            aria-label={mobileOpen ? "메뉴 닫기" : "메뉴 열기"}
             aria-expanded={mobileOpen}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {mobileOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
+            {mobileOpen ? <CloseIcon /> : <MenuIcon />}
           </button>
         </div>
       </nav>
 
       {/* Mobile dropdown */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 space-y-1">
+        <div
+          ref={mobileMenuRef}
+          role="navigation"
+          aria-label="모바일 메뉴"
+          className="md:hidden border-t border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2 space-y-1"
+        >
           {NAV_ITEMS.map((item) =>
             item.children ? (
               <div key={item.href}>

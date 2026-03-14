@@ -11,7 +11,7 @@ class ReminderCreate(BaseModel):
     cabinet_item_id: int
     reminder_time: time
     days_of_week: list[int] = Field(..., min_length=1, max_length=7)
-    memo: str | None = None
+    memo: str | None = Field(default=None, max_length=200)
 
     @field_validator("days_of_week")
     @classmethod
@@ -29,7 +29,7 @@ class ReminderUpdate(BaseModel):
     reminder_time: time | None = None
     days_of_week: list[int] | None = Field(None, min_length=1, max_length=7)
     is_active: bool | None = None
-    memo: str | None = None
+    memo: str | None = Field(default=None, max_length=200)
 
     @field_validator("days_of_week")
     @classmethod

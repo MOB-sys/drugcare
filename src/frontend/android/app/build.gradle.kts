@@ -37,7 +37,6 @@ android {
         versionName = flutter.versionName
         multiDexEnabled = true
         manifestPlaceholders["admobAppId"] = "ca-app-pub-4091950246368818~5666052037"
-        manifestPlaceholders["useCleartextTraffic"] = "true"
     }
 
     signingConfigs {
@@ -52,6 +51,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            manifestPlaceholders["useCleartextTraffic"] = "true"
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
